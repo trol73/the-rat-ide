@@ -54,12 +54,10 @@ public class FileSystemTreePlugin extends GUIPlugin<RText> {
     private final List<File> rootHistory;
     private int rootHistoryOffs;
 
-    static final String BUNDLE_NAME =
-            "org/fife/rtext/plugins/filesystemtree/FileSystemTree";
+    static final String BUNDLE_NAME = "org/fife/rtext/plugins/filesystemtree/FileSystemTree";
     private static final String VERSION_STRING = "5.0.0";
 
-    public static final String SELECT_CURRENT_FILE_ACTION_NAME =
-            "FileSystemTree.SelectCurrentFileAction";
+    public static final String SELECT_CURRENT_FILE_ACTION_NAME = "FileSystemTree.SelectCurrentFileAction";
 
     private static final String VIEW_FST_ACTION = "ViewFileSystemTreeAction";
 
@@ -70,7 +68,6 @@ public class FileSystemTreePlugin extends GUIPlugin<RText> {
      * @param app The RText instance.
      */
     public FileSystemTreePlugin(RText app) {
-
         super(app);
         loadIcons();
 
@@ -83,11 +80,15 @@ public class FileSystemTreePlugin extends GUIPlugin<RText> {
 
         DockableWindow wind = createDockableWindow(prefs);
         putDockableWindow(name, wind);
+        try {
+            new FileSystemTreeStateSaver().restoreState(tree);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         rootHistory = new ArrayList<>();
         rootHistory.add(null);
         rootHistoryOffs = 0;
-
     }
 
 
@@ -144,12 +145,10 @@ public class FileSystemTreePlugin extends GUIPlugin<RText> {
         wind.setPosition(prefs.position);
         wind.setIcon(getPluginIcon());
 
-        ComponentOrientation o = ComponentOrientation.
-                getOrientation(Locale.getDefault());
+        ComponentOrientation o = ComponentOrientation.getOrientation(Locale.getDefault());
         wind.applyComponentOrientation(o);
 
         return wind;
-
     }
 
 
@@ -249,7 +248,6 @@ public class FileSystemTreePlugin extends GUIPlugin<RText> {
 
     @Override
     public void install() {
-
         RText app = getApplication();
 
         // Register an action to show the current file in this plugin
@@ -318,6 +316,7 @@ public class FileSystemTreePlugin extends GUIPlugin<RText> {
         File prefsFile = getPrefsFile();
         try {
             prefs.save(prefsFile);
+            new FileSystemTreeStateSaver().saveState(tree);
         } catch (IOException ioe) {
             getApplication().displayException(ioe);
         }

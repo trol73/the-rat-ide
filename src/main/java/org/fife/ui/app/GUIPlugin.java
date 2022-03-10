@@ -33,7 +33,7 @@ public abstract class GUIPlugin<T extends GUIApplication> extends AbstractPlugin
 	/**
 	 * Map of window ID's to dockable windows.
 	 */
-	private Map<String, DockableWindow> windowMap;
+	private final Map<String, DockableWindow> windowMap;
 
 
 	/**

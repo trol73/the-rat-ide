@@ -9,17 +9,20 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class OpenFileList {
+public class FileList {
     private final List<String> list = new ArrayList<>();
+    private boolean enabled = true;
 
     public void add(String fileName) {
-        if (!list.contains(fileName)) {
+        if (enabled && !list.contains(fileName)) {
             list.add(fileName);
         }
     }
 
     public void remove(String fileName) {
-        list.remove(fileName);
+        if (enabled) {
+            list.remove(fileName);
+        }
     }
 
     public void load(String path) {
@@ -35,6 +38,7 @@ public class OpenFileList {
         try (FileWriter writer = new FileWriter(path)) {
             for (String s : list) {
                 writer.write(s);
+                writer.write('\n');
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,6 +46,8 @@ public class OpenFileList {
     }
 
     public void forEach(Consumer<String> consumer) {
+        enabled = false;
         list.forEach(consumer);
+        enabled = true;
     }
 }

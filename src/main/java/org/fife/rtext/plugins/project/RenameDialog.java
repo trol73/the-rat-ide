@@ -24,25 +24,24 @@ import org.fife.rtext.plugins.project.tree.NameChecker;
 public class RenameDialog extends AbstractEnterFileNameDialog {
 
 
-	/**
-	 * Constructor.
-	 *
-	 * @param owner The rtext window that owns this dialog.
-	 * @param isForFile Whether this dialog is for a regular file as opposed to
-	 *        a directory.
-	 * @param type The type of node being renamed.
-	 * @param checker The name checking callback.
-	 */
-	public RenameDialog(RText owner, boolean isForFile, String type,
-			NameChecker checker) {
-		super(owner, isForFile, checker);
-		setTitle(Messages.getString("RenameDialog.Title", type));
-	}
+    /**
+     * Constructor.
+     *
+     * @param owner     The rtext window that owns this dialog.
+     * @param isForFile Whether this dialog is for a regular file as opposed to
+     *                  a directory.
+     * @param type      The type of node being renamed.
+     * @param checker   The name checking callback.
+     */
+    public RenameDialog(RText owner, boolean isForFile, String type, NameChecker checker) {
+        super(owner, isForFile, checker);
+        setTitle(Messages.getString("RenameDialog.Title", type));
+    }
 
 
-	@Override
-	protected void addDescPanel() {
-	}
+    @Override
+    protected void addDescPanel() {
+    }
 
 
 }

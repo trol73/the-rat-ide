@@ -253,9 +253,9 @@ public final class RTextUtilities {
             addFilter(chooser, msg, "ActionScript", "as", "asc");
             addFilter(chooser, msg, "Assembler6502", "s");
             addFilter(chooser, msg, "AssemblerX86", "asm");
+            addFilter(chooser, msg, "AVRRat", "art", "arth");
             addFilter(chooser, msg, "BBCode", "bbc");
-            addFilter(chooser, msg, "CPlusPlus",
-                    "c", "cpp", "cxx", "h");
+            addFilter(chooser, msg, "CPlusPlus","c", "cpp", "cxx", "h");
             addFilter(chooser, msg, "Clojure", "clj");
             addFilter(chooser, msg, "CSharp", "cs");
             addFilter(chooser, msg, "CSS", "css");
@@ -264,32 +264,24 @@ public final class RTextUtilities {
             addFilter(chooser, msg, "Delphi", "pas");
             addFilter(chooser, msg, "DTD", "dtd");
             addFilter(chooser, msg, "Flex", "mxml");
-            addFilter(chooser, msg, "Fortran",
-                    "f", "for", "fort", "f77", "f90");
+            addFilter(chooser, msg, "Fortran","f", "for", "fort", "f77", "f90");
             addFilter(chooser, msg, "Go", "go");
-            addFilter(chooser, msg, "Groovy",
-                    "groovy", "grv");
-            addFilter(chooser, msg, "HTML",
-                    "htm", "html");
-            addFilter(chooser, msg, "INI",
-                    "ini");
+            addFilter(chooser, msg, "Groovy","groovy", "grv");
+            addFilter(chooser, msg, "HTML","htm", "html");
+            addFilter(chooser, msg, "INI","ini");
             addFilter(chooser, msg, "Java", "java");
             addFilter(chooser, msg, "JavaScript", "js");
             addFilter(chooser, msg, "JSON", "json");
             addFilter(chooser, msg, "JSP", "jsp");
             addFilter(chooser, msg, "Kotlin", "kt", "ktm", "kts");
             addFilter(chooser, msg, "LaTeX", "tex", "ltx", "latex");
-            addFilter(chooser, msg, "Lisp",
-                    "cl", "clisp", "el", "l", "lisp", "lsp", "ml");
+            addFilter(chooser, msg, "Lisp","cl", "clisp", "el", "l", "lisp", "lsp", "ml");
             addFilter(chooser, msg, "Lua", "lua");
-            addFilter(chooser, msg, "Makefile",
-                    "Makefile", "makefile");
+            addFilter(chooser, msg, "Makefile","Makefile", "makefile");
             addFilter(chooser, msg, "Markdown", "md");
             addFilter(chooser, msg, "Nsis", "nsi");
-            addFilter(chooser, msg, "Perl",
-                    "pl", "perl", "pm");
-            addFilter(chooser, msg, "PHP",
-                    "php");
+            addFilter(chooser, msg, "Perl","pl", "perl", "pm");
+            addFilter(chooser, msg, "PHP","php");
             addFilter(chooser, msg, "PropertiesFiles", "properties");
             addFilter(chooser, msg, "Python", "py");
             addFilter(chooser, msg, "Ruby", "rb");
@@ -299,15 +291,11 @@ public final class RTextUtilities {
             addFilter(chooser, msg, "PlainText", "txt");
             addFilter(chooser, msg, "Tcl", "tcl");
             addFilter(chooser, msg, "TypeScript", "ts");
-            addFilter(chooser, msg, "UnixShell",
-                    "sh", "bsh", "csh", "ksh");
+            addFilter(chooser, msg, "UnixShell","sh", "bsh", "csh", "ksh");
             addFilter(chooser, msg, "VisualBasic", "vb");
-            addFilter(chooser, msg, "WindowsBatch",
-                    "bat", "cmd");
-            addFilter(chooser, msg, "XML",
-                    "xml", "xsl", "xsd", "xslt", "wsdl", "jnlp", "macro", "manifest");
-            addFilter(chooser, msg, "Yaml",
-                    "yml", "yaml");
+            addFilter(chooser, msg, "WindowsBatch","bat", "cmd");
+            addFilter(chooser, msg, "XML","xml", "xsl", "xsd", "xslt", "wsdl", "jnlp", "macro", "manifest");
+            addFilter(chooser, msg, "Yaml","yml", "yaml");
 
             // Add any user-defined file filters.
             File file = new File(rtext.getInstallLocation(), FILE_FILTERS_FILE);
@@ -325,6 +313,8 @@ public final class RTextUtilities {
                     "as", "asc",
                     "s",
                     "asm",
+                    "art",
+                    "arth",
                     "bbc",
                     "c", "cpp", "cxx", "h",
                     "clj",
@@ -392,7 +382,6 @@ public final class RTextUtilities {
         }
 
         return chooser;
-
     }
 
 
@@ -627,9 +616,7 @@ public final class RTextUtilities {
      * expression for the string passed in.  If an error occurs,
      * <code>null</code> is returned.
      */
-    public static Pattern getPatternForFileFilter(String fileFilter,
-                                                  boolean showErrorDialog) {
-
+    public static Pattern getPatternForFileFilter(String fileFilter, boolean showErrorDialog) {
         String pattern = createRegexForFileFilter(fileFilter);
         int flags = OS.get().isCaseSensitive() ? 0 :
                 (Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
@@ -712,8 +699,7 @@ public final class RTextUtilities {
      */
     public static boolean isDarkLookAndFeel() {
         String laf = UIManager.getLookAndFeel().getClass().getName();
-
-        return laf != null && (laf.contains("Darcula") || laf.contains("FlatDark"));
+        return laf.contains("Darcula") || laf.contains("FlatDark");
     }
 
 

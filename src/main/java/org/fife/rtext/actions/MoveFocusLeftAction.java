@@ -30,62 +30,58 @@ import org.fife.ui.dockablewindows.DockableWindowConstants;
 class MoveFocusLeftAction extends AppAction<RText> {
 
 
-	/**
-	 * Constructor.
-	 */
-	MoveFocusLeftAction(RText app, ResourceBundle msg) {
-		super(app, msg, "MoveFocusLeftAction");
-	}
+    /**
+     * Constructor.
+     */
+    MoveFocusLeftAction(RText app, ResourceBundle msg) {
+        super(app, msg, "MoveFocusLeftAction");
+    }
 
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-		Component focused = KeyboardFocusManager.
-				getCurrentKeyboardFocusManager().getFocusOwner();
-		if (focused==null) {
-			return;
-		}
+        Component focused = KeyboardFocusManager.
+                getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focused == null) {
+            return;
+        }
 
-		RText rtext = getApplication();
-		int focusedGroup = rtext.getFocusedDockableWindowGroup();
-		int toFocus;
+        RText rtext = getApplication();
+        int focusedGroup = rtext.getFocusedDockableWindowGroup();
+        int toFocus;
 
-		switch (focusedGroup) {
-			case DockableWindowConstants.TOP:
-			case DockableWindowConstants.BOTTOM:
-			default: // In editor
-				if (rtext.hasDockableWindowGroup(DockableWindowConstants.LEFT)) {
-					toFocus = DockableWindowConstants.LEFT;
-				}
-				else if (rtext.hasDockableWindowGroup(DockableWindowConstants.RIGHT)) {
-					toFocus = DockableWindowConstants.RIGHT;
-				}
-				else {
-					return; // Don't change focused docked window
-				}
-				break;
-			case DockableWindowConstants.LEFT:
-				if (rtext.hasDockableWindowGroup(DockableWindowConstants.RIGHT)) {
-					toFocus = DockableWindowConstants.RIGHT;
-				}
-				else {
-					toFocus = -1; // Focus currentTextArea
-				}
-				break;
-			case DockableWindowConstants.RIGHT:
-				toFocus = -1; // Focus currentTextArea
-				break;
-		}
+        switch (focusedGroup) {
+            case DockableWindowConstants.TOP:
+            case DockableWindowConstants.BOTTOM:
+            default: // In editor
+                if (rtext.hasDockableWindowGroup(DockableWindowConstants.LEFT)) {
+                    toFocus = DockableWindowConstants.LEFT;
+                } else if (rtext.hasDockableWindowGroup(DockableWindowConstants.RIGHT)) {
+                    toFocus = DockableWindowConstants.RIGHT;
+                } else {
+                    return; // Don't change focused docked window
+                }
+                break;
+            case DockableWindowConstants.LEFT:
+                if (rtext.hasDockableWindowGroup(DockableWindowConstants.RIGHT)) {
+                    toFocus = DockableWindowConstants.RIGHT;
+                } else {
+                    toFocus = -1; // Focus currentTextArea
+                }
+                break;
+            case DockableWindowConstants.RIGHT:
+                toFocus = -1; // Focus currentTextArea
+                break;
+        }
 
-		if (toFocus==-1) {
-			rtext.getMainView().getCurrentTextArea().requestFocusInWindow();
-		}
-		else {
-			rtext.focusDockableWindowGroup(toFocus);
-		}
+        if (toFocus == -1) {
+            rtext.getMainView().getCurrentTextArea().requestFocusInWindow();
+        } else {
+            rtext.focusDockableWindowGroup(toFocus);
+        }
 
-	}
+    }
 
 
 }

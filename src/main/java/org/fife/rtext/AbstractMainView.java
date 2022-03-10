@@ -29,6 +29,8 @@ import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.ui.search.*;
+import ru.trolsoft.ide.config.history.FileList;
+import ru.trolsoft.ide.config.history.FilePositionHistory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -69,7 +71,7 @@ import java.util.*;
  * @author Robert Futrell
  * @version 0.5
  */
-@SuppressWarnings("checkstyle:VisibilityModifier")
+//@SuppressWarnings("checkstyle:VisibilityModifier")
 public abstract class AbstractMainView extends JPanel
         implements PropertyChangeListener, ActionListener, SearchListener,
         FindInFilesListener, HyperlinkListener {
@@ -185,7 +187,7 @@ public abstract class AbstractMainView extends JPanel
     private Color foldBackground;
     private Color armedFoldBackground;
 
-    private final EventListenerList listenerList;
+    private final EventListenerList listenerList = new EventListenerList();;
 
     private Map<String, Boolean> codeFoldingEnabledStates;
 
@@ -200,6 +202,8 @@ public abstract class AbstractMainView extends JPanel
     private ToggleTextModeAction toggleTextModeAction;
     private CapsLockAction capsLockAction;
 
+    private final FileList openFileList = new FileList();
+    FilePositionHistory filePositionHistory = new FilePositionHistory();
 
     /**
      * The cursor used when recording a macro.
@@ -212,13 +216,9 @@ public abstract class AbstractMainView extends JPanel
      * You should call {@link #initialize} right after this.
      */
     public AbstractMainView() {
-
-        listenerList = new EventListenerList();
-
         checkForModification = true;
         Timer t = new Timer();
-        // Check for files modified outside the editor
-        // every 30 seconds
+        // Check for files modified outside the editor every 30 seconds
         t.schedule(new TimerTask() {
                        @Override
                        public void run() {
@@ -227,21 +227,18 @@ public abstract class AbstractMainView extends JPanel
                    },
                 modificationCheckDelay,
                 modificationCheckDelay);
-
     }
 
 
     // Callback for various actions.
     @Override
     public void actionPerformed(ActionEvent e) {
-
         String command = e.getActionCommand();
 
-        // If a file was found to be modified outside of the editor...
+        // If a file was found to be modified outside the editor...
         if (command.startsWith("FileModified. ")) {
             handleFileModifiedEvent(command);
         }
-
     }
 
 
@@ -257,18 +254,15 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Adds an empty text file to this tabbed pane.  This method is
-     * synchronized so it doesn't interfere with the thread checking for
-     * files being modified outside of the editor.
+     * Adds an empty text file to this tabbed pane.  This method is synchronized, so it doesn't
+     * interfere with the thread checking for files being modified outside the editor.
      *
      * @param fileNameAndPath The full path and name of the file to add.
      * @param encoding        The encoding in which the file is to be saved.  If
      *                        an invalid value is passed in, the system default encoding
      *                        is used.
      */
-    private synchronized void addNewEmptyFile(String fileNameAndPath,
-                                              String encoding) {
-
+    private synchronized void addNewEmptyFile(String fileNameAndPath, String encoding) {
         // Ensure the encoding is a proper value.
         if (encoding == null) {
             encoding = RTextFileChooser.getDefaultEncoding();
@@ -302,14 +296,13 @@ public abstract class AbstractMainView extends JPanel
 
         // Let anybody who cares know we've opened this file.
         firePropertyChange(TEXT_AREA_ADDED_PROPERTY, null, currentTextArea);
-
     }
 
 
     /**
      * Adds an empty text file with a default name to this panel.  This method
-     * is synchronized so it doesn't interfere with the thread checking for
-     * files being modified outside of the editor.
+     * is synchronized, so it doesn't interfere with the thread checking for
+     * files being modified outside the editor.
      */
     public synchronized void addNewEmptyUntitledFile() {
         addNewEmptyFile(getDefaultFileName(), getDefaultEncoding());
@@ -349,15 +342,13 @@ public abstract class AbstractMainView extends JPanel
      *
      * @param title        The name of the document to display.
      * @param component    The component to add (usually an RTextScrollPane).
-     * @param fileFullPath The full path to the file being displayed by the
-     *                     component.
+     * @param fileFullPath The full path to the file being displayed by the component.
      */
     protected abstract void addTextAreaImpl(String title, Component component, String fileFullPath);
 
 
     /**
-     * Overridden so we ensure text areas keep their special LTR or RTL
-     * orientaitons.
+     * Overridden so we ensure text areas keep their special LTR or RTL orientations.
      *
      * @param o The new component orientation.
      */
@@ -374,7 +365,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns whether or not tabs are emulated with spaces.
+     * Returns whether tabs are emulated with spaces.
      *
      * @return <code>true</code> iff tabs are emulated with spaces.
      */
@@ -385,16 +376,14 @@ public abstract class AbstractMainView extends JPanel
 
     /**
      * Checks the "modified" timestamps for open files against the last known
-     * "modified" timestamps to see if any files have been modified outside of
+     * "modified" timestamps to see if any files have been modified outside
      * this RText instance.  This method is synchronized so that it isn't
      * called while the user is loading or saving a file.
      */
     public synchronized void checkFilesForOutsideModification() {
-
         // If we're currently not waiting on the user to decide about a
         // previous "another program modified..." message...
         if (checkForModification) {
-
             // Flag so that if the user takes to long deciding, messages
             // don't pile up about the same file being modified.
             // NOTE:  This is theoretically not thread-safe, but the
@@ -412,7 +401,7 @@ public abstract class AbstractMainView extends JPanel
 
             // If no documents were modified outside the editor, allow the
             // thread to check again; otherwise, remember to prompt the user
-            // about all of the documents that changed outside of the editor.
+            // about all the documents that changed outside the editor.
             if (sb.length() == 0) {
                 checkForModification = true;
             } else {
@@ -425,8 +414,6 @@ public abstract class AbstractMainView extends JPanel
                     }
                 });
             }
-
-
         } // End of if (checkForModification==true).
     }
 
@@ -451,13 +438,11 @@ public abstract class AbstractMainView extends JPanel
      * <code>false</code> if they weren't (i.e., the user hit cancel).
      */
     public boolean closeAllDocumentsExcept(int except) {
-
         int numDocuments = getNumDocuments();
         setSelectedIndex(numDocuments - 1); // Start at the back.
 
         // Cycle through each document, one by one.
         for (int i = numDocuments - 1; i >= 0; i--) {
-
             if (i == except) {
                 // Instead of removing this document, set focus to the
                 // "first" document, and continue closing documents with the
@@ -467,7 +452,6 @@ public abstract class AbstractMainView extends JPanel
                     setSelectedIndex(0);
                 }
             } else {
-
                 // Try to close the document.
                 boolean closed = closeCurrentDocument();
 
@@ -478,15 +462,12 @@ public abstract class AbstractMainView extends JPanel
                             currentTextArea != null && currentTextArea.isReadOnly());
                     return false;
                 }
-
             }
-
         } // End of for (int i=tabCount-1; i>=0; i--).
 
         // If we got this far, then all documents were closed.
         // We'll just have an empty default-named file out there.
         return true;
-
     }
 
 
@@ -504,12 +485,20 @@ public abstract class AbstractMainView extends JPanel
         if (closed) {
             old.clearParsers();
             firePropertyChange(TEXT_AREA_REMOVED_PROPERTY, null, old);
-// save pos
-// save recent files
-System.out.println("close " + old.getFileFullPath());
+            filePositionHistory.saveTextArea(old, findScrollPane(old));
+            openFileList.remove(old.getFileFullPath());
         }
 
         return closed;
+    }
+
+    private RTextScrollPane findScrollPane(RTextEditorPane editor) {
+        for (int i = 0; i < getNumDocuments(); i++) {
+            if (getRTextEditorPaneAt(i) == editor) {
+                return getRTextScrollPaneAt(i);
+            }
+        }
+        return null;
     }
 
 
@@ -555,7 +544,6 @@ System.out.println("close " + old.getFileFullPath());
      * @param fromPanel The panel to copy data from.
      */
     public void copyData(AbstractMainView fromPanel) {
-
         currentTextArea = fromPanel.currentTextArea;
 
         searchManager = fromPanel.searchManager;
@@ -673,8 +661,7 @@ System.out.println("close " + old.getFileFullPath());
 
         int numDocuments = fromPanel.getNumDocuments();
         int fromSelectedIndex = fromPanel.getSelectedIndex();
-        ArrayList<RTextScrollPane> scrollPanes =
-                new ArrayList<>(numDocuments);
+        ArrayList<RTextScrollPane> scrollPanes = new ArrayList<>(numDocuments);
         for (int i = 0; i < numDocuments; i++) {
             scrollPanes.add(fromPanel.getRTextScrollPaneAt(0));
             fromPanel.removeComponentAt(0);
@@ -682,8 +669,7 @@ System.out.println("close " + old.getFileFullPath());
         for (int i = 0; i < numDocuments; i++) {
             RTextScrollPane scrollPane = scrollPanes.get(i);
             RTextEditorPane editorPane = (RTextEditorPane) scrollPane.getTextArea();
-            addTextAreaImpl(editorPane.getFileName(), scrollPane,
-                    editorPane.getFileFullPath());
+            addTextAreaImpl(editorPane.getFileName(), scrollPane, editorPane.getFileFullPath());
             editorPane.removePropertyChangeListener(fromPanel);
             editorPane.removeHyperlinkListener(fromPanel);
             editorPane.addPropertyChangeListener(this);
@@ -694,11 +680,10 @@ System.out.println("close " + old.getFileFullPath());
         setSelectedIndex(fromSelectedIndex);
 
         spellingSupport = fromPanel.spellingSupport;
-
     }
 
 
-    protected ErrorStrip createErrorStrip(RTextEditorPane textArea) {
+    protected static ErrorStrip createErrorStrip(RTextEditorPane textArea) {
         ErrorStrip strip = new ErrorStrip(textArea);
         strip.setLevelThreshold(ParserNotice.Level.WARNING);
         return strip;
@@ -727,12 +712,9 @@ System.out.println("close " + old.getFileFullPath());
      * @return An editor pane.
      * @throws IOException If an IO error occurs reading the file to load.
      */
-    private RTextEditorPane createRTextEditorPane(FileLocation loc,
-                                                  String encoding) throws IOException {
-
+    private RTextEditorPane createRTextEditorPane(FileLocation loc, String encoding) throws IOException {
         String style = getSyntaxStyleForFile(loc.getFileName());
-        RTextEditorPane pane = new RTextEditorPane(owner, lineWrapEnabled,
-                textMode, loc, encoding);
+        RTextEditorPane pane = new RTextEditorPane(owner, lineWrapEnabled, textMode, loc, encoding);
 
         // Set some properties.
         pane.setFont(getTextAreaFont());
@@ -757,8 +739,7 @@ System.out.println("close " + old.getFileFullPath());
         pane.setPaintMatchedBracketPair(getMatchBothBrackets());
         pane.setMatchedBracketBGColor(getMatchedBracketBGColor());
         pane.setMatchedBracketBorderColor(getMatchedBracketBorderColor());
-        if (defaultLineTerminator != null &&
-                pane.getDocument().getLength() == 0) {
+        if (defaultLineTerminator != null && pane.getDocument().getLength() == 0) {
             // Empty (or new) file => use default line terminator.
             pane.setLineSeparator(defaultLineTerminator, false);
         }
@@ -777,10 +758,8 @@ System.out.println("close " + old.getFileFullPath());
         pane.setHyperlinkForeground(getHyperlinkColor());
         pane.setLinkScanningMask(getHyperlinkModifierKey());
         pane.setRoundedSelectionEdges(getRoundedSelectionEdges());
-        pane.setCaretStyle(RTextEditorPane.INSERT_MODE,
-                carets[RTextEditorPane.INSERT_MODE]);
-        pane.setCaretStyle(RTextEditorPane.OVERWRITE_MODE,
-                carets[RTextEditorPane.OVERWRITE_MODE]);
+        pane.setCaretStyle(RTextEditorPane.INSERT_MODE, carets[RTextEditorPane.INSERT_MODE]);
+        pane.setCaretStyle(RTextEditorPane.OVERWRITE_MODE, carets[RTextEditorPane.OVERWRITE_MODE]);
         pane.getCaret().setBlinkRate(getCaretBlinkRate());
         //pane.setFadeCurrentLineHighlight(fadeCurrentLineHighlight);
 
@@ -820,7 +799,6 @@ System.out.println("close " + old.getFileFullPath());
         am.put("OnCapsLock", capsLockAction);
 
         return pane;
-
     }
 
 
@@ -831,8 +809,7 @@ System.out.println("close " + old.getFileFullPath());
      * @return The scroll pane.
      */
     private RTextScrollPane createScrollPane(RTextEditorPane textArea) {
-        RTextScrollPane scrollPane = new RTextScrollPane(textArea,
-                lineNumbersEnabled, null);
+        RTextScrollPane scrollPane = new RTextScrollPane(textArea, lineNumbersEnabled, null);
         scrollPane.applyComponentOrientation(getComponentOrientation());
         Gutter gutter = scrollPane.getGutter();
         gutter.setBookmarkIcon(bookmarkIcon);
@@ -898,7 +875,6 @@ System.out.println("close " + old.getFileFullPath());
         int line = e.getLine();
         if (line != -1) {
             try {
-
                 // currentTextArea is updated here.  Highlight the searched-for
                 // text.
                 int start = currentTextArea.getLineStartOffset(line - 1);
@@ -927,8 +903,7 @@ System.out.println("close " + old.getFileFullPath());
      * @param oldValue The old value.
      * @param newValue The new value.
      */
-    protected void fireCurrentTextAreaEvent(int type, Object oldValue,
-                                            Object newValue) {
+    protected void fireCurrentTextAreaEvent(int type, Object oldValue, Object newValue) {
         // Guaranteed to return a non-null array.
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
@@ -937,8 +912,7 @@ System.out.println("close " + old.getFileFullPath());
             if (listeners[i] == CurrentTextAreaListener.class) {
                 ((CurrentTextAreaListener) listeners[i + 1]).
                         currentTextAreaPropertyChanged(
-                                new CurrentTextAreaEvent(this, type,
-                                        oldValue, newValue));
+                                new CurrentTextAreaEvent(this, type, oldValue, newValue));
             }
         }
     }
@@ -1080,8 +1054,7 @@ System.out.println("close " + old.getFileFullPath());
      */
     public String getCodeFoldingEnabledForString() {
         StringBuilder sb = new StringBuilder();
-        Set<Map.Entry<String, Boolean>> entrySet =
-                codeFoldingEnabledStates.entrySet();
+        Set<Map.Entry<String, Boolean>> entrySet = codeFoldingEnabledStates.entrySet();
         for (Map.Entry<String, Boolean> entry : entrySet) {
             if (Boolean.TRUE.equals(entry.getValue())) {
                 sb.append(entry.getKey()).append(',');
@@ -1344,7 +1317,6 @@ System.out.println("close " + old.getFileFullPath());
      * @see #getIconFor(RTextScrollPane)
      */
     public Icon getIconFor(RTextEditorPane textArea) {
-
         Icon icon = null;
 
         // Try fetching a language-specific icon first
@@ -1400,9 +1372,9 @@ System.out.println("close " + old.getFileFullPath());
 
 
     /**
-     * Returns whether or not line numbers are visible in the open documents.
+     * Returns whether line numbers are visible in the open documents.
      *
-     * @return Whether or not line numbers are enabled.
+     * @return Whether line numbers are enabled.
      */
     public boolean getLineNumbersEnabled() {
         return lineNumbersEnabled;
@@ -2120,7 +2092,7 @@ System.out.println("close " + old.getFileFullPath());
 
             } // End of if (rc==JOptionPane.YES_OPTION)
 
-            // Whether or not we reload, we need to update the "last
+            // Whether we reload, we need to update the "last
             // modified" time for this document, so we don't keep
             // bugging them about the same outside modification.
             currentTextArea.syncLastSaveOrLoadTimeToActualFile();
@@ -2324,7 +2296,7 @@ System.out.println("close " + old.getFileFullPath());
 
 
     /**
-     * Returns whether or not bracket matching is enabled.
+     * Returns whether bracket matching is enabled.
      *
      * @return <code>true</code> iff bracket matching is enabled.
      * @see #setBracketMatchingEnabled
@@ -2347,7 +2319,7 @@ System.out.println("close " + old.getFileFullPath());
 
 
     /**
-     * Returns whether or not the current line is highlighted.
+     * Returns whether the current line is highlighted.
      *
      * @return Whether or the current line is highlighted.
      * @see #setCurrentLineHighlightEnabled
@@ -2372,9 +2344,9 @@ System.out.println("close " + old.getFileFullPath());
 
 
     /**
-     * Returns whether or not the margin line is enabled.
+     * Returns whether the margin line is enabled.
      *
-     * @return Whether or not the margin line is enabled.
+     * @return Whether the margin line is enabled.
      * @see #setMarginLineEnabled
      */
     public boolean isMarginLineEnabled() {
@@ -2435,7 +2407,6 @@ System.out.println("close " + old.getFileFullPath());
      * the user chose NOT to create it, for example).
      */
     public boolean openFile(FileLocation loc, String charSet, boolean reuse) {
-
         // If the only document open is untitled and empty, remove
         // (and thus replace) replace it.
         if (getNumDocuments() == 1 &&
@@ -2469,6 +2440,7 @@ System.out.println("close " + old.getFileFullPath());
             try {
                 RTextEditorPane tempTextArea = createRTextEditorPane(loc, charSet);
                 addTextArea(tempTextArea);
+                filePositionHistory.restoreTextArea(tempTextArea);
             } catch (IOException ioe) {
                 handleAddTextFileIOException(loc, ioe, true);
                 ensureFilesAreOpened();
@@ -2532,7 +2504,7 @@ System.out.println("close " + old.getFileFullPath());
      * the user chose NOT to create it, for example).
      */
     public boolean openFile(String fileNameAndPath, String charSet, boolean reuse) {
-System.out.println("open " + fileNameAndPath);
+        openFileList.add(fileNameAndPath);
 // add file to open list
 // restore file position
         return openFile(FileLocation.create(fileNameAndPath), charSet, reuse);
@@ -2692,22 +2664,18 @@ System.out.println("open " + fileNameAndPath);
                         doneYet[j] = true;
                     }
                 }
+                String title;
                 if (count > 1) {
-                    String title = textArea.getFileName() + " (1)";
-                    if (textArea.isDirty())
-                        title = title + "*";
-                    setDocumentDisplayNameAt(i, title);
+                    title = textArea.getFileName() + " (1)";
                 } else {
-                    String title = textArea.getFileName();
-                    if (textArea.isDirty())
-                        title = title + "*";
-                    setDocumentDisplayNameAt(i, title);
+                    title = textArea.getFileName();
                 }
+                if (textArea.isDirty())
+                    title = title + "*";
+                setDocumentDisplayNameAt(i, title);
                 doneYet[i] = true;
             } // End of for (int i=0; i<numDocuments; i++).
-
         } // End of if (numDocuments>0).
-
     }
 
 
@@ -2792,7 +2760,6 @@ System.out.println("open " + fileNameAndPath);
      * @see #saveCurrentFileAs(FileLocation)
      */
     public synchronized boolean saveCurrentFile() {
-
         // If this file is named "Untitled.txt", prompt them for a new name.
         if (currentTextArea.getFileName().equals(owner.getNewFileName())) {
             return saveCurrentFileAs();
@@ -2825,7 +2792,6 @@ System.out.println("open " + fileNameAndPath);
      * @see #saveAllFiles()
      */
     public synchronized boolean saveCurrentFileAs() {
-
         // Ensures text area gets focus after save for saves that don't bring
         // up an extra window (Save As, etc.).  Without this, the text area
         // would lose focus.
@@ -2842,9 +2808,8 @@ System.out.println("open " + fileNameAndPath);
 
         int returnVal = chooser.showSaveDialog(owner);
 
-        // If they entered a new filename and clicked "OK", save the flie!
+        // If they entered a new filename and clicked "OK", save the file!
         if (returnVal == RTextFileChooser.APPROVE_OPTION) {
-
             File chosenFile = chooser.getSelectedFile();
             String chosenFileName = chosenFile.getName();
             String chosenFilePath = chosenFile.getAbsolutePath();
@@ -2876,10 +2841,9 @@ System.out.println("open " + fileNameAndPath);
             }
 
             // If the file already exists, prompt them to see whether
-            // or not they want to overwrite it.
+            // they want to overwrite it.
             if (chosenFile.exists()) {
-                String temp = owner.getString("FileAlreadyExists",
-                        chosenFile.getName());
+                String temp = owner.getString("FileAlreadyExists", chosenFile.getName());
                 if (JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(
                         this, temp, owner.getString("ConfDialogTitle"),
                         JOptionPane.YES_NO_OPTION)) {
@@ -2899,7 +2863,6 @@ System.out.println("open " + fileNameAndPath);
 
         // If they cancel the save...
         return false;
-
     }
 
 
@@ -2913,7 +2876,6 @@ System.out.println("open " + fileNameAndPath);
      * if an IO error occurs.
      */
     public synchronized boolean saveCurrentFileAs(FileLocation loc) {
-
         // Try and write output to the current filename.
         try {
             currentTextArea.saveAs(loc);
@@ -2932,8 +2894,7 @@ System.out.println("open " + fileNameAndPath);
         // .c => .cpp, etc.).
         String newStyle = getSyntaxStyleForFile(loc.getFileName());
         setSyntaxStyle(currentTextArea, newStyle);
-        setCodeFoldingEnabledForTextArea(currentTextArea,
-                isCodeFoldingEnabledFor(newStyle));
+        setCodeFoldingEnabledForTextArea(currentTextArea, isCodeFoldingEnabledFor(newStyle));
 
         // If they had the same file opened twice (i.e., the "foo (1)"
         // and "foo (2)"), and did "Save As..." on one of them, the other
@@ -2941,19 +2902,16 @@ System.out.println("open " + fileNameAndPath);
         renumberDisplayNames();
 
         return true;
-
     }
 
 
     /**
-     * Called when a search event is received from the Find/Replace dialogs or
-     * tool bars.
+     * Called when a search event is received from the Find/Replace dialogs or toolbars.
      *
      * @param e The search event.
      */
     @Override
     public void searchEvent(SearchEvent e) {
-
         SearchContext context = e.getSearchContext();
 
         switch (e.getType()) {
@@ -2962,16 +2920,13 @@ System.out.println("open " + fileNameAndPath);
                 SearchEngine.markAll(textArea, context);
                 break;
             case FIND:
-                ((AbstractSearchAction) owner.getAction(RText.FIND_NEXT_ACTION)).
-                        actionPerformed(context);
+                ((AbstractSearchAction) owner.getAction(RText.FIND_NEXT_ACTION)).actionPerformed(context);
                 break;
             case REPLACE:
-                ((AbstractSearchAction) owner.getAction(RText.REPLACE_NEXT_ACTION)).
-                        actionPerformed(context);
+                ((AbstractSearchAction) owner.getAction(RText.REPLACE_NEXT_ACTION)).actionPerformed(context);
                 break;
             case REPLACE_ALL:
-                ((AbstractSearchAction) owner.getAction(RText.REPLACE_ALL_ACTION)).
-                        actionPerformed(context);
+                ((AbstractSearchAction) owner.getAction(RText.REPLACE_ALL_ACTION)).actionPerformed(context);
                 break;
         }
     }
@@ -3007,8 +2962,7 @@ System.out.println("open " + fileNameAndPath);
             this.armedFoldBackground = armedFoldBackground;
             for (int i = 0; i < getNumDocuments(); i++) {
                 RTextScrollPane scrollPane = getRTextScrollPaneAt(i);
-                scrollPane.getGutter().
-                        setArmedFoldBackground(armedFoldBackground);
+                scrollPane.getGutter().setArmedFoldBackground(armedFoldBackground);
             }
         }
     }
@@ -3029,8 +2983,7 @@ System.out.println("open " + fileNameAndPath);
                 RTextEditorPane textArea = getRTextEditorPaneAt(i);
                 textArea.setCloseCurlyBraces(autoInsert);
             }
-            firePropertyChange(AUTO_INSERT_CLOSING_CURLYS,
-                    !autoInsert, autoInsert);
+            firePropertyChange(AUTO_INSERT_CLOSING_CURLYS, !autoInsert, autoInsert);
         }
     }
 
@@ -3086,8 +3039,7 @@ System.out.println("open " + fileNameAndPath);
         if (newBackground instanceof Color) {
             backgroundObject = newBackground;
         } else if (newBackground instanceof Image) {
-            backgroundObject = UIUtil.getTranslucentImage(owner,
-                    (Image) newBackground, imageAlpha);
+            backgroundObject = UIUtil.getTranslucentImage(owner, (Image) newBackground, imageAlpha);
         }
 
         // If they didn't pass in a valid type...
@@ -3134,9 +3086,9 @@ System.out.println("open " + fileNameAndPath);
 
 
     /**
-     * Sets whether or not bracket matching is enabled.
+     * Sets whether bracket matching is enabled.
      *
-     * @param enabled Whether or not bracket matching should be enabled.
+     * @param enabled Whether bracket matching should be enabled.
      * @see #isBracketMatchingEnabled
      */
     public void setBracketMatchingEnabled(boolean enabled) {
@@ -3272,9 +3224,9 @@ System.out.println("open " + fileNameAndPath);
 
 
     /**
-     * Sets whether or not the current line is highlighted.
+     * Sets whether the current line is highlighted.
      *
-     * @param enabled Whether or not to highlight the current line.
+     * @param enabled Whether to highlight the current line.
      * @see #isCurrentLineHighlightEnabled
      * @see #getCurrentLineHighlightColor
      * @see #setCurrentLineHighlightColor
@@ -3458,8 +3410,7 @@ System.out.println("open " + fileNameAndPath);
      * Sets whether this panel will highlight modified documents' display
      * names with a different color.
      *
-     * @param highlight Whether or not to highlight modified documents' display
-     *                  names.
+     * @param highlight Whether to highlight modified documents' display names.
      * @see #highlightModifiedDocumentDisplayNames
      * @see #getModifiedDocumentDisplayNamesColor
      * @see #setModifiedDocumentDisplayNamesColor
@@ -3619,7 +3570,7 @@ System.out.println("open " + fileNameAndPath);
     /**
      * Enables/disables the line numbers for the open documents.
      *
-     * @param enabled Whether or not line numbers should be enabled.
+     * @param enabled Whether line numbers should be enabled.
      */
     public void setLineNumbersEnabled(boolean enabled) {
         if (enabled != lineNumbersEnabled) {
@@ -3649,7 +3600,7 @@ System.out.println("open " + fileNameAndPath);
     /**
      * Enables/disables word wrap of the open documents.
      *
-     * @param enabled Whether or not word wrap should be enabled.
+     * @param enabled Whether word wrap should be enabled.
      */
     public void setLineWrap(boolean enabled) {
         if (enabled != lineWrapEnabled) {
@@ -3677,10 +3628,10 @@ System.out.println("open " + fileNameAndPath);
 
 
     /**
-     * Sets whether or not the margin line is enabled in all text areas.  If
+     * Sets whether the margin line is enabled in all text areas.  If
      * this value is the same as the current value, nothing happens.
      *
-     * @param enabled Whether or not the margin line should be enabled.
+     * @param enabled Whether the margin line should be enabled.
      * @see #isMarginLineEnabled
      */
     public void setMarginLineEnabled(boolean enabled) {
@@ -4114,7 +4065,6 @@ System.out.println("open " + fileNameAndPath);
      * @param style The style for the text area.
      */
     private void setSyntaxStyle(RTextEditorPane pane, String style) {
-
         // Ignore extensions that mean "this is a backup", but don't
         // denote the actual file type.
         String fileName = pane.getFileName().toLowerCase();
@@ -4137,15 +4087,14 @@ System.out.println("open " + fileNameAndPath);
         // If the syntax style changed, what text is a "comment" also changed,
         // so we need to re-do the spell check.
         spellingSupport.forceSpellCheck(pane);
-
     }
 
 
     /**
-     * Changes whether or not tabs should be emulated with spaces (i.e., soft
+     * Changes whether tabs should be emulated with spaces (i.e., soft
      * tabs).
      *
-     * @param areEmulated Whether or not tabs should be emulated with spaces.
+     * @param areEmulated Whether tabs should be emulated with spaces.
      */
     public void setTabsEmulated(boolean areEmulated) {
         if (areEmulated != emulateTabsWithWhitespace) {
@@ -4191,9 +4140,7 @@ System.out.println("open " + fileNameAndPath);
             tabSize = newSize;
             for (int i = 0; i < getNumDocuments(); i++)
                 getRTextEditorPaneAt(i).setTabSize(newSize);
-
         }
-
     }
 
 
@@ -4206,7 +4153,6 @@ System.out.println("open " + fileNameAndPath);
      * @see #getTextAreaUnderline()
      */
     public void setTextAreaFont(Font font, boolean underline) {
-
         if (font == null) {
             font = RTextEditorPane.getDefaultFont();
         }
@@ -4223,7 +4169,6 @@ System.out.println("open " + fileNameAndPath);
         // Always set our values so text areas created later have them.
         textAreaFont = font;
         textAreaUnderline = underline;
-
     }
 
 
@@ -4255,8 +4200,7 @@ System.out.println("open " + fileNameAndPath);
         if (o == null) {
             o = ComponentOrientation.LEFT_TO_RIGHT;
         }
-        if (textAreaOrientation == null ||
-                o.isLeftToRight() != textAreaOrientation.isLeftToRight()) {
+        if (textAreaOrientation == null || o.isLeftToRight() != textAreaOrientation.isLeftToRight()) {
             textAreaOrientation = o;
             int count = getNumDocuments();
             for (int i = 0; i < count; i++) {
@@ -4284,7 +4228,6 @@ System.out.println("open " + fileNameAndPath);
         for (int i = 0; i < getNumDocuments(); i++) {
             getRTextEditorPaneAt(i).setTextMode(mode);
         }
-
     }
 
 
@@ -4335,7 +4278,6 @@ System.out.println("open " + fileNameAndPath);
 
 
     private void updateBookmarkIcon() {
-
         bookmarkIcon = owner.getIconGroup().getIcon("bookmark");
 
         for (int i = 0; i < getNumDocuments(); i++) {
@@ -4351,7 +4293,6 @@ System.out.println("open " + fileNameAndPath);
      * changed while <code>RText</code> is running.
      */
     public void updateLookAndFeel() {
-
         searchManager.updateUI();
 
         // Update the GoTo dialog, if it has been created yet.
@@ -4378,7 +4319,6 @@ System.out.println("open " + fileNameAndPath);
             getRTextEditorPaneAt(i).setBackgroundObject(backgroundObject);
         if (currentTextArea != null)
             currentTextArea.repaint();
-
     }
 
 
@@ -4397,5 +4337,25 @@ System.out.println("open " + fileNameAndPath);
         }
     }
 
+    private static String getOpenFilesListConfigPath() {
+        return new File(RTextUtilities.getPreferencesDirectory(),"files.list").getAbsolutePath();
+    }
 
+    private static String getFilesPositionHistoryConfigPath() {
+        return new File(RTextUtilities.getPreferencesDirectory(),"files.history").getAbsolutePath();
+    }
+
+    public void saveState() {
+        openFileList.save(getOpenFilesListConfigPath());
+        for (int i = 0; i < getNumDocuments(); i++) {
+            filePositionHistory.saveTextArea(getRTextEditorPaneAt(i), getRTextScrollPaneAt(i));
+        }
+        filePositionHistory.save(getFilesPositionHistoryConfigPath());
+    }
+
+    public void restoreOpenedFiles() {
+        openFileList.load(getOpenFilesListConfigPath());
+        filePositionHistory.load(getFilesPositionHistoryConfigPath());
+        openFileList.forEach((name) -> openFile(name, null)); // TODO !!!
+    }
 }

@@ -27,8 +27,7 @@ import java.security.AccessControlException;
 public class SvgIconGroup extends AbstractIconGroup {
 
 
-	public SvgIconGroup(AbstractGUIApplication<?> owner, String name, String path,
-						String nativePath) {
+	public SvgIconGroup(AbstractGUIApplication<?> owner, String name, String path, String nativePath) {
 		super(name, path, nativePath, "svg");
 	}
 

@@ -308,7 +308,6 @@ public class Workspace implements ModelEntity {
 				}
 
 				parent.addEntry(entry);
-
 			}
 
 		}
@@ -337,7 +336,6 @@ public class Workspace implements ModelEntity {
 
 
 	private void saveImpl(File loc) throws IOException {
-
 		// Sanity check, folders may be deleted out from under us
 		File parentDir = loc.getParentFile();
 		if (!parentDir.exists()) {

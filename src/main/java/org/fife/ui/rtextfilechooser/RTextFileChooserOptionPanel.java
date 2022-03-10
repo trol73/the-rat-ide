@@ -372,8 +372,7 @@ public class RTextFileChooserOptionPanel extends OptionsDialogPanel
 	@Override
 	protected void setValuesImpl(Frame owner) {
 		if (!(owner instanceof FileChooserOwner)) {
-			throw new IllegalArgumentException(
-									"owner must be a FileChooserOwner");
+			throw new IllegalArgumentException("owner must be a FileChooserOwner");
 		}
 		FileChooserOwner fco = (FileChooserOwner)owner;
 		initialize(fco.getFileChooser());

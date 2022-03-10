@@ -32,19 +32,16 @@ public class NewFileOrFolderDialog extends AbstractEnterFileNameDialog {
 	private JCheckBox openOnCreateCB;
 
 
-	public NewFileOrFolderDialog(RText parent, boolean directory,
-			NameChecker nameChecker) {
+	public NewFileOrFolderDialog(RText parent, boolean directory, NameChecker nameChecker) {
 		super(parent, directory, nameChecker);
-		String key = "NewFileOrFolderDialog.Title." +
-					(directory ? "Folder" : "File");
+		String key = "NewFileOrFolderDialog.Title." + (directory ? "Folder" : "File");
 		setTitle(Messages.getString(key));
 	}
 
 
 	@Override
 	protected void addDescPanel() {
-		String header = "NewFileOrFolderDialog.Header." +
-				(isForFile ? "File" : "Folder");
+		String header = "NewFileOrFolderDialog.Header." + (isForFile ? "File" : "Folder");
 		String descText = Messages.getString(header);
 		Icon icon = getDescPanelIcon();
 		setDescription(icon, descText);
@@ -57,7 +54,6 @@ public class NewFileOrFolderDialog extends AbstractEnterFileNameDialog {
 	 */
 	@Override
 	protected Container createExtraContent() {
-
 		Container previousContent = super.createExtraContent();
 		if (!isForFile) {
 			return previousContent;

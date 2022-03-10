@@ -214,7 +214,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
 
     /**
-     * Returns whether or not tabs are emulated with spaces (i.e. "soft" tabs).
+     * Returns whether tabs are emulated with spaces (i.e. "soft" tabs).
      * This simply calls <code>mainView.areTabsEmulated</code>.
      *
      * @return <code>true</code> if tabs are emulated with spaces;
@@ -410,19 +410,18 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     /**
      * Called when the user attempts to close the application, whether from
      * an "Exit" menu item, closing the main application window, or any other
-     * means.  The user is prompted to save any dirty documents, and this
+     * means. The user is prompted to save any dirty documents, and this
      * RText instance is closed.
      */
     @Override
     public void doExit() {
-
+        getMainView().saveState();
         // Attempt to close all open documents.
         boolean allDocumentsClosed = getMainView().closeAllDocuments();
 
         // Assuming all documents closed okay (ie, the user
         // didn't click "Cancel")...
         if (allDocumentsClosed) {
-
             // If there will be no more rtext's running, stop the JVM.
             if (StoreKeeper.getInstanceCount() == 1) {
                 savePreferences();
@@ -430,8 +429,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
                 if (!saved) {
                     String title = getString("ErrorDialogTitle");
                     String text = getString("TemplateSaveError");
-                    JOptionPane.showMessageDialog(this, text, title,
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, text, title, JOptionPane.ERROR_MESSAGE);
                 }
                 // Save file chooser "Favorite Directories".  It is
                 // important to check that the chooser exists here, as
@@ -445,16 +443,13 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
                 System.exit(0);
             }
 
-            // If there will still be some RText instances running, just
-            // stop this instance.
+            // If there will still be some RText instances running, just stop this instance.
             else {
                 setVisible(false);
                 StoreKeeper.removeRTextInstance(this);
                 this.dispose();
             }
-
         }
-
     }
 
 
@@ -485,7 +480,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     @Override
     public OptionsDialog getOptionsDialog() {
-
         int pluginCount = getPlugins().length;
 
         // Check plugin count and re-create dialog if it has changed.  This
@@ -493,13 +487,11 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         // all plugins have loaded.  A real solution is to have some sort of
         // options manager that plugins can add options panels to.
         if (optionsDialog == null || pluginCount != lastPluginCount) {
-            optionsDialog = new org.fife.rtext.optionsdialog.
-                    OptionsDialog(this);
+            optionsDialog = new org.fife.rtext.optionsdialog.OptionsDialog(this);
             optionsDialog.setLocationRelativeTo(this);
         }
 
         return optionsDialog;
-
     }
 
 
@@ -550,6 +542,10 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      */
     @Override
     public HelpDialog getHelpDialog() {
+DockableWindowPanel dwp = (DockableWindowPanel) mainContentPanel;
+for (var w : dwp.getDockableWindows()) {
+    System.out.println("::" + w);
+}
         // Create the help dialog if it hasn't already been.
         if (helpDialog == null) {
             String contentsPath = getInstallLocation() + "/doc/";
@@ -682,8 +678,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      * @return The shortcuts file.
      */
     private static File getShortcutsFile() {
-        return new File(RTextUtilities.getPreferencesDirectory(),
-                "shortcuts.properties");
+        return new File(RTextUtilities.getPreferencesDirectory(),"shortcuts.properties");
     }
 
 
@@ -804,6 +799,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      */
     private void init(String[] filesToOpen) {
         lastPluginCount = -1;
+        getMainView().restoreOpenedFiles();
         openFiles(filesToOpen);
     }
 
@@ -814,7 +810,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      * @param prefs The preferences for the application.
      */
     private void initRecentFileManager(RTextPrefs prefs) {
-
         String fileHistoryStr = prefs.fileHistoryString;
         java.util.List<String> recentFiles = new ArrayList<>();
         if (fileHistoryStr != null && fileHistoryStr.length() > 0) {
@@ -1150,7 +1145,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      * Saves the user's preferences.
      */
     public void savePreferences() {
-
         // Save preferences for RText itself.
         super.savePreferences();
         saveActionShortcuts(getShortcutsFile());
@@ -1164,7 +1158,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         // Save the file chooser's properties, if it has been instantiated.
         if (chooser != null)
             chooser.savePreferences();
-
     }
 
 
@@ -1300,7 +1293,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     /**
      * Enables or disables the row/column indicator in the status bar.
      *
-     * @param isVisible Whether or not the row/column indicator should be
+     * @param isVisible Whether the row/column indicator should be
      *                  visible.
      */
     public void setRowColumnIndicatorVisible(boolean isVisible) {
@@ -1326,7 +1319,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     /**
      * Sets whether the read-only indicator in the status bar is enabled.
      *
-     * @param enabled Whether or not the read-only indicator is enabled.
+     * @param enabled Whether the read-only indicator is enabled.
      */
     public void setStatusBarReadOnlyIndicatorEnabled(boolean enabled) {
         ((StatusBar) getStatusBar()).setReadOnlyIndicatorEnabled(enabled);
@@ -1354,11 +1347,10 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
 
     /**
-     * Changes whether or not tabs should be emulated with spaces
-     * (i.e., soft tabs).
+     * Changes whether tabs should be emulated with spaces (i.e., soft tabs).
      * This simply calls <code>mainView.setTabsEmulated</code>.
      *
-     * @param areEmulated Whether or not tabs should be emulated with spaces.
+     * @param areEmulated Whether tabs should be emulated with spaces.
      */
     public void setTabsEmulated(boolean areEmulated) {
         mainView.setTabsEmulated(areEmulated);
@@ -1398,8 +1390,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      * Sets the opacity with which to render unfocused child windows, if this
      * option is enabled.
      *
-     * @param opacity The opacity.  This should be between <code>0</code> and
-     *                <code>1</code>.
+     * @param opacity The opacity. This should be between <code>0</code> and <code>1</code>.
      * @see #getSearchWindowOpacity()
      * @see #setSearchWindowOpacityRule(int)
      */
@@ -1423,8 +1414,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
             // Toggled either on or off
             // Must check searchWindowOpacityListener since in pre 6u10,
             // we'll be inited, but listener isn't created.
-            if (windowListenersInited &&
-                    searchWindowOpacityListener != null) {
+            if (windowListenersInited && searchWindowOpacityListener != null) {
                 searchWindowOpacityListener.refreshTranslucencies();
             }
         }
@@ -1473,7 +1463,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     @Override
     protected void setThemeAdditionalProperties(AppTheme theme) {
-
         if (iconGroupMap != null) {
             setIconGroupByName((String) theme.getExtraUiDefaults().get("rtext.iconGroupName"));
         }
@@ -1513,7 +1502,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     @Override
     protected void updateIconsForNewIconGroup(IconGroup iconGroup) {
-
         super.updateIconsForNewIconGroup(iconGroup);
 
         Dimension size = getSize();
@@ -1581,11 +1569,9 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     @Override
     public void updateLookAndFeel(LookAndFeel lnf) {
-
         super.updateLookAndFeel(lnf);
 
         try {
-
             Dimension size = this.getSize();
 
             // Update all components in this frame.

@@ -53,7 +53,6 @@ class ConsoleWindow extends DockableWindow implements PropertyChangeListener {
 
 
 	ConsoleWindow(RText app, Plugin plugin) {
-
 		setDockableWindowName(plugin.getString("DockableWindow.Title"));
 		setIcon(plugin.getPluginIcon());
 		setPosition(DockableWindowConstants.BOTTOM);
@@ -68,8 +67,7 @@ class ConsoleWindow extends DockableWindow implements PropertyChangeListener {
 
 		shellTextArea = new SystemShellTextArea(plugin);
 		setPrimaryComponent(shellTextArea);
-		shellTextArea.addPropertyChangeListener(
-							ConsoleTextArea.PROPERTY_PROCESS_RUNNING, this);
+		shellTextArea.addPropertyChangeListener(ConsoleTextArea.PROPERTY_PROCESS_RUNNING, this);
 		RScrollPane sp = new RScrollPane(shellTextArea);
 		UIUtil.removeTabbedPaneFocusTraversalKeyBindings(sp);
 		mainPanel.add(sp, "System");

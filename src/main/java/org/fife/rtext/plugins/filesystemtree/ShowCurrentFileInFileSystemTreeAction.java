@@ -19,27 +19,24 @@ import java.util.ResourceBundle;
  */
 class ShowCurrentFileInFileSystemTreeAction extends AppAction<RText> {
 
-	private final FileSystemTreePlugin plugin;
+    private final FileSystemTreePlugin plugin;
 
-	ShowCurrentFileInFileSystemTreeAction(RText app,
-				 	FileSystemTreePlugin plugin, ResourceBundle msg) {
-		super(app, msg, "Action.SelectCurrentFile");
-		this.plugin = plugin;
-	}
+    ShowCurrentFileInFileSystemTreeAction(RText app, FileSystemTreePlugin plugin, ResourceBundle msg) {
+        super(app, msg, "Action.SelectCurrentFile");
+        this.plugin = plugin;
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        RText rtext = getApplication();
 
-		RText rtext = getApplication();
+        RTextEditorPane textArea = rtext.getMainView().getCurrentTextArea();
+        File file = new File(textArea.getFileFullPath());
 
-		RTextEditorPane textArea = rtext.getMainView().getCurrentTextArea();
-		File file = new File(textArea.getFileFullPath());
-
-		if (file.isFile()) {
-			plugin.selectInFileChooser(file);
-		}
-		else {
-			UIManager.getLookAndFeel().provideErrorFeedback(rtext);
-		}
-	}
+        if (file.isFile()) {
+            plugin.selectInFileChooser(file);
+        } else {
+            UIManager.getLookAndFeel().provideErrorFeedback(rtext);
+        }
+    }
 }
