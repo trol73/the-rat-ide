@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="lnfs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/main/dist/lnfs/darcula.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/main/dist/lnfs/OfficeLnFs.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -34,7 +34,7 @@ public class HelpTreeNode {
 	/**
 	 * The text of the node.
 	 */
-	private String title;
+	private final String title;
 
 	/**
 	 * The font of the node.  If this is {@code null} then the default font

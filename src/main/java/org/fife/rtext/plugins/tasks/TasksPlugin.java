@@ -25,7 +25,7 @@ import org.fife.rtext.RText;
 import org.fife.rtext.RTextEditorPane;
 import org.fife.rtext.RTextMenuBar;
 import org.fife.rtext.RTextUtilities;
-import org.fife.ui.ImageTranscodingUtil;
+import org.fife.ui.utils.ImageTranscodingUtil;
 import org.fife.ui.app.GUIPlugin;
 import org.fife.ui.app.MenuBar;
 import org.fife.ui.app.PluginOptionsDialogPanel;

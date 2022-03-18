@@ -31,8 +31,8 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.fife.ui.LabelValueComboBox;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.LabelValueComboBox;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.PluginOptionsDialogPanel;
 
 

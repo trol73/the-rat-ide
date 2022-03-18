@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 import org.fife.io.ProcessRunner;
 import org.fife.rtext.RTextEditorPane;
 import org.fife.rtext.plugins.langsupport.Plugin;
-import org.fife.ui.GUIWorkerThread;
+import org.fife.ui.utils.GUIWorkerThread;
 
 
 /**

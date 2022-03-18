@@ -81,7 +81,7 @@ public class Plugin extends GUIPlugin<RText> {
 	/**
 	 * The resource bundle used across this plugin.
 	 */
-	static final ResourceBundle MSG = ResourceBundle.getBundle(MSG_BUNDLE);
+	public static final ResourceBundle MSG = ResourceBundle.getBundle(MSG_BUNDLE);
 
 
 	/**
@@ -99,7 +99,6 @@ public class Plugin extends GUIPlugin<RText> {
 	 * Adds plugin-specific actions to RText's menu bar.
 	 */
 	private void addActionsToMenus() {
-
 		RText rtext = getApplication();
 		RTextMenuBar mb = (RTextMenuBar)rtext.getJMenuBar();
 

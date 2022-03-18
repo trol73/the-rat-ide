@@ -22,10 +22,10 @@ import javax.swing.text.BadLocationException;
 
 import org.fife.jgoodies.looks.common.ShadowPopupBorder;
 import org.fife.jgoodies.looks.common.ShadowPopupFactory;
-import org.fife.rsta.ui.DecorativeIconPanel;
-import org.fife.ui.OS;
-import org.fife.ui.UIUtil;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.widgets.DecorativeIconPanel;
+import org.fife.ui.utils.OS;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.app.AppTheme;
 import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.rsyntaxtextarea.CodeTemplateManager;

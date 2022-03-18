@@ -169,8 +169,7 @@ public class RTextAppContext extends AppContext<RText, RTextPrefs> {
 		prefs.dropShadowsInEditor		= RTextUtilities.getDropShadowsEnabledInEditor();
 		prefs.codeFoldingEnabledFor		= mainView.getCodeFoldingEnabledForString();
 
-		prefs.useSearchDialogs			= mainView.getSearchManager().
-			getSearchingMode()== SearchManager.SearchingMode.DIALOGS;
+		prefs.useSearchDialogs			= mainView.getSearchManager().getSearchingMode() == SearchManager.SearchingMode.DIALOGS;
 
 	}
 }

@@ -34,8 +34,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
-import org.fife.ui.RScrollPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.RScrollPane;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

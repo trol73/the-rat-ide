@@ -25,62 +25,60 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  */
 public class CLanguageSupport extends AbstractLanguageSupport {
 
-	/**
-	 * The completion provider, shared amongst all text areas editing C.
-	 */
-	private CCompletionProvider provider;
+    /**
+     * The completion provider, shared amongst all text areas editing C.
+     */
+    private CCompletionProvider provider;
 
 
-	/**
-	 * Constructor.
-	 */
-	public CLanguageSupport() {
-		setParameterAssistanceEnabled(true);
-		setShowDescWindow(true);
-	}
+    /**
+     * Constructor.
+     */
+    public CLanguageSupport() {
+        setParameterAssistanceEnabled(true);
+        setShowDescWindow(true);
+    }
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected ListCellRenderer<Object> createDefaultCompletionCellRenderer() {
-		return new CCellRenderer();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ListCellRenderer<Object> createDefaultCompletionCellRenderer() {
+        return new CCellRenderer();
+    }
 
 
-	private CCompletionProvider getProvider() {
-		if (provider==null) {
-			provider = new CCompletionProvider();
-		}
-		return provider;
-	}
+    private CCompletionProvider getProvider() {
+        if (provider == null) {
+            provider = new CCompletionProvider();
+        }
+        return provider;
+    }
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void install(RSyntaxTextArea textArea) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void install(RSyntaxTextArea textArea) {
+        CCompletionProvider provider = getProvider();
+        AutoCompletion ac = createAutoCompletion(provider);
+        ac.install(textArea);
+        installImpl(textArea, ac);
 
-		CCompletionProvider provider = getProvider();
-		AutoCompletion ac = createAutoCompletion(provider);
-		ac.install(textArea);
-		installImpl(textArea, ac);
-
-		textArea.setToolTipSupplier(provider);
-
-	}
+        textArea.setToolTipSupplier(provider);
+    }
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void uninstall(RSyntaxTextArea textArea) {
-		uninstallImpl(textArea);
-		textArea.setToolTipSupplier(null);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void uninstall(RSyntaxTextArea textArea) {
+        uninstallImpl(textArea);
+        textArea.setToolTipSupplier(null);
+    }
 
 
 }

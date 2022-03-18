@@ -23,6 +23,8 @@ import org.fife.rtext.plugins.project.ProjectPlugin;
 import org.fife.rtext.plugins.project.RenameDialog;
 import org.fife.rtext.plugins.project.model.Project;
 import org.fife.rtext.plugins.project.model.Workspace;
+import org.fife.rtext.plugins.project.tree.checkers.ProjectNameChecker;
+import ru.trolsoft.ide.dialogs.ProjectSettingsDialog;
 
 
 /**
@@ -70,7 +72,7 @@ class ProjectTreeNode extends AbstractWorkspaceTreeNode {
         actions.add(null);
         actions.add(new RenameAction());
         actions.add(null);
-        actions.add(new PropertiesAction(false));
+        actions.add(new PropertiesAction(true));
         return actions;
     }
 
@@ -107,7 +109,8 @@ class ProjectTreeNode extends AbstractWorkspaceTreeNode {
 
     @Override
     protected void handleProperties() {
-        // Do nothing
+        RText rtext = plugin.getApplication();
+        new ProjectSettingsDialog(rtext, project, false).setVisible(true);
     }
 
 
@@ -115,8 +118,7 @@ class ProjectTreeNode extends AbstractWorkspaceTreeNode {
     protected void handleRename() {
         RText rtext = plugin.getApplication();
         String type = Messages.getString("ProjectPlugin.Project");
-        RenameDialog dialog = new RenameDialog(rtext, false, type,
-                new ProjectNameChecker(project.getWorkspace()));
+        RenameDialog dialog = new RenameDialog(rtext, false, type, new ProjectNameChecker(project.getWorkspace()));
         dialog.setFileName(project.getName());
         dialog.setVisible(true);
         String newName = dialog.getFileName();
@@ -138,32 +140,6 @@ class ProjectTreeNode extends AbstractWorkspaceTreeNode {
     public boolean moveProjectEntityUp(boolean toTop) {
         Workspace workspace = project.getWorkspace();
         return workspace.moveProjectUp(project, toTop);
-    }
-
-
-    /**
-     * Ensures that proposed project names are valid.
-     */
-    public static class ProjectNameChecker implements NameChecker {
-
-        private final Workspace workspace;
-
-        ProjectNameChecker(Workspace workspace) {
-            this.workspace = workspace;
-        }
-
-        @Override
-        public String isValid(String text) {
-            int length = text.length();
-            if (length == 0) {
-                return "empty";
-            }
-            if (workspace.containsProjectNamed(text)) {
-                return "projectAlreadyExists";
-            }
-            return null;
-        }
-
     }
 
 

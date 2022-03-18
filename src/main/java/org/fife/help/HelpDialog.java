@@ -43,13 +43,13 @@ import javax.xml.parsers.*;
 
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
-import org.fife.ui.CleanSplitPaneUI;
+import org.fife.ui.widgets.CleanSplitPaneUI;
 import org.fife.ui.RListSelectionModel;
-import org.fife.ui.RScrollPane;
+import org.fife.ui.widgets.RScrollPane;
 import org.fife.ui.RTreeSelectionModel;
 import org.fife.ui.StatusBar;
-import org.fife.ui.UIUtil;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.app.GUIApplication;
 
 

@@ -19,6 +19,7 @@ import javax.swing.*;
 
 import org.fife.print.RPrintUtilities;
 import org.fife.rtext.plugins.filesystemtree.FileSystemTreePlugin;
+import org.fife.rtext.plugins.project.model.Workspace;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
 import org.fife.ui.rsyntaxtextarea.TextEditorPane;
 import org.fife.ui.rtextarea.RTATextTransferHandler;
@@ -97,18 +98,22 @@ public class RTextEditorPane extends TextEditorPane {
 
         @Override
         public boolean canImport(JComponent c, DataFlavor[] flavors) {
-            return MainPanelTransferHandler.hasFileFlavor(flavors) ||
-                    super.canImport(c, flavors);
+            return MainPanelTransferHandler.hasFileFlavor(flavors) || super.canImport(c, flavors);
         }
 
         @Override
         public boolean importData(JComponent c, Transferable t) {
-            return MainPanelTransferHandler.
-                    importDataImpl(rtext.getMainView(), c, t) ||
-                    super.importData(c, t);
+            return MainPanelTransferHandler.importDataImpl(rtext.getMainView(), c, t) || super.importData(c, t);
         }
 
     }
 
-
+    @Override
+    public void save() throws IOException {
+        super.save();
+        Workspace workspace = rtext.getWorkspace();
+        if (workspace != null && getFileFullPath().equals(workspace.getFileFullPath())) {
+            rtext.getProjectPlugin().reloadWorkspace();
+        }
+    }
 }

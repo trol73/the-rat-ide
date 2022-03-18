@@ -11,6 +11,8 @@
  */
 package org.fife.ui;
 
+import org.fife.ui.utils.WebLookAndFeelUtils;
+
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;

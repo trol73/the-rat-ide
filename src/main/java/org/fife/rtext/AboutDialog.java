@@ -26,6 +26,10 @@ import javax.swing.event.HyperlinkListener;
 import org.fife.ui.*;
 import org.fife.ui.rtextarea.RTextArea;
 import org.fife.ui.rtextfilechooser.Utilities;
+import org.fife.ui.utils.ImageTranscodingUtil;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.widgets.RScrollPane;
+import org.fife.ui.widgets.SelectableLabel;
 
 class AboutDialog extends EscapableDialog {
 

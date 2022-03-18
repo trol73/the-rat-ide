@@ -21,9 +21,9 @@ import javax.swing.*;
 
 import org.fife.rtext.AbstractMainView;
 import org.fife.rtext.RText;
-import org.fife.ui.FontSelector;
-import org.fife.ui.OptionsDialogPanel;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.FontSelector;
+import org.fife.ui.options.OptionsDialogPanel;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

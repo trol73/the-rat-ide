@@ -17,8 +17,8 @@ import java.util.prefs.Preferences;
 
 
 /**
- * Preferences for the file chooser.  These are stored via the Java Preferences
- * API so they are remembered between application invocations.
+ * Preferences for the file chooser.  These are stored via the Java Preferences API,
+ * so they are remembered between application invocations.
  *
  * @author Robert Futrell
  * @version 0.7

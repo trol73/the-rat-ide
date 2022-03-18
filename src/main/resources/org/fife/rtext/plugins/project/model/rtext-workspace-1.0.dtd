@@ -7,7 +7,11 @@
 <!ELEMENT logical-folder (file|folder|logical-folder)*>
 
 <!ATTLIST project
-      name            CDATA  #REQUIRED>
+      name            CDATA  #REQUIRED
+      type            CDATA  #REQUIRED
+      device          CDATA  #IMPLIED
+      encoding        CDATA  #IMPLIED
+      mainfile        CDATA  #IMPLIED>
 <!ATTLIST file
       path            CDATA  #REQUIRED>
 <!ATTLIST folder

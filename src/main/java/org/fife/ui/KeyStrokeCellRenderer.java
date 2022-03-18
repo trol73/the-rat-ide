@@ -16,6 +16,8 @@ import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import org.fife.ui.options.SubstanceKeyStrokeCellRenderer;
+import org.fife.ui.utils.UIUtil;
 import org.fife.util.SubstanceUtil;
 
 
@@ -36,8 +38,7 @@ public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 	 * @param table The parent table.
 	 * @param ks The keystroke to display.
 	 */
-	public static void configure(DefaultTableCellRenderer renderer,
-			JTable table, KeyStroke ks) {
+	public static void configure(DefaultTableCellRenderer renderer, JTable table, KeyStroke ks) {
 		renderer.setText(UIUtil.getPrettyStringFor(ks));
 		renderer.setComponentOrientation(table.getComponentOrientation());
 	}
@@ -60,11 +61,9 @@ public class KeyStrokeCellRenderer extends DefaultTableCellRenderer {
 
 
 	@Override
-	public Component getTableCellRendererComponent(JTable table,
-							Object value, boolean selected, boolean focused,
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
 							int row, int column) {
-		super.getTableCellRendererComponent(table, value, selected,
-											focused, row, column);
+		super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 		configure(this, table, (KeyStroke)value);
 		return this;
 	}

@@ -22,7 +22,7 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

@@ -29,7 +29,7 @@ import javax.swing.JMenuItem;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextMenuBar;
 import org.fife.rtext.RTextUtilities;
-import org.fife.ui.ImageTranscodingUtil;
+import org.fife.ui.utils.ImageTranscodingUtil;
 import org.fife.ui.app.*;
 import org.fife.ui.app.MenuBar;
 import org.fife.ui.app.icons.IconGroup;

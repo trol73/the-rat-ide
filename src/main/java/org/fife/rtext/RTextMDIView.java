@@ -83,9 +83,7 @@ class RTextMDIView extends AbstractMainView implements InternalFrameListener {
      * @param fileFullPath The full path to the document being added.
      */
     @Override
-    protected void addTextAreaImpl(String title, Component component,
-                                   String fileFullPath) {
-
+    protected void addTextAreaImpl(String title, Component component, String fileFullPath) {
         JPanel temp = new JPanel(new BorderLayout());
         temp.add(component);
         RTextScrollPane sp = (RTextScrollPane) component;
@@ -144,7 +142,6 @@ class RTextMDIView extends AbstractMainView implements InternalFrameListener {
      * Cascades the windows in this MDI view.
      */
     public void cascadeWindows() {
-
         int x = 0;
         int y = 0;
         int numRows = 0;
@@ -224,7 +221,6 @@ class RTextMDIView extends AbstractMainView implements InternalFrameListener {
      * Creates the popup menu for the desktop pane.
      */
     protected void createPopupMenu() {
-
         popupMenu = new JPopupMenu();
 
         JMenuItem menuItem = new JMenuItem(new AbstractAction() {
@@ -253,7 +249,6 @@ class RTextMDIView extends AbstractMainView implements InternalFrameListener {
         });
         menuItem.setText("Cascade");
         popupMenu.add(menuItem);
-
     }
 
 
@@ -320,8 +315,7 @@ class RTextMDIView extends AbstractMainView implements InternalFrameListener {
         if (index < 0 || index >= getNumDocuments())
             //throw new IndexOutOfBoundsException();
             return null;
-        JPanel temp = (JPanel) (frames.get(index)).
-                getContentPane().getComponent(0);
+        JPanel temp = (JPanel) (frames.get(index)).getContentPane().getComponent(0);
         return (RTextScrollPane) temp.getComponent(0);
     }
 
@@ -353,7 +347,6 @@ class RTextMDIView extends AbstractMainView implements InternalFrameListener {
      */
     @Override
     public void internalFrameActivated(InternalFrameEvent e) {
-
         RTextEditorPane current = getRTextEditorPaneAt(getSelectedIndex());
         setCurrentTextArea(current);
 
@@ -518,9 +511,7 @@ class RTextMDIView extends AbstractMainView implements InternalFrameListener {
      * Tiles all open internal frames horizontally.
      */
     public void tileWindowsHorizontally() {
-
         int numToResize = 0;
-
         for (JInternalFrame frame : frames) {
 
             if (frame.isVisible() && !frame.isIcon()) {

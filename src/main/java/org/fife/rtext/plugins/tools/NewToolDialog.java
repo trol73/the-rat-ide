@@ -45,15 +45,15 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
-import org.fife.rsta.ui.AssistanceIconPanel;
+import org.fife.ui.widgets.AssistanceIconPanel;
 import org.fife.rsta.ui.search.AbstractSearchDialog;
 import org.fife.rtext.RTextUtilities;
 import org.fife.ui.EscapableDialog;
-import org.fife.ui.FSATextField;
-import org.fife.ui.KeyStrokeField;
-import org.fife.ui.MenuButton;
+import org.fife.ui.widgets.FSATextField;
+import org.fife.ui.widgets.KeyStrokeField;
+import org.fife.ui.widgets.MenuButton;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.autocomplete.BasicCompletion;
 import org.fife.ui.autocomplete.CompletionProvider;
@@ -127,15 +127,14 @@ class NewToolDialog extends EscapableDialog implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		String command = e.getActionCommand();
 
 		if ("BrowseProgram".equals(command)) {
-			if (chooser==null) {
+			if (chooser == null) {
 				chooser = new RTextFileChooser(false);
 			}
 			int rc = chooser.showOpenDialog(this);
-			if (rc==RTextFileChooser.APPROVE_OPTION) {
+			if (rc == RTextFileChooser.APPROVE_OPTION) {
 				File file = chooser.getSelectedFile();
 				programField.setFileSystemAware(false);
 				programField.setText(file.getAbsolutePath());
@@ -144,12 +143,12 @@ class NewToolDialog extends EscapableDialog implements ActionListener {
 		}
 
 		else if ("BrowseDir".equals(command)) {
-			if (dirChooser==null) {
+			if (dirChooser == null) {
 				dirChooser = new RDirectoryChooser(this);
 			}
 			dirChooser.setVisible(true);
 			String dir = dirChooser.getChosenDirectory();
-			if (dir!=null) {
+			if (dir != null) {
 				dirField.setFileSystemAware(false);
 				dirField.setText(dir);
 				dirField.setFileSystemAware(true);
@@ -307,8 +306,7 @@ ac.install(dirField);
 			springPanel.add(programLabel);	springPanel.add(programFieldPanel);  springPanel.add(programBrowseButton);
 			springPanel.add(dirLabel);		springPanel.add(dirFieldPanel);      springPanel.add(dirBrowseButton);
 			springPanel.add(shortcutLabel); springPanel.add(shortcutFieldPanel); springPanel.add(Box.createRigidArea(dim));
-		}
-		else {
+		} else {
 			springPanel.add(Box.createRigidArea(dim));	springPanel.add(nameFieldPanel);     springPanel.add(nameLabel);
 			springPanel.add(Box.createRigidArea(dim));	springPanel.add(descFieldPanel);     springPanel.add(descLabel);
 			springPanel.add(programBrowseButton);		springPanel.add(programFieldPanel);  springPanel.add(programLabel);
@@ -321,8 +319,7 @@ ac.install(dirField);
 		temp.add(springPanel, BorderLayout.NORTH);
 
 		argModel = new DefaultTableModel(0, 1);
-		ModifiableTable argTable = new ModifiableTable(argModel,
-				BorderLayout.SOUTH, ModifiableTable.ALL_BUTTONS);
+		ModifiableTable argTable = new ModifiableTable(argModel, BorderLayout.SOUTH, ModifiableTable.ALL_BUTTONS);
 		argTable.getTable().setTableHeader(null);
 		Dimension s = argTable.getTable().getPreferredScrollableViewportSize();
 		s.height = 200; // JTable default is 400!
@@ -347,10 +344,8 @@ ac.install(dirField);
 		temp2.add(temp, BorderLayout.LINE_START);
 		envPanel.add(temp2, BorderLayout.NORTH);
 		envModel = new DefaultTableModel(
-				new Object[] { MSG.getString("VariableName"),
-								MSG.getString("VariableValue") }, 0);
-		ModifiableTable envTable = new ModifiableTable(envModel,
-				BorderLayout.SOUTH, ModifiableTable.ALL_BUTTONS);
+				new Object[] { MSG.getString("VariableName"), MSG.getString("VariableValue") }, 0);
+		ModifiableTable envTable = new ModifiableTable(envModel, BorderLayout.SOUTH, ModifiableTable.ALL_BUTTONS);
 		s = envTable.getTable().getPreferredScrollableViewportSize();
 		s.height = 200; // JTable default is 400!
 		envTable.getTable().setPreferredScrollableViewportSize(s);
@@ -412,7 +407,6 @@ ac.install(dirField);
 	 * @return Whether the identifier is a valid tool name.
 	 */
 	private static boolean isValidName(String name) {
-
 		boolean valid = false;
 
 		if (name.length()>0) {
@@ -455,8 +449,7 @@ ac.install(dirField);
 
 		if (tool.getAppendEnvironmentVars()) {
 			appendRB.setSelected(true);
-		}
-		else {
+		} else {
 			replaceRB.setSelected(true);
 		}
 
@@ -510,8 +503,7 @@ ac.install(dirField);
 	 * The dialog that allows the user to add or modify a command line
 	 * argument.
 	 */
-	private static class ArgDialog extends EscapableDialog implements ActionListener,
-									DocumentListener {
+	private static class ArgDialog extends EscapableDialog implements ActionListener, DocumentListener {
 
 		private final JTextField argField;
 		private final JButton okButton;
@@ -581,18 +573,14 @@ ac.install(dirField);
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			String command = e.getActionCommand();
 
 			if ("OK".equals(command)) {
 				arg = argField.getText();
 				setVisible(false);
-			}
-
-			else if ("Cancel".equals(command)) {
+			} else if ("Cancel".equals(command)) {
 				escapePressed();
 			}
-
 		}
 
 		@Override
@@ -649,7 +637,6 @@ ac.install(dirField);
 		private boolean escaped;
 
 		EnvVarDialog(JDialog parent) {
-
 			super(parent);
 			ComponentOrientation o = parent.getComponentOrientation();
 			escaped = true;
@@ -723,15 +710,12 @@ ac.install(dirField);
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			String command = e.getActionCommand();
 
 			if ("OK".equals(command)) {
 				escaped = false;
 				setVisible(false);
-			}
-
-			else if ("Cancel".equals(command)) {
+			} else if ("Cancel".equals(command)) {
 				escapePressed();
 			}
 
@@ -792,8 +776,7 @@ ac.install(dirField);
 		private final JTextField field;
 		private final String replacement;
 
-		VariableAction(String nameKey, String replacement,
-								JTextField field) {
+		VariableAction(String nameKey, String replacement, JTextField field) {
 			putValue(NAME, MSG.getString(nameKey));
 			this.field = field;
 			this.replacement = replacement;

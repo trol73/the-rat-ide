@@ -22,24 +22,24 @@ import org.fife.ui.PickyDocumentFilter;
 public class NumberDocumentFilter extends PickyDocumentFilter {
 
 
-	/**
-	 * Removes any characters in a string that aren't digits.
-	 *
-	 * @param text The string the user is trying to insert.
-	 * @return The text, with any non-digit characters removed.
-	 */
-	@Override
-	protected String cleanseImpl(String text) {
-		int length = text.length();
-		for (int i=0; i<length; i++) {
-			if (!Character.isDigit(text.charAt(i))) {
-				text = text.substring(0,i) + text.substring(i+1);
-				i--;
-				length--;
-			}
-		}
-		return text;
-	}
+    /**
+     * Removes any characters in a string that aren't digits.
+     *
+     * @param text The string the user is trying to insert.
+     * @return The text, with any non-digit characters removed.
+     */
+    @Override
+    protected String cleanseImpl(String text) {
+        int length = text.length();
+        for (int i = 0; i < length; i++) {
+            if (!Character.isDigit(text.charAt(i))) {
+                text = text.substring(0, i) + text.substring(i + 1);
+                i--;
+                length--;
+            }
+        }
+        return text;
+    }
 
 
 }

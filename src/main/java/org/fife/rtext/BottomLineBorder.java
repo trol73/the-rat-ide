@@ -9,7 +9,7 @@
  */
 package org.fife.rtext;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 
 import java.awt.*;
 import javax.swing.UIManager;

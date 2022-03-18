@@ -24,8 +24,13 @@ import org.fife.rtext.RText;
 import org.fife.rtext.RTextUtilities;
 import org.fife.ui.*;
 import org.fife.ui.app.AppTheme;
+import org.fife.ui.options.OptionsDialog;
+import org.fife.ui.options.OptionsDialogPanel;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaOptionPanel;
 import org.fife.ui.rtextarea.RTextAreaOptionPanel;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.widgets.LabelValueComboBox;
+import org.fife.ui.widgets.SelectableLabel;
 
 
 /**
@@ -118,7 +123,7 @@ public class UIOptionPanel extends OptionsDialogPanel implements ActionListener,
 		RTextUtilities.setThemeForAllOpenAppInstances(rtext, theme); // Doesn't update if...
 
 		// Refresh other option panels whose properties were affected
-		org.fife.ui.OptionsDialog dialog = getOptionsDialog();
+		OptionsDialog dialog = getOptionsDialog();
 		setValues(rtext);
 		dialog.getPanelById(UIOptionPanel.OPTION_PANEL_ID).setValues(rtext);
 		dialog.getPanelById(RTextAreaOptionPanel.OPTION_PANEL_ID).setValues(rtext);

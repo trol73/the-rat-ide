@@ -16,7 +16,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.filechooser.FileSystemView;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
 
 

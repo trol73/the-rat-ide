@@ -28,7 +28,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.fife.ui.FileExplorerTableModel;
-import org.fife.ui.OS;
+import org.fife.ui.utils.OS;
 
 
 /**

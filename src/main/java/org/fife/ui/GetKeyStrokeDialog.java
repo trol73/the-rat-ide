@@ -10,6 +10,9 @@
  */
 package org.fife.ui;
 
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.widgets.KeyStrokeField;
+
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dialog;
@@ -36,158 +39,152 @@ import javax.swing.SwingUtilities;
  */
 public class GetKeyStrokeDialog extends JDialog {
 
-	@Serial
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	private KeyStroke stroke;
-	private KeyStrokeField textField;
-	private boolean canceled;
+    private KeyStroke stroke;
+    private KeyStrokeField textField;
+    private boolean canceled;
 
-	private static final ResourceBundle MSG = ResourceBundle.
-			getBundle("org.fife.ui.GetKeyStrokeDialog");
-
-
-	/**
-	 * Constructor.
-	 *
-	 * @param parent The parent dialog of this dialog.
-	 * @param initial The initial key stroke to display.
-	 */
-	public GetKeyStrokeDialog(Dialog parent, KeyStroke initial) {
-		super(parent, MSG.getString("Dialog.KeyStroke.Title"));
-		createUI(initial);
-	}
+    private static final ResourceBundle MSG = ResourceBundle.getBundle("org.fife.ui.GetKeyStrokeDialog");
 
 
-	/**
-	 * Constructor.
-	 *
-	 * @param parent The parent frame of this dialog.
-	 * @param initial The initial key stroke to display.
-	 */
-	public GetKeyStrokeDialog(Frame parent, KeyStroke initial) {
-		super(parent, MSG.getString("Dialog.KeyStroke.Title"));
-		createUI(initial);
-	}
+    /**
+     * Constructor.
+     *
+     * @param parent  The parent dialog of this dialog.
+     * @param initial The initial key stroke to display.
+     */
+    public GetKeyStrokeDialog(Dialog parent, KeyStroke initial) {
+        super(parent, MSG.getString("Dialog.KeyStroke.Title"));
+        createUI(initial);
+    }
 
 
-	/**
-	 * Creates the contents of this dialog.
-	 */
-	private void createUI(KeyStroke initial) {
-
-		ComponentOrientation orientation = ComponentOrientation.
-								getOrientation(getLocale());
-		Listener listener = new Listener();
-		Box contentPane = Box.createVerticalBox();
-		contentPane.setBorder(UIUtil.getEmpty5Border());
-
-		JPanel temp = new JPanel(new BorderLayout());
-		JLabel prompt = UIUtil.newLabel(MSG, "Dialog.KeyStroke.Prompt");
-		temp.add(prompt, BorderLayout.LINE_START);
-		contentPane.add(temp);
-		contentPane.add(Box.createVerticalStrut(8));
-
-		textField = new KeyStrokeField();
-		JLabel charLabel=UIUtil.newLabel(MSG, "Dialog.KeyStroke.Key",textField);
-		temp = new JPanel(new BorderLayout());
-		temp.add(charLabel, BorderLayout.LINE_START);
-		temp.add(textField);
-		contentPane.add(temp);
-
-		JButton ok = UIUtil.newButton(MSG, "OK", listener);
-		ok.setActionCommand("OK");
-		JButton cancel = UIUtil.newButton(MSG, "Cancel", listener);
-		cancel.setActionCommand("Cancel");
-		JPanel buttonPanel = (JPanel)UIUtil.createButtonFooter(ok, cancel);
-		buttonPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(10, 0, 5, 0),
-				buttonPanel.getBorder()));
-
-		JPanel realCP = new ResizableFrameContentPane(new BorderLayout());
-		realCP.add(contentPane, BorderLayout.NORTH);
-		realCP.add(buttonPanel, BorderLayout.SOUTH);
-
-		setContentPane(realCP);
-		setKeyStroke(initial);
-		setModal(true);
-		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		applyComponentOrientation(orientation);
-		pack();
-
-	}
+    /**
+     * Constructor.
+     *
+     * @param parent  The parent frame of this dialog.
+     * @param initial The initial key stroke to display.
+     */
+    public GetKeyStrokeDialog(Frame parent, KeyStroke initial) {
+        super(parent, MSG.getString("Dialog.KeyStroke.Title"));
+        createUI(initial);
+    }
 
 
-	/**
-	 * Whether the dialog was canceled.
-	 *
-	 * @return Whether the dialog was canceled.
-	 * @see #getKeyStroke()
-	 */
-	public boolean getCancelled() {
-		return canceled;
-	}
+    /**
+     * Creates the contents of this dialog.
+     */
+    private void createUI(KeyStroke initial) {
+        ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
+        Listener listener = new Listener();
+        Box contentPane = Box.createVerticalBox();
+        contentPane.setBorder(UIUtil.getEmpty5Border());
+
+        JPanel temp = new JPanel(new BorderLayout());
+        JLabel prompt = UIUtil.newLabel(MSG, "Dialog.KeyStroke.Prompt");
+        temp.add(prompt, BorderLayout.LINE_START);
+        contentPane.add(temp);
+        contentPane.add(Box.createVerticalStrut(8));
+
+        textField = new KeyStrokeField();
+        JLabel charLabel = UIUtil.newLabel(MSG, "Dialog.KeyStroke.Key", textField);
+        temp = new JPanel(new BorderLayout());
+        temp.add(charLabel, BorderLayout.LINE_START);
+        temp.add(textField);
+        contentPane.add(temp);
+
+        JButton ok = UIUtil.newButton(MSG, "OK", listener);
+        ok.setActionCommand("OK");
+        JButton cancel = UIUtil.newButton(MSG, "Cancel", listener);
+        cancel.setActionCommand("Cancel");
+        JPanel buttonPanel = (JPanel) UIUtil.createButtonFooter(ok, cancel);
+        buttonPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(10, 0, 5, 0),
+                buttonPanel.getBorder()));
+
+        JPanel realCP = new ResizableFrameContentPane(new BorderLayout());
+        realCP.add(contentPane, BorderLayout.NORTH);
+        realCP.add(buttonPanel, BorderLayout.SOUTH);
+
+        setContentPane(realCP);
+        setKeyStroke(initial);
+        setModal(true);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        applyComponentOrientation(orientation);
+        pack();
+    }
 
 
-	/**
-	 * Returns the key stroke the user entered.
-	 *
-	 * @return The key stroke, or <code>null</code> if the user canceled the
-	 *         dialog.
-	 * @see #setKeyStroke(KeyStroke)
-	 */
-	public KeyStroke getKeyStroke() {
-		return stroke;
-	}
-
-	/**
-	 * Sets the key stroke displayed in this dialog.
-	 *
-	 * @param stroke The key stroke.
-	 * @see #getKeyStroke()
-	 */
-	public void setKeyStroke(KeyStroke stroke) {
-		this.stroke = stroke;
-		textField.setKeyStroke(stroke);
-	}
+    /**
+     * Whether the dialog was canceled.
+     *
+     * @return Whether the dialog was canceled.
+     * @see #getKeyStroke()
+     */
+    public boolean getCancelled() {
+        return canceled;
+    }
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setVisible(boolean visible) {
-		if (visible) {
-			canceled = true; // Default to canceled.
-			SwingUtilities.invokeLater(() -> {
-				textField.requestFocusInWindow();
-				textField.selectAll();
-			});
-		}
-		super.setVisible(visible);
-	}
+    /**
+     * Returns the key stroke the user entered.
+     *
+     * @return The key stroke, or <code>null</code> if the user canceled the dialog.
+     * @see #setKeyStroke(KeyStroke)
+     */
+    public KeyStroke getKeyStroke() {
+        return stroke;
+    }
+
+    /**
+     * Sets the key stroke displayed in this dialog.
+     *
+     * @param stroke The key stroke.
+     * @see #getKeyStroke()
+     */
+    public void setKeyStroke(KeyStroke stroke) {
+        this.stroke = stroke;
+        textField.setKeyStroke(stroke);
+    }
 
 
-	/**
-	 * Listens for events in this dialog.
-	 */
-	private class Listener implements ActionListener {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            canceled = true; // Default to canceled.
+            SwingUtilities.invokeLater(() -> {
+                textField.requestFocusInWindow();
+                textField.selectAll();
+            });
+        }
+        super.setVisible(visible);
+    }
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String command = e.getActionCommand();
-			if ("OK".equals(command)) {
-				stroke = textField.getKeyStroke();
-				canceled = false;
-				setVisible(false);
-			}
-			else if ("Cancel".equals(command)) {
-				stroke = null;
-				setVisible(false);
-			}
-		}
 
-	}
+    /**
+     * Listens for events in this dialog.
+     */
+    private class Listener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+            if ("OK".equals(command)) {
+                stroke = textField.getKeyStroke();
+                canceled = false;
+                setVisible(false);
+            } else if ("Cancel".equals(command)) {
+                stroke = null;
+                setVisible(false);
+            }
+        }
+
+    }
 
 
 }

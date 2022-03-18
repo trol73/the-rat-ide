@@ -44,12 +44,12 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
 import org.fife.ui.EscapableDialog;
-import org.fife.ui.GUIWorkerThread;
+import org.fife.ui.utils.GUIWorkerThread;
 import org.fife.ui.RListSelectionModel;
-import org.fife.ui.RScrollPane;
+import org.fife.ui.widgets.RScrollPane;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.SelectableLabel;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.SelectableLabel;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

@@ -39,8 +39,7 @@ public class LogicalFolderProjectEntryTreeNode extends ProjectEntryTreeNode {
 	private static final DecoratableIcon ICON;
 
 
-	public LogicalFolderProjectEntryTreeNode(ProjectPlugin plugin,
-			LogicalFolderProjectEntry entry) {
+	public LogicalFolderProjectEntryTreeNode(ProjectPlugin plugin, LogicalFolderProjectEntry entry) {
 		super(plugin, entry);
 	}
 
@@ -92,8 +91,7 @@ public class LogicalFolderProjectEntryTreeNode extends ProjectEntryTreeNode {
 
 	@Override
 	public String getToolTipText() {
-		return Messages.getString("ProjectPlugin.ToolTip.LogicalFolderProjectEntry",
-				entry.getSaveData());
+		return Messages.getString("ProjectPlugin.ToolTip.LogicalFolderProjectEntry", entry.getSaveData());
 	}
 
 
@@ -118,7 +116,7 @@ public class LogicalFolderProjectEntryTreeNode extends ProjectEntryTreeNode {
 				entry.getSaveData(), new LogicalFolderNameChecker());
 		dialog.setVisible(true);
 		String name = dialog.getLogicalFolderName();
-		if (name!=null) {
+		if (name != null) {
 			LogicalFolderProjectEntry lfpe = (LogicalFolderProjectEntry)entry;
 			lfpe.setName(name);
 			plugin.refreshTree(this);
@@ -134,8 +132,7 @@ public class LogicalFolderProjectEntryTreeNode extends ProjectEntryTreeNode {
 		File testFile =  new File(System.getProperty("java.io.tmpdir"));
 		Icon temp = FileSystemView.getFileSystemView().getSystemIcon(testFile);
 		ICON = new DecoratableIcon(16, temp);
-		URL decorationRes = RText.class.
-				getResource("/org/fife/rsta/ui/search/lightbulb.png");
+		URL decorationRes = RText.class.getResource("/org/fife/rsta/ui/search/lightbulb.png");
 		Icon decoration = new ImageIcon(decorationRes);
 		ICON.addDecorationIcon(decoration);
 	}

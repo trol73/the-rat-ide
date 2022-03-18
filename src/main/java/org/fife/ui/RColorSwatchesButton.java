@@ -10,6 +10,11 @@
  */
 package org.fife.ui;
 
+import org.fife.ui.utils.OS;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
+import org.fife.ui.widgets.RColorButton;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;

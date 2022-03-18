@@ -303,8 +303,7 @@ public class TextEditorPane extends RSyntaxTextArea implements DocumentListener 
      * @see #setLineSeparator(String, boolean)
      */
     public Object getLineSeparator() {
-        return getDocument().getProperty(
-                RTextAreaEditorKit.EndOfLineStringProperty);
+        return getDocument().getProperty(RTextAreaEditorKit.EndOfLineStringProperty);
     }
 
 
@@ -526,8 +525,7 @@ public class TextEditorPane extends RSyntaxTextArea implements DocumentListener 
      * this will cause this {@link TextEditorPane}'s encoding to change.
      * Otherwise, the file's encoding will stay the same.
      *
-     * @throws IOException If the file does not exist, or if an IO error
-     *                     occurs reading the file.
+     * @throws IOException If the file does not exist, or if an IO error occurs reading the file.
      * @see #isLocalAndExists()
      */
     public void reload() throws IOException {
@@ -655,8 +653,7 @@ public class TextEditorPane extends RSyntaxTextArea implements DocumentListener 
      *
      * @param encoding The new encoding.
      * @throws UnsupportedCharsetException If the encoding is not supported.
-     * @throws NullPointerException        If <code>encoding</code> is
-     *                                     <code>null</code>.
+     * @throws NullPointerException        If <code>encoding</code> is <code>null</code>.
      * @see #getEncoding()
      */
     public void setEncoding(String encoding) {
@@ -669,7 +666,23 @@ public class TextEditorPane extends RSyntaxTextArea implements DocumentListener 
             String oldEncoding = charSet;
             charSet = encoding;
             firePropertyChange(ENCODING_PROPERTY, oldEncoding, charSet);
-            setDirty(true);
+        }
+    }
+
+    public void changeEncoding(String encoding) throws IOException {
+        if (encoding == null) {
+            throw new NullPointerException("encoding cannot be null");
+        } else if (!Charset.isSupported(encoding)) {
+            throw new UnsupportedCharsetException(encoding);
+        }
+        if (charSet == null || !charSet.equals(encoding)) {
+            String oldEncoding = charSet;
+            int line = getLine();
+            int column = getColumn();
+            charSet = encoding;
+            reload();
+            gotoLine(line, column);
+            firePropertyChange(ENCODING_PROPERTY, oldEncoding, charSet);
         }
     }
 

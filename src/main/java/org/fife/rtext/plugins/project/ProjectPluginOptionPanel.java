@@ -26,7 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.PluginOptionsDialogPanel;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowConstants;

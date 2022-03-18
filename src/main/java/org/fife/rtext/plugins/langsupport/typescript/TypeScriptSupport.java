@@ -22,7 +22,7 @@ import org.fife.rtext.plugins.langsupport.LangSupportPreferences;
 import org.fife.rtext.plugins.langsupport.Plugin;
 import org.fife.ui.app.MenuBar;
 import org.fife.ui.StandardAction;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

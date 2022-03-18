@@ -712,8 +712,8 @@ public class AvrRatTokenMaker extends AbstractJFlexCTokenMaker {
 	 *        occurs.
 	 * @param hyperlink Whether this token is a hyperlink.
 	 */
-	public void addToken(char[] array, int start, int end, int tokenType,
-						int startOffset, boolean hyperlink) {
+	public void addToken(char[] array, int start, int end, int tokenType, int startOffset, boolean hyperlink) {
+//System.out.println("+T " + new String(array, start, end-start+1) + " " + start + " " + end + " " + tokenType);
 		super.addToken(array, start,end, tokenType, startOffset, hyperlink);
 		zzStartRead = zzMarkedPos;
 	}

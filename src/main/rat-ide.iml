@@ -19,5 +19,6 @@
     <orderEntry type="library" name="xml-apis-ext-1.3.04" level="project" />
     <orderEntry type="library" name="xml-apis-1.4.01" level="project" />
     <orderEntry type="library" name="xmlgraphics-commons-2.6" level="project" />
+    <orderEntry type="library" name="the-rat" level="project" />
   </component>
 </module>

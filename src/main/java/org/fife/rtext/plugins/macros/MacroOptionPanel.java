@@ -32,7 +32,7 @@ import javax.swing.table.TableColumnModel;
 
 import org.fife.rtext.RText;
 import org.fife.ui.KeyStrokeCellRenderer;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.PluginOptionsDialogPanel;
 import org.fife.ui.modifiabletable.AbstractRowHandler;
 import org.fife.ui.modifiabletable.ModifiableTable;

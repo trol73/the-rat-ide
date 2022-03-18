@@ -38,10 +38,10 @@ import javax.swing.event.ChangeListener;
 import org.fife.rtext.AbstractMainView;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextAppThemes;
-import org.fife.ui.OptionsDialogPanel;
-import org.fife.ui.RColorButton;
+import org.fife.ui.options.OptionsDialogPanel;
+import org.fife.ui.widgets.RColorButton;
 import org.fife.ui.RColorSwatchesButton;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rsyntaxtextarea.Theme;
 
 

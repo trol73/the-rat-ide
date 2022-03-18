@@ -28,15 +28,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.fife.rsta.ui.DecorativeIconPanel;
-import org.fife.rsta.ui.EscapableDialog;
-import org.fife.rsta.ui.ResizableFrameContentPane;
+import org.fife.ui.widgets.DecorativeIconPanel;
+import org.fife.ui.widgets.ResizableFrameContentPane;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextUtilities;
 import org.fife.rtext.plugins.project.tree.LogicalFolderProjectEntryTreeNode;
 import org.fife.rtext.plugins.project.tree.NameChecker;
-import org.fife.ui.SelectableLabel;
-import org.fife.ui.UIUtil;
+import org.fife.ui.EscapableDialog;
+import org.fife.ui.widgets.SelectableLabel;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

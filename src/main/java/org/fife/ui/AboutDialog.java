@@ -32,6 +32,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import org.fife.io.IOUtil;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.widgets.RScrollPane;
 
 
 /**

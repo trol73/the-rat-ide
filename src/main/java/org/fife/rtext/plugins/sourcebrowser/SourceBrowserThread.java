@@ -24,7 +24,7 @@ import javax.swing.Icon;
 import org.fife.ctags.TagEntry;
 import org.fife.io.ProcessRunner;
 import org.fife.rtext.RTextEditorPane;
-import org.fife.ui.GUIWorkerThread;
+import org.fife.ui.utils.GUIWorkerThread;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 

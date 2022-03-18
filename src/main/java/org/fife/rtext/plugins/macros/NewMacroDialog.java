@@ -34,10 +34,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.fife.rsta.ui.DecorativeIconPanel;
+import org.fife.ui.widgets.DecorativeIconPanel;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextUtilities;
 import org.fife.ui.*;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.widgets.KeyStrokeField;
+import org.fife.ui.widgets.SelectableLabel;
 
 
 /**

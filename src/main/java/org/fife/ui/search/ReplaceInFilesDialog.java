@@ -15,9 +15,9 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
-import org.fife.rsta.ui.AssistanceIconPanel;
+import org.fife.ui.widgets.AssistanceIconPanel;
 import org.fife.rsta.ui.search.SearchComboBox;
-import org.fife.ui.*;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

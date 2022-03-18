@@ -19,10 +19,10 @@ import java.util.List;
 import javax.swing.*;
 
 import org.fife.rtext.*;
-import org.fife.ui.ImageTranscodingUtil;
-import org.fife.ui.RScrollPane;
-import org.fife.ui.UIUtil;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.utils.ImageTranscodingUtil;
+import org.fife.ui.widgets.RScrollPane;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.app.*;
 import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.app.themes.FlatDarkTheme;

@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 
 import org.fife.io.IOUtil;
 import org.fife.rtext.RText;
-import org.fife.ui.ImageTranscodingUtil;
+import org.fife.ui.utils.ImageTranscodingUtil;
 import org.fife.ui.app.AppAction;
 import org.fife.ui.app.themes.FlatDarkTheme;
 import org.fife.ui.app.themes.FlatLightTheme;

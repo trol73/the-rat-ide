@@ -24,8 +24,8 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
 
-import org.fife.ui.OS;
-import org.fife.ui.ToolTipTree;
+import org.fife.ui.utils.OS;
+import org.fife.ui.widgets.ToolTipTree;
 import org.fife.util.SubstanceUtil;
 
 

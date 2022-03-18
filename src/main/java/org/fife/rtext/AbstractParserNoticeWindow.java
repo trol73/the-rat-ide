@@ -35,7 +35,7 @@ import javax.swing.table.TableModel;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.FileExplorerTableModel;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.FileExplorerTableModel.SortableHeaderRenderer;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;

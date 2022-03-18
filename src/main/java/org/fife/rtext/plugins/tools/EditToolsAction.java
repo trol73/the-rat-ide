@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 import javax.swing.Icon;
 
 import org.fife.rtext.RText;
-import org.fife.ui.OptionsDialog;
+import org.fife.ui.options.OptionsDialog;
 import org.fife.ui.app.AppAction;
 
 

@@ -46,8 +46,7 @@ class ReplaceAction extends FindAction {
 	 * @param icon The icon associated with the action.
 	 * @param nameKey The key for localizing the name of this action.
 	 */
-	ReplaceAction(RText owner, ResourceBundle msg, Icon icon,
-							String nameKey) {
+	ReplaceAction(RText owner, ResourceBundle msg, Icon icon, String nameKey) {
 		super(owner, msg, icon, nameKey);
 	}
 

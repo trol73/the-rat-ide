@@ -63,8 +63,7 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
     private boolean inCloseCurrentDocument;
     private int rightClickIndex;
 
-    private final TabbedPaneViewTransferHandler transferHandler =
-            new TabbedPaneViewTransferHandler(this);
+    private final TabbedPaneViewTransferHandler transferHandler = new TabbedPaneViewTransferHandler(this);
 
     private static final String POPUP_MSG = "org.fife.rtext.TabbedPaneViewPopupMenu";
 
@@ -79,9 +78,7 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
      * @param properties  A properties object used to initialize some fields on
      *                    this tabbed pane.
      */
-    RTextTabbedPaneView(RText owner, String[] filesToOpen,
-                        RTextPrefs properties) {
-
+    RTextTabbedPaneView(RText owner, String[] filesToOpen, RTextPrefs properties) {
         setLayout(new GridLayout(1, 1));
         tabbedPane = new TabbedPane();
         tabbedPane.addChangeListener(this);
@@ -102,7 +99,6 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
         tabbedPane.addMouseMotionListener(tdl);
 
         rightClickIndex = -1;
-
     }
 
 
@@ -346,7 +342,6 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
      */
     @Override
     public void refreshDisplayNames() {
-
         Color defaultForeground = UIManager.getColor("tabbedpane.foreground");
         Color modifiedColor = getModifiedDocumentDisplayNamesColor();
         int numDocuments = getNumDocuments();
@@ -423,11 +418,9 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
             // Hack-of-a-way to tell if this document is modified.
             if (displayName.charAt(displayName.length() - 1) == '*') {
                 if (highlightModifiedDocumentDisplayNames()) {
-                    tabbedPane.setForegroundAt(index,
-                            getModifiedDocumentDisplayNamesColor());
+                    tabbedPane.setForegroundAt(index,getModifiedDocumentDisplayNamesColor());
                 } else {
-                    tabbedPane.setForegroundAt(index,
-                            tabbedPane.getForeground());
+                    tabbedPane.setForegroundAt(index, tabbedPane.getForeground());
                 }
             }
             // Just set it to regular color (this may/may not be unnecessary...).
@@ -474,7 +467,6 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-
         // Skip this stuff if we're called from closeCurrentDocument(), as
         // that method does this stuff to; let's not do it twice (listeners
         // would get two CURRENT_DOCUMENT_PROPERTY events).
@@ -522,8 +514,7 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
 
             // Let any listeners know that the current document changed.
             firePropertyChange(CURRENT_DOCUMENT_PROPERTY, -1, getSelectedIndex());
-            fireCurrentTextAreaEvent(CurrentTextAreaEvent.TEXT_AREA_CHANGED,
-                    null, currentTextArea);
+            fireCurrentTextAreaEvent(CurrentTextAreaEvent.TEXT_AREA_CHANGED,null, currentTextArea);
 
         }
 
@@ -533,8 +524,7 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
     /**
      * The actual tabbed pane.
      */
-    class TabbedPane extends JTabbedPane
-            implements DrawDnDIndicatorTabbedPane {
+    class TabbedPane extends JTabbedPane implements DrawDnDIndicatorTabbedPane {
 
         private int x;
         private int y;
@@ -557,7 +547,6 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
         }
 
         private JPopupMenu createPopupMenu() {
-
             ResourceBundle msg = ResourceBundle.getBundle(POPUP_MSG);
 
             JPopupMenu popup = new JPopupMenu();
@@ -585,8 +574,7 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
             popup.addSeparator();
 
             title = msg.getString("CopyPathToClipboard");
-            item = new JMenuItem(
-                    new TabbedPaneCopyPathAction(title));
+            item = new JMenuItem(new TabbedPaneCopyPathAction(title));
             popup.add(item);
 
             return popup;
@@ -642,8 +630,7 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
                     if (index != -1) {
                         rightClickIndex = index;
                         JPopupMenu popup = getTabPopupMenu();
-                        String name = RTextTabbedPaneView.this.
-                                getDocumentDisplayNameAt(index);
+                        String name = RTextTabbedPaneView.this.getDocumentDisplayNameAt(index);
                         closeAction.setDocumentName(name);
                         popup.show(this, x, y);
                     }
@@ -725,8 +712,7 @@ class RTextTabbedPaneView extends AbstractMainView implements ChangeListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (rightClickIndex > -1) {
-                RTextTabbedPaneView.this.closeAllDocumentsExcept(
-                        rightClickIndex);
+                RTextTabbedPaneView.this.closeAllDocumentsExcept(rightClickIndex);
             }
         }
 

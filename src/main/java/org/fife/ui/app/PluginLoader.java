@@ -278,16 +278,19 @@ class PluginLoader {
 	}
 
 	public void loadBuiltinPlugins() {
-		app.addPlugin(new org.fife.rtext.plugins.console.Plugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.filesystemtree.FileSystemTreePlugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.heapindicator.HeapIndicatorPlugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.langsupport.Plugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.macros.MacroPlugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.project.ProjectPlugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.sourcebrowser.SourceBrowserPlugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.tasks.TasksPlugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.tidy.Plugin((RText) app));
-		app.addPlugin(new org.fife.rtext.plugins.tools.ToolPlugin((RText) app));
+		RText rtext = (RText) app;
+		app.addPlugin(new org.fife.rtext.plugins.project.ProjectPlugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.filesystemtree.FileSystemTreePlugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.sourcebrowser.SourceBrowserPlugin(rtext));
+
+		app.addPlugin(new org.fife.rtext.plugins.buildoutput.Plugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.terminal.Plugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.heapindicator.HeapIndicatorPlugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.langsupport.Plugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.macros.MacroPlugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.tasks.TasksPlugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.tidy.Plugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.tools.ToolPlugin(rtext));
 	}
 
 

@@ -21,7 +21,7 @@ import org.fife.ui.StatusBarPanel;
  */
 public abstract class StatusBarPlugin<T extends GUIApplication> extends StatusBarPanel implements Plugin<T> {
 
-	private T app;
+	private final T app;
 	private String parentOptionPanelID;
 
 

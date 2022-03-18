@@ -32,8 +32,8 @@ import org.fife.ui.rsyntaxtextarea.Token;
  */
 public class TokenScanner {
 
-	private RSyntaxDocument doc;
-	private Element root;
+	private final RSyntaxDocument doc;
+	private final Element root;
 	private Token t;
 	private int line;
 

@@ -162,12 +162,11 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** Handles code templates. */
 	private static CodeTemplateManager codeTemplateManager;
 
-	/** Whether or not templates are enabled. */
+	/** Whether templates are enabled. */
 	private static boolean templatesEnabled;
 
 	/**
-	 * The rectangle surrounding the "matched bracket" if bracket matching
-	 * is enabled.
+	 * The rectangle surrounding the "matched bracket" if bracket matching is enabled.
 	 */
 	private Rectangle match;
 
@@ -192,10 +191,10 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	/** The location of the last matched bracket. */
 	private int lastBracketMatchPos;
 
-	/** Whether or not bracket matching is enabled. */
+	/** Whether bracket matching is enabled. */
 	private boolean bracketMatchingEnabled;
 
-	/** Whether or not bracket matching is animated. */
+	/** Whether bracket matching is animated. */
 	private boolean animateBracketMatching;
 
 	/** Whether <b>both</b> brackets are highlighted when bracket matching. */
@@ -208,7 +207,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private boolean metricsNeverRefreshed;
 
 	/**
-	 * Whether or not auto-indent is on.
+	 * Whether auto-indent is on.
 	 */
 	private boolean autoIndentEnabled;
 
@@ -226,7 +225,7 @@ public class RSyntaxTextArea extends RTextArea implements SyntaxConstants {
 	private boolean closeMarkupTags;
 
 	/**
-	 * Whether or not lines with nothing but whitespace are "made empty".
+	 * Whether lines with nothing but whitespace are "made empty".
 	 */
 	private boolean clearWhitespaceLines;
 
@@ -558,7 +557,6 @@ private boolean fractionalFontMetricsEnabled;
 	 * @return The clone of the token list.
 	 */
 	private TokenImpl cloneTokenList(Token t) {
-
 		if (t==null) {
 			return null;
 		}
@@ -1712,7 +1710,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns whether or not templates are enabled for all instances
+	 * Returns whether templates are enabled for all instances
 	 * of <code>RSyntaxTextArea</code>.<p>
 	 *
 	 * For more flexible boilerplate code insertion, consider using the
@@ -2037,9 +2035,9 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns whether or not auto-indent is enabled.
+	 * Returns whether auto-indent is enabled.
 	 *
-	 * @return Whether or not auto-indent is enabled.
+	 * @return Whether auto-indent is enabled.
 	 * @see #setAutoIndentEnabled(boolean)
 	 */
 	public boolean isAutoIndentEnabled() {
@@ -2048,7 +2046,7 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns whether or not bracket matching is enabled.
+	 * Returns whether bracket matching is enabled.
 	 *
 	 * @return <code>true</code> iff bracket matching is enabled.
 	 * @see #setBracketMatchingEnabled
@@ -2059,10 +2057,10 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Returns whether or not lines containing nothing but whitespace are made
+	 * Returns whether lines containing nothing but whitespace are made
 	 * into blank lines when Enter is pressed in them.
 	 *
-	 * @return Whether or not whitespace-only lines are cleared when
+	 * @return Whether whitespace-only lines are cleared when
 	 *         the user presses Enter on them.
 	 * @see #setClearWhitespaceLinesEnabled(boolean)
 	 */
@@ -2241,7 +2239,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * example, a template that expands on the word "forb" will be saved as
 	 * <code>forb.xml</code>.
 	 *
-	 * @return Whether or not the save was successful.  The save will
+	 * @return Whether the save was successful.  The save will
 	 *         be unsuccessful if the template directory does not exist or
 	 *         if it has not been set (i.e., you have not yet called
 	 *         <code>setTemplateDirectory</code>).
@@ -2337,10 +2335,10 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets whether or not auto-indent is enabled.  This fires a property
+	 * Sets whether auto-indent is enabled.  This fires a property
 	 * change event of type {@link #AUTO_INDENT_PROPERTY}.
 	 *
-	 * @param enabled Whether or not auto-indent is enabled.
+	 * @param enabled Whether auto-indent is enabled.
 	 * @see #isAutoIndentEnabled()
 	 */
 	public void setAutoIndentEnabled(boolean enabled) {
@@ -2355,7 +2353,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Sets whether bracket matching is enabled.  This fires a property change
 	 * event of type {@link #BRACKET_MATCHING_PROPERTY}.
 	 *
-	 * @param enabled Whether or not bracket matching should be enabled.
+	 * @param enabled Whether bracket matching should be enabled.
 	 * @see #isBracketMatchingEnabled()
 	 */
 	public void setBracketMatchingEnabled(boolean enabled) {
@@ -2368,11 +2366,11 @@ private boolean fractionalFontMetricsEnabled;
 
 
 	/**
-	 * Sets whether or not lines containing nothing but whitespace are made
+	 * Sets whether lines containing nothing but whitespace are made
 	 * into blank lines when Enter is pressed in them.  This method fires
 	 * a property change event of type {@link #CLEAR_WHITESPACE_LINES_PROPERTY}.
 	 *
-	 * @param enabled Whether or not whitespace-only lines are cleared when
+	 * @param enabled Whether whitespace-only lines are cleared when
 	 *        the user presses Enter on them.
 	 * @see #isClearWhitespaceLinesEnabled()
 	 */
@@ -3065,7 +3063,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * <a href="https://github.com/bobbylight/AutoComplete">AutoComplete
 	 * add-on library</a>.
 	 *
-	 * @param enabled Whether or not templates should be enabled.
+	 * @param enabled Whether templates should be enabled.
 	 * @see #getTemplatesEnabled()
 	 */
 	public static synchronized void setTemplatesEnabled(boolean enabled) {

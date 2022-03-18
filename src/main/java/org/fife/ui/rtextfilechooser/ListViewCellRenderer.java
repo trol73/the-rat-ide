@@ -16,7 +16,7 @@ import java.io.File;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

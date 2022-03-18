@@ -32,8 +32,8 @@ import javax.swing.event.TreeSelectionListener;
 
 import org.fife.ui.EscapableDialog;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.RScrollPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.RScrollPane;
+import org.fife.ui.utils.UIUtil;
 
 
 /**

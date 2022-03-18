@@ -33,9 +33,9 @@ import javax.swing.event.DocumentListener;
 
 import org.fife.ui.EscapableDialog;
 import org.fife.ui.RListSelectionModel;
-import org.fife.ui.RScrollPane;
+import org.fife.ui.widgets.RScrollPane;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 

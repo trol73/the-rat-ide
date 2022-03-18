@@ -52,21 +52,22 @@ public interface TokenTypes {
 	int LITERAL_NUMBER_DECIMAL_INT		= 10;
 	int LITERAL_NUMBER_FLOAT			= 11;
 	int LITERAL_NUMBER_HEXADECIMAL		= 12;
-	int LITERAL_STRING_DOUBLE_QUOTE		= 13;
-	int LITERAL_CHAR					= 14;
-	int LITERAL_BACKQUOTE				= 15;
+	int LITERAL_NUMBER_BINARY		    = 13;
+	int LITERAL_STRING_DOUBLE_QUOTE		= 14;
+	int LITERAL_CHAR					= 15;
+	int LITERAL_BACKQUOTE				= 16;
 
-	int DATA_TYPE						= 16;
+	int DATA_TYPE						= 17;
 
-	int VARIABLE						= 17;
+	int VARIABLE						= 18;
 
-	int REGEX							= 18;
+	int REGEX							= 19;
 
-	int ANNOTATION						= 19;
+	int ANNOTATION						= 20;
 
-	int IDENTIFIER						= 20;
+	int IDENTIFIER						= 21;
 
-	int WHITESPACE						= 21;
+	int WHITESPACE						= 22;
 
 	/**
 	 * Separators are typically single-character tokens such as parens
@@ -74,32 +75,31 @@ public interface TokenTypes {
 	 * <code>}</code>, etc.).  In particular, brackets and braces
 	 * must be of this token type for bracket matching to work.
 	 */
-	int SEPARATOR						= 22;
+	int SEPARATOR						= 23;
 
-	int OPERATOR						= 23;
+	int OPERATOR						= 24;
 
-	int PREPROCESSOR					= 24;
+	int PREPROCESSOR					= 25;
 
-	int MARKUP_TAG_DELIMITER			= 25;
-	int MARKUP_TAG_NAME					= 26;
-	int MARKUP_TAG_ATTRIBUTE			= 27;
-	int MARKUP_TAG_ATTRIBUTE_VALUE		= 28;
-	int MARKUP_COMMENT					= 29;
-	int MARKUP_DTD						= 30;
-	int MARKUP_PROCESSING_INSTRUCTION	= 31;
-	int MARKUP_CDATA_DELIMITER			= 32;
-	int MARKUP_CDATA					= 33;
-	int MARKUP_ENTITY_REFERENCE			= 34;
+	int REGISTER					    = 26;
+	int CPU_INSTRUCTION					= 27;
+	int IO_PORT							= 28;
 
-	int ERROR_IDENTIFIER				= 35;
-	int ERROR_NUMBER_FORMAT				= 36;
-	int ERROR_STRING_DOUBLE 			= 37;
-	int ERROR_CHAR						= 38;
+	int MARKUP_TAG_DELIMITER			= 29;
+	int MARKUP_TAG_NAME					= 30;
+	int MARKUP_TAG_ATTRIBUTE			= 31;
+	int MARKUP_TAG_ATTRIBUTE_VALUE		= 32;
+	int MARKUP_COMMENT					= 33;
+	int MARKUP_DTD						= 34;
+	int MARKUP_PROCESSING_INSTRUCTION	= 35;
+	int MARKUP_CDATA_DELIMITER			= 36;
+	int MARKUP_CDATA					= 37;
+	int MARKUP_ENTITY_REFERENCE			= 38;
 
-	int REGISTER					    = 39;
-	int CPU_INSTRUCTION					= 40;
-	int IO_PORT							= 41;
-	int LITERAL_NUMBER_BINARY		    = 42;
+	int ERROR_IDENTIFIER				= 39;
+	int ERROR_NUMBER_FORMAT				= 40;
+	int ERROR_STRING_DOUBLE 			= 41;
+	int ERROR_CHAR						= 42;
 
 	int DEFAULT_NUM_TOKEN_TYPES = 43;
 

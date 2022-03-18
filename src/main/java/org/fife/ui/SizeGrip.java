@@ -137,11 +137,9 @@ class SizeGrip extends StatusBarPanel {
     private boolean getShouldPaintGrip() {
         Rectangle rect = window.getBounds();
         Dimension dim = getToolkit().getScreenSize();
-        if ((rect.x == rect.y) && (rect.x <= 0) &&
-                (rect.x > -20) && (dim.width - 20 < rect.width) &&
-                (dim.width + 20 > rect.width))
-            return false;
-        return true;
+        return (rect.x != rect.y) || (rect.x > 0) ||
+                (rect.x <= -20) || (dim.width - 20 >= rect.width) ||
+                (dim.width + 20 <= rect.width);
     }
 
 
@@ -184,7 +182,7 @@ class SizeGrip extends StatusBarPanel {
 
     /**
      * Called when this component loses its parent.  This method is
-     * overridden so we can remove the component listener we added
+     * overridden, so we can remove the component listener we added
      * to the parent.
      */
     @Override

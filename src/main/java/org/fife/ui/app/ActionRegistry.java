@@ -35,7 +35,7 @@ import javax.swing.KeyStroke;
  */
 public class ActionRegistry {
 
-	private Map<String, Action> actionMap;
+	private final Map<String, Action> actionMap;
 
 	private static final String PROPS_FILE_HEADER =
 			"Shortcuts for this application.  Do not modify by hand!";

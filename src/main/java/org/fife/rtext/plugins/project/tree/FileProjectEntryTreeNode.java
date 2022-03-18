@@ -25,7 +25,7 @@ import org.fife.rtext.plugins.project.ProjectPlugin;
 import org.fife.rtext.plugins.project.RenameDialog;
 import org.fife.rtext.plugins.project.model.FolderProjectEntry;
 import org.fife.rtext.plugins.project.model.ProjectEntry;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rtextfilechooser.FileDisplayNames;
 import org.fife.ui.rtextfilechooser.Utilities;
 
@@ -38,149 +38,139 @@ import org.fife.ui.rtextfilechooser.Utilities;
  */
 public class FileProjectEntryTreeNode extends ProjectEntryTreeNode {
 
-	private final Icon icon;
+    private final Icon icon;
 
 
-	public FileProjectEntryTreeNode(ProjectPlugin plugin, ProjectEntry entry) {
-		super(plugin, entry);
-		icon = FileSystemView.getFileSystemView().getSystemIcon(entry.getFile());
-	}
+    public FileProjectEntryTreeNode(ProjectPlugin plugin, ProjectEntry entry) {
+        super(plugin, entry);
+        icon = FileSystemView.getFileSystemView().getSystemIcon(entry.getFile());
+    }
 
 
-	NameChecker createNameChecker() {
-		File file = getFile();
-		return new FileTreeNode.FileNameChecker(file.getParentFile(),
-				file.isDirectory());
-	}
+    NameChecker createNameChecker() {
+        File file = getFile();
+        return new FileTreeNode.FileNameChecker(file.getParentFile(), file.isDirectory());
+    }
 
 
-	@Override
-	public String getDisplayName() {
-		return FileDisplayNames.get().getName(getFile());
-	}
+    @Override
+    public String getDisplayName() {
+        return FileDisplayNames.get().getName(getFile());
+    }
 
 
-	/**
-	 * Returns the file or directory represented by this tree node's project
-	 * entry.
-	 *
-	 * @return The file or directory.
-	 */
-	public File getFile() {
-		return entry.getFile();
-	}
+    /**
+     * Returns the file or directory represented by this tree node's project
+     * entry.
+     *
+     * @return The file or directory.
+     */
+    public File getFile() {
+        return entry.getFile();
+    }
 
 
-	@Override
-	public Icon getIcon() {
-		return icon;
-	}
+    @Override
+    public Icon getIcon() {
+        return icon;
+    }
 
 
-	@Override
-	public List<PopupContent> getPopupActions() {
-		List<PopupContent> actions = new ArrayList<>();
-		boolean dir = getFile().isDirectory();
-		if (!dir) {
-			actions.add(new OpenAction());
-		}
-		addOpenInActions(actions);
-		actions.add(new MoveToTopAction());
-		actions.add(new MoveUpAction());
-		actions.add(new MoveDownAction());
-		actions.add(new MoveToBottomAction());
-		actions.add(null);
-		actions.add(new RemoveAction());
-		actions.add(new CopyFullPathAction());
-		actions.add(new DeleteAction());
-		actions.add(null);
-		actions.add(new RenameAction());
-		actions.add(null);
-		if (dir) {
-			actions.add(new RefreshAction());
-			actions.add(null);
-		}
-		actions.add(new PropertiesAction(true));
-		return actions;
-	}
+    @Override
+    public List<PopupContent> getPopupActions() {
+        List<PopupContent> actions = new ArrayList<>();
+        boolean dir = getFile().isDirectory();
+        if (!dir) {
+            actions.add(new OpenAction());
+        }
+        addOpenInActions(actions);
+        actions.add(new MoveToTopAction());
+        actions.add(new MoveUpAction());
+        actions.add(new MoveDownAction());
+        actions.add(new MoveToBottomAction());
+        actions.add(null);
+        actions.add(new RemoveAction());
+        actions.add(new CopyFullPathAction());
+        actions.add(new DeleteAction());
+        actions.add(null);
+        actions.add(new RenameAction());
+        actions.add(null);
+        if (dir) {
+            actions.add(new RefreshAction());
+            actions.add(null);
+        }
+        actions.add(new PropertiesAction(true));
+        return actions;
+    }
 
 
-	@Override
-	public String getToolTipText() {
-		return Messages.getString("ProjectPlugin.ToolTip.FileProjectEntry",
-				getFile().getAbsolutePath(),
-				Utilities.getFileSizeStringFor(getFile()));
-	}
+    @Override
+    public String getToolTipText() {
+        return Messages.getString("ProjectPlugin.ToolTip.FileProjectEntry",
+                getFile().getAbsolutePath(),
+                Utilities.getFileSizeStringFor(getFile()));
+    }
 
 
-	@Override
-	protected void handleDelete() {
+    @Override
+    protected void handleDelete() {
+        String text = Messages.getString("Action.DeleteFile.Confirm", getFile().getName());
+        RText rtext = plugin.getApplication();
+        String title = rtext.getString("ConfDialogTitle");
 
-		String text = Messages.getString("Action.DeleteFile.Confirm",
-				getFile().getName());
-		RText rtext = plugin.getApplication();
-		String title = rtext.getString("ConfDialogTitle");
-
-		int rc = JOptionPane.showConfirmDialog(rtext, text, title,
-				JOptionPane.YES_NO_OPTION);
-		if (rc==JOptionPane.YES_OPTION) {
-			if (!UIUtil.deleteFile(entry.getFile())) {
-				text = Messages.getString("ProjectPlugin.Error.DeletingFile",
-						getFile().getName());
-				title = rtext.getString("ErrorDialogTitle");
-				JOptionPane.showMessageDialog(rtext, text, title,
-						JOptionPane.ERROR_MESSAGE);
-			}
-			entry.removeFromParent();
-			removeFromParent();
-			plugin.refreshTree(getParent());
-		}
-
-	}
+        int rc = JOptionPane.showConfirmDialog(rtext, text, title, JOptionPane.YES_NO_OPTION);
+        if (rc == JOptionPane.YES_OPTION) {
+            if (!UIUtil.deleteFile(entry.getFile())) {
+                text = Messages.getString("ProjectPlugin.Error.DeletingFile", getFile().getName());
+                title = rtext.getString("ErrorDialogTitle");
+                JOptionPane.showMessageDialog(rtext, text, title, JOptionPane.ERROR_MESSAGE);
+            }
+            entry.removeFromParent();
+            removeFromParent();
+            plugin.refreshTree(getParent());
+        }
+    }
 
 
-	@Override
-	protected void handleProperties() {
-		FileTreeNode.handleProperties(plugin.getApplication(), getFile());
-	}
+    @Override
+    protected void handleProperties() {
+        FileTreeNode.handleProperties(plugin.getApplication(), getFile());
+    }
 
 
-	@Override
-	protected void handleRename() {
-		RText rtext = plugin.getApplication();
-		boolean directory = entry.getFile().isDirectory();
-		String key = "ProjectPlugin." + (directory ? "Folder" : "File");
-		String type = Messages.getString(key);
-		RenameDialog dialog = new RenameDialog(rtext, !directory, type, createNameChecker());
-		if (this instanceof FolderProjectEntryTreeNode) {
-			FolderProjectEntry fpe = (FolderProjectEntry)entry;
-			dialog.setDescription(getIcon(),
-					Messages.getString("RenameDialog.DisplayName.Desc"));
-			dialog.setNameLabel(Messages.getString("RenameDialog.DisplayName.Label"));
-			dialog.setFileName(fpe.getDisplayName());
-		}
-		else {
-			dialog.setFileName(FileDisplayNames.get().getName(entry.getFile()));
-		}
-		dialog.setVisible(true);
-		String newName = dialog.getFileName();
-		if (newName!=null) {
-			handleRenameImpl(newName);
-		}
-	}
+    @Override
+    protected void handleRename() {
+        RText rtext = plugin.getApplication();
+        boolean directory = entry.getFile().isDirectory();
+        String key = "ProjectPlugin." + (directory ? "Folder" : "File");
+        String type = Messages.getString(key);
+        RenameDialog dialog = new RenameDialog(rtext, !directory, type, createNameChecker());
+        if (this instanceof FolderProjectEntryTreeNode) {
+            FolderProjectEntry fpe = (FolderProjectEntry) entry;
+            dialog.setDescription(getIcon(), Messages.getString("RenameDialog.DisplayName.Desc"));
+            dialog.setNameLabel(Messages.getString("RenameDialog.DisplayName.Label"));
+            dialog.setFileName(fpe.getDisplayName());
+        } else {
+            dialog.setFileName(FileDisplayNames.get().getName(entry.getFile()));
+        }
+        dialog.setVisible(true);
+        String newName = dialog.getFileName();
+        if (newName != null) {
+            handleRenameImpl(newName);
+        }
+    }
 
 
-	void handleRenameImpl(String newName) {
-		File old = entry.getFile();
-		File newFile = new File(old.getParentFile(), newName);
-		boolean success = old.renameTo(newFile);
-		if (success) {
-			plugin.getTree().nodeChanged(this);
-		}
-		else {
-			UIManager.getLookAndFeel().provideErrorFeedback(null);
-		}
-	}
+    void handleRenameImpl(String newName) {
+        File old = entry.getFile();
+        File newFile = new File(old.getParentFile(), newName);
+        boolean success = old.renameTo(newFile);
+        if (success) {
+            plugin.getTree().nodeChanged(this);
+        } else {
+            UIManager.getLookAndFeel().provideErrorFeedback(null);
+        }
+    }
 
 
 }

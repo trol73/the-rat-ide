@@ -30,8 +30,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
-import org.fife.rsta.ui.EscapableDialog;
 import org.fife.rsta.ui.UIUtil;
+import org.fife.ui.EscapableDialog;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
 import org.fife.ui.rtextarea.SearchContext;
 
@@ -45,8 +45,7 @@ import org.fife.ui.rtextarea.SearchContext;
  * @author Robert Futrell
  * @version 0.1
  */
-public class AbstractSearchDialog extends EscapableDialog
-							implements ActionListener {
+public class AbstractSearchDialog extends EscapableDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,13 +74,11 @@ public class AbstractSearchDialog extends EscapableDialog
 	// Miscellaneous other stuff.
 	protected JButton cancelButton;
 
-	private static final ResourceBundle MSG = ResourceBundle.
-			getBundle("org.fife.rsta.ui.search.Search");
+	private static final ResourceBundle MSG = ResourceBundle.getBundle("org.fife.rsta.ui.search.Search");
 
 
 	/**
-	 * Constructor.  Does initializing for parts common to all search
-	 * dialogs.
+	 * Constructor.  Does initializing for parts common to all search dialogs.
 	 *
 	 * @param owner The dialog that owns this search dialog.
 	 */
@@ -390,7 +387,6 @@ public class AbstractSearchDialog extends EscapableDialog
 	 * @return Whether the buttons should be enabled.
 	 */
 	protected FindReplaceButtonsEnableResult handleToggleButtons() {
-
 		//String text = getSearchString();
 		JTextComponent tc = UIUtil.getTextComponent(findTextCombo);
 		String text = tc.getText();

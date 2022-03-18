@@ -28,8 +28,7 @@ public class RenameDialog extends AbstractEnterFileNameDialog {
      * Constructor.
      *
      * @param owner     The rtext window that owns this dialog.
-     * @param isForFile Whether this dialog is for a regular file as opposed to
-     *                  a directory.
+     * @param isForFile Whether this dialog is for a regular file as opposed to a directory.
      * @param type      The type of node being renamed.
      * @param checker   The name checking callback.
      */

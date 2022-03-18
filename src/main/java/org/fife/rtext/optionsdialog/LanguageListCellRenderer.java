@@ -18,7 +18,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
 import org.fife.rtext.optionsdialog.LanguageOptionPanel.IconTextInfo;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 
 
 /**

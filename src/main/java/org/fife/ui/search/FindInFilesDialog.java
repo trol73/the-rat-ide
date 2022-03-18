@@ -21,16 +21,16 @@ import javax.swing.border.Border;
 import javax.swing.event.*;
 import javax.swing.text.JTextComponent;
 
-import org.fife.rsta.ui.AssistanceIconPanel;
+import org.fife.ui.widgets.AssistanceIconPanel;
 import org.fife.rsta.ui.RComboBoxModel;
 import org.fife.rsta.ui.search.AbstractSearchDialog;
 import org.fife.rsta.ui.search.FindReplaceButtonsEnableResult;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextUtilities;
-import org.fife.ui.FSATextField;
-import org.fife.ui.RScrollPane;
+import org.fife.ui.widgets.FSATextField;
+import org.fife.ui.widgets.RScrollPane;
 import org.fife.ui.StatusBar;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextfilechooser.RDirectoryChooser;
 

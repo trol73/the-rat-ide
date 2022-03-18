@@ -13,7 +13,7 @@ import java.io.File;
 
 import javax.swing.filechooser.*;
 
-import org.fife.ui.OS;
+import org.fife.ui.utils.OS;
 import org.fife.ui.rtextfilechooser.Utilities;
 
 

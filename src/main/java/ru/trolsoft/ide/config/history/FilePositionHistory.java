@@ -155,8 +155,13 @@ public class FilePositionHistory {
         return index >= 0 ? records.get(index) : new FileRecord(fileName);
     }
 
+    public String restoreEncoding(String filePath, String defaultEncoding) {
+        int index = findRecord(filePath);
+        return index >= 0 ? records.get(index).getEncoding() : defaultEncoding;
+    }
+
     public void restoreTextArea(TextEditorPane editor) {
-        System.out.println("LOAD " + editor.getFileFullPath());
+        //System.out.println("LOAD " + editor.getFileFullPath());
         FileRecord record = get(editor.getFileFullPath());
         Component parent = editor.getParent();
         if (parent instanceof JViewport) {
@@ -166,7 +171,7 @@ public class FilePositionHistory {
     }
 
     public void saveTextArea(TextEditorPane editor, RTextScrollPane scrollPane) {
-        System.out.println("SAVE " + editor.getFileFullPath());
+        //System.out.println("SAVE " + editor.getFileFullPath());
         FileRecord record = get(editor.getFileFullPath());
         record.setLine(editor.getLine());
         record.setColumn(editor.getColumn());

@@ -32,6 +32,8 @@ import org.fife.ui.SplashScreen;
 import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.app.themes.NativeTheme;
+import org.fife.ui.options.OptionsDialog;
+import org.fife.ui.utils.OS;
 
 
 /**
@@ -1488,7 +1490,6 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
             AbstractGUIApplication<?> app = getApplication();
             app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             OptionsDialog dialog;

@@ -33,6 +33,12 @@ import javax.swing.filechooser.FileSystemView;
 import org.fife.ui.*;
 import org.fife.ui.breadcrumbbar.BreadcrumbBar;
 import org.fife.ui.rtextfilechooser.filters.AcceptAllFileFilter;
+import org.fife.ui.utils.ImageTranscodingUtil;
+import org.fife.ui.utils.OS;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.widgets.FSATextField;
+import org.fife.ui.widgets.MenuButton;
+import org.fife.ui.widgets.RScrollPane;
 
 
 /**

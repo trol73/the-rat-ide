@@ -38,13 +38,13 @@ import org.fife.rtext.RText;
 import org.fife.rtext.RTextPrefs;
 import org.fife.rtext.RTextUtilities;
 import org.fife.rtext.SpellingSupport;
-import org.fife.ui.FSATextField;
-import org.fife.ui.OptionsDialogPanel;
-import org.fife.ui.RColorButton;
+import org.fife.ui.widgets.FSATextField;
+import org.fife.ui.options.OptionsDialogPanel;
+import org.fife.ui.widgets.RColorButton;
 import org.fife.ui.RColorSwatchesButton;
-import org.fife.ui.SelectableLabel;
-import org.fife.ui.LabelValueComboBox;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.SelectableLabel;
+import org.fife.ui.widgets.LabelValueComboBox;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
 
 

@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 
 
-
 /**
  * A project is a logical collection of {@link ProjectEntry}s.  For maximum
  * flexibility, this plugin does not require all entries in a project to live in
@@ -25,139 +24,172 @@ import java.util.List;
  */
 public class Project implements Comparable<Project>, ProjectEntryParent {
 
-	private final Workspace workspace;
-	private String name;
-	private final List<ProjectEntry> entries;
+    private final Workspace workspace;
+    private String name;
+    private String encoding;
+    private String device;
+    private ProjectType type;
+    private String mainFile;
+    private final List<ProjectEntry> entries;
 
 
-	public Project(Workspace workspace, String name) {
-		this.workspace = workspace;
-		setName(name);
-		entries = new ArrayList<>();
-	}
+    public Project(Workspace workspace, String name) {
+        this.workspace = workspace;
+        setName(name);
+        entries = new ArrayList<>();
+    }
 
 
-	@Override
-	public void accept(WorkspaceVisitor visitor) {
-		visitor.visit(this);
-		for (ProjectEntry entry : entries) {
-			entry.accept(visitor);
-		}
-		visitor.postVisit(this);
-	}
+    @Override
+    public void accept(WorkspaceVisitor visitor) {
+        visitor.visit(this);
+        for (ProjectEntry entry : entries) {
+            entry.accept(visitor);
+        }
+        visitor.postVisit(this);
+    }
 
 
-	@Override
-	public void addEntry(ProjectEntry entry) {
-		entries.add(entry);
-	}
+    @Override
+    public void addEntry(ProjectEntry entry) {
+        entries.add(entry);
+    }
 
 
-	@Override
-	public int compareTo(Project p2) {
-		return getName().compareTo(p2.getName());
-	}
+    @Override
+    public int compareTo(Project p2) {
+        return getName().compareTo(p2.getName());
+    }
 
 
-	@Override
-	public boolean equals(Object o) {
-		if (o==this) {
-			return true;
-		}
-		if (o instanceof Project) {
-			return compareTo((Project)o)==0;
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o instanceof Project) {
+            return compareTo((Project) o) == 0;
+        }
+        return false;
+    }
 
 
-	/**
-	 * Returns the index of the specified project entry.
-	 *
-	 * @param entry The entry to look for.
-	 * @return The index of the entry, or <code>-1</code> if it is not
-	 *         contained in this project.
-	 */
-	private int getEntryIndex(ProjectEntry entry) {
-		for (int i=0; i<entries.size(); i++) {
-			if (entry==entries.get(i)) {
-				return i;
-			}
-		}
-		return -1;
-	}
+    /**
+     * Returns the index of the specified project entry.
+     *
+     * @param entry The entry to look for.
+     * @return The index of the entry, or <code>-1</code> if it is not
+     * contained in this project.
+     */
+    private int getEntryIndex(ProjectEntry entry) {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entry == entries.get(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
 
-	@Override
-	public Iterator<ProjectEntry> getEntryIterator() {
-		return entries.iterator();
-	}
+    @Override
+    public Iterator<ProjectEntry> getEntryIterator() {
+        return entries.iterator();
+    }
 
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public ProjectType getType() {
+        return type;
+    }
+
+    public Workspace getWorkspace() {
+        return workspace;
+    }
+
+    public String getMainFile() {
+        return mainFile;
+    }
 
 
-	public Workspace getWorkspace() {
-		return workspace;
-	}
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
 
 
-	@Override
-	public int hashCode() {
-		return getName().hashCode();
-	}
+    @Override
+    public boolean moveProjectEntryDown(ProjectEntry entry, boolean toBottom) {
+        int index = getEntryIndex(entry);
+        if (index > -1 && index < entries.size() - 1) {
+            entries.remove(index);
+            int newIndex = toBottom ? entries.size() - 1 : index + 1;
+            entries.add(newIndex, entry);
+            return true;
+        }
+        return false;
+    }
 
 
-	@Override
-	public boolean moveProjectEntryDown(ProjectEntry entry, boolean toBottom) {
-		int index = getEntryIndex(entry);
-		if (index>-1 && index<entries.size()-1) {
-			entries.remove(index);
-			int newIndex = toBottom ? entries.size() - 1 : index + 1;
-			entries.add(newIndex, entry);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean moveProjectEntryUp(ProjectEntry entry, boolean toTop) {
+        int index = getEntryIndex(entry);
+        if (index > 0) {
+            entries.remove(index);
+            int newIndex = toTop ? 0 : index - 1;
+            entries.add(newIndex, entry);
+            return true;
+        }
+        return false;
+    }
 
 
-	@Override
-	public boolean moveProjectEntryUp(ProjectEntry entry, boolean toTop) {
-		int index = getEntryIndex(entry);
-		if (index>0) {
-			entries.remove(index);
-			int newIndex = toTop ? 0 : index - 1;
-			entries.add(newIndex, entry);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public void removeEntry(ProjectEntry entry) {
+        entries.remove(entry);
+    }
 
 
-	@Override
-	public void removeEntry(ProjectEntry entry) {
-		entries.remove(entry);
-	}
+    /**
+     * Removes this project from its parent workspace.
+     */
+    public void removeFromWorkspace() {
+        workspace.removeProject(this);
+    }
 
 
-	/**
-	 * Removes this project from its parent workspace.
-	 */
-	public void removeFromWorkspace() {
-		workspace.removeProject(this);
-	}
+    /**
+     * Sets the name of this workspace.
+     *
+     * @param name The new name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
 
-	/**
-	 * Sets the name of this workspace.
-	 *
-	 * @param name The new name.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    public void setType(ProjectType type) {
+        this.type = type;
+    }
+
+    public void setMainFile(String mainFile) { this.mainFile = mainFile; }
 
 
 }

@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.regex.PatternSyntaxException;
 import javax.swing.*;
 
-import org.fife.rsta.ui.CollapsibleSectionPanel;
+import org.fife.ui.widgets.CollapsibleSectionPanel;
 import org.fife.rsta.ui.search.AbstractFindReplaceDialog;
 import org.fife.rsta.ui.search.FindDialog;
 import org.fife.rsta.ui.search.FindToolBar;

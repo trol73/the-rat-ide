@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextEditorPane;
 import org.fife.rtext.RTextUtilities;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.AppAction;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.ui.rtextfilechooser.filters.HTMLFileFilter;

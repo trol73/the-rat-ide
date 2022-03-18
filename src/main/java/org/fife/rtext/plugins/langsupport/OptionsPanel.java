@@ -25,9 +25,10 @@ import javax.swing.event.HyperlinkEvent.EventType;
 
 import org.fife.rsta.ac.java.JavaCellRenderer;
 import org.fife.rtext.RText;
+import org.fife.rtext.plugins.langsupport.panels.*;
 import org.fife.ui.RColorSwatchesButton;
-import org.fife.ui.SelectableLabel;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.SelectableLabel;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.PluginOptionsDialogPanel;
 import org.fife.ui.autocomplete.CompletionCellRenderer;
 
@@ -40,216 +41,200 @@ import org.fife.ui.autocomplete.CompletionCellRenderer;
  */
 class OptionsPanel extends PluginOptionsDialogPanel<Plugin> {
 
-	/**
-	 * ID used to identify this option panel, so others can attach to it.
-	 */
-	private static final String OPTION_PANEL_ID = "LanguageSupportOptionPanel";
+    /**
+     * ID used to identify this option panel, so others can attach to it.
+     */
+    private static final String OPTION_PANEL_ID = "LanguageSupportOptionPanel";
 
-	private final JComboBox<Integer> codeFoldingThresholdCB;
-	private final JCheckBox altColorCB;
-	private final RColorSwatchesButton altColorButton;
-	private final JButton rdButton;
-
-
-	OptionsPanel(Plugin plugin) {
-
-		super(plugin);
-		setId(OPTION_PANEL_ID);
-		RText app = plugin.getApplication();
-		setIcon(app.getIconGroup().getIcon("comment"));
-		app.addPropertyChangeListener(RText.ICON_STYLE_PROPERTY, e -> {
-			app.getIconGroup().getIcon("comment");
-		});
-
-		ResourceBundle msg = Plugin.MSG;
-		setName(msg.getString("Name"));
-		Listener listener = new Listener();
-
-		ComponentOrientation o = ComponentOrientation.
-											getOrientation(getLocale());
-
-		setLayout(new BorderLayout());
-		setBorder(UIUtil.getEmpty5Border());
-		Box cp = Box.createVerticalBox();
-		add(cp, BorderLayout.NORTH);
-
-		SelectableLabel label = new SelectableLabel();
-		label.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
-		label.setText(msg.getString("Options.Main.Label"));
-		label.addHyperlinkListener(listener);
-		cp.add(label);
-		cp.add(Box.createVerticalStrut(5));
-
-		Box temp = Box.createVerticalBox();
-		temp.setBorder(new OptionPanelBorder(msg.getString("Options.Main.Section")));
-
-		codeFoldingThresholdCB = new JComboBox<>(new Integer[] { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 });
-		codeFoldingThresholdCB.addActionListener(listener);
-		Box temp2 = createHorizontalBox();
-		temp2.add(UIUtil.newLabel(msg, "Options.Main.CodeFoldingThreshold", codeFoldingThresholdCB));
-		temp2.add(Box.createHorizontalStrut(5));
-		temp2.add(codeFoldingThresholdCB);
-		temp2.add(Box.createHorizontalGlue());
-		addLeftAligned(temp, temp2);
-
-		altColorCB = new JCheckBox(msg.getString("Options.Main.AlternateColor"));
-		altColorCB.addActionListener(listener);
-		altColorButton = new RColorSwatchesButton();
-		altColorButton.addActionListener(listener);
-		temp2 = createHorizontalBox();
-		temp2.add(altColorCB);
-		temp2.add(Box.createHorizontalStrut(5));
-		temp2.add(altColorButton);
-		temp2.add(Box.createHorizontalGlue());
-		temp.add(temp2);
-		cp.add(temp);
-		cp.add(Box.createVerticalStrut(10));
-
-		rdButton = new JButton(msg.getString("Options.General.RestoreDefaults"));
-		rdButton.addActionListener(listener);
-		addLeftAligned(cp, rdButton, 5);
-
-		cp.add(Box.createVerticalGlue());
-
-		applyComponentOrientation(o);
-
-		// Language-specific child panels
-		addChildPanel(new COptionsPanel(app));
-		addChildPanel(new CPlusPlusOptionsPanel(app));
-		addChildPanel(new CSharpOptionsPanel(app));
-		addChildPanel(new CssOptionsPanel(app));
-		addChildPanel(new ClojureOptionsPanel(app));
-		addChildPanel(new DOptionsPanel(app));
-		addChildPanel(new DartOptionsPanel(app));
-		addChildPanel(new GoOptionsPanel(app));
-		addChildPanel(new GroovyOptionsPanel(app));
-		addChildPanel(new HtmlOptionsPanel(app));
-		addChildPanel(new JavaOptionsPanel(app));
-		addChildPanel(new JavaScriptOptionsPanel(app));
-		addChildPanel(new JSHintOptionsPanel(app));
-		addChildPanel(new JsonOptionsPanel(app));
-		addChildPanel(new JspOptionsPanel(app));
-		addChildPanel(new KotlinOptionsPanel(app));
-		addChildPanel(new LatexOptionsPanel(app));
-		addChildPanel(new LessOptionsPanel(app));
-		addChildPanel(new MxmlOptionsPanel(app));
-		addChildPanel(new NsisOptionsPanel(app));
-		addChildPanel(new PerlOptionsPanel(app));
-		addChildPanel(new PhpOptionsPanel(app));
-		addChildPanel(new PythonOptionsPanel(app));
-		addChildPanel(new ScalaOptionsPanel(app));
-		addChildPanel(new ShellOptionsPanel(app));
-		addChildPanel(new TypeScriptOptionsPanel(app));
-		addChildPanel(new XmlOptionsPanel(app));
-	}
+    private final JComboBox<Integer> codeFoldingThresholdCB;
+    private final JCheckBox altColorCB;
+    private final RColorSwatchesButton altColorButton;
+    private final JButton rdButton;
 
 
-	@Override
-	protected void doApplyImpl(Frame owner) {
+    OptionsPanel(Plugin plugin) {
+        super(plugin);
+        setId(OPTION_PANEL_ID);
+        RText app = plugin.getApplication();
+        setIcon(app.getIconGroup().getIcon("comment"));
+        app.addPropertyChangeListener(RText.ICON_STYLE_PROPERTY, e -> app.getIconGroup().getIcon("comment"));
 
-		RText rtext = (RText)owner;
-		rtext.getMainView().setMaxFileSizeForCodeFolding(
-			(Integer)codeFoldingThresholdCB.getSelectedItem());
+        ResourceBundle msg = Plugin.MSG;
+        setName(msg.getString("Name"));
+        Listener listener = new Listener();
 
-		Color c = altColorCB.isSelected() ? altColorButton.getColor() : null;
-		// All cell renderers except Java's are CompletionCellRenderers.
-		CompletionCellRenderer.setAlternateBackground(c);
-		JavaCellRenderer.setAlternateBackground(c);
-	}
+        ComponentOrientation o = ComponentOrientation.getOrientation(getLocale());
+
+        setLayout(new BorderLayout());
+        setBorder(UIUtil.getEmpty5Border());
+        Box cp = Box.createVerticalBox();
+        add(cp, BorderLayout.NORTH);
+
+        SelectableLabel label = new SelectableLabel();
+        label.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        label.setText(msg.getString("Options.Main.Label"));
+        label.addHyperlinkListener(listener);
+        cp.add(label);
+        cp.add(Box.createVerticalStrut(5));
+
+        Box temp = Box.createVerticalBox();
+        temp.setBorder(new OptionPanelBorder(msg.getString("Options.Main.Section")));
+
+        codeFoldingThresholdCB = new JComboBox<>(new Integer[]{8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20});
+        codeFoldingThresholdCB.addActionListener(listener);
+        Box temp2 = createHorizontalBox();
+        temp2.add(UIUtil.newLabel(msg, "Options.Main.CodeFoldingThreshold", codeFoldingThresholdCB));
+        temp2.add(Box.createHorizontalStrut(5));
+        temp2.add(codeFoldingThresholdCB);
+        temp2.add(Box.createHorizontalGlue());
+        addLeftAligned(temp, temp2);
+
+        altColorCB = new JCheckBox(msg.getString("Options.Main.AlternateColor"));
+        altColorCB.addActionListener(listener);
+        altColorButton = new RColorSwatchesButton();
+        altColorButton.addActionListener(listener);
+        temp2 = createHorizontalBox();
+        temp2.add(altColorCB);
+        temp2.add(Box.createHorizontalStrut(5));
+        temp2.add(altColorButton);
+        temp2.add(Box.createHorizontalGlue());
+        temp.add(temp2);
+        cp.add(temp);
+        cp.add(Box.createVerticalStrut(10));
+
+        rdButton = new JButton(msg.getString("Options.General.RestoreDefaults"));
+        rdButton.addActionListener(listener);
+        addLeftAligned(cp, rdButton, 5);
+
+        cp.add(Box.createVerticalGlue());
+
+        applyComponentOrientation(o);
+
+        // Language-specific child panels
+        addChildPanel(new COptionsPanel(app));
+        addChildPanel(new CPlusPlusOptionsPanel(app));
+        addChildPanel(new CSharpOptionsPanel(app));
+        addChildPanel(new CssOptionsPanel(app));
+        addChildPanel(new ClojureOptionsPanel(app));
+        addChildPanel(new DOptionsPanel(app));
+        addChildPanel(new DartOptionsPanel(app));
+        addChildPanel(new GoOptionsPanel(app));
+        addChildPanel(new GroovyOptionsPanel(app));
+        addChildPanel(new HtmlOptionsPanel(app));
+        addChildPanel(new JavaOptionsPanel(app));
+        addChildPanel(new JavaScriptOptionsPanel(app));
+        addChildPanel(new JSHintOptionsPanel(app));
+        addChildPanel(new JsonOptionsPanel(app));
+        addChildPanel(new JspOptionsPanel(app));
+        addChildPanel(new KotlinOptionsPanel(app));
+        addChildPanel(new LatexOptionsPanel(app));
+        addChildPanel(new LessOptionsPanel(app));
+        addChildPanel(new MxmlOptionsPanel(app));
+        addChildPanel(new NsisOptionsPanel(app));
+        addChildPanel(new PerlOptionsPanel(app));
+        addChildPanel(new PhpOptionsPanel(app));
+        addChildPanel(new PythonOptionsPanel(app));
+        addChildPanel(new ScalaOptionsPanel(app));
+        addChildPanel(new ShellOptionsPanel(app));
+        addChildPanel(new TypeScriptOptionsPanel(app));
+        addChildPanel(new XmlOptionsPanel(app));
+    }
 
 
-	@Override
-	protected OptionsPanelCheckResult ensureValidInputsImpl() {
-		return null;
-	}
+    @Override
+    protected void doApplyImpl(Frame owner) {
+        RText rtext = (RText) owner;
+        rtext.getMainView().setMaxFileSizeForCodeFolding((Integer) codeFoldingThresholdCB.getSelectedItem());
+
+        Color c = altColorCB.isSelected() ? altColorButton.getColor() : null;
+        // All cell renderers except Java's are CompletionCellRenderers.
+        CompletionCellRenderer.setAlternateBackground(c);
+        JavaCellRenderer.setAlternateBackground(c);
+    }
 
 
-	@Override
-	public JComponent getTopJComponent() {
-		return altColorCB;
-	}
+    @Override
+    protected OptionsPanelCheckResult ensureValidInputsImpl() {
+        return null;
+    }
 
 
-	@Override
-	protected void setValuesImpl(Frame owner) {
-
-		RText app = (RText)owner;
-		Map<String, Object> extraUiDefaults = app.getTheme().getExtraUiDefaults();
-		Color defaultAltRowColor = (Color)extraUiDefaults.get("rtext.listAltRowColor");
-
-		codeFoldingThresholdCB.setSelectedItem(app.getMainView().getMaxFileSizeForCodeFolding());
-
-		Color altColor = CompletionCellRenderer.getAlternateBackground();
-		if (altColor==null) {
-			altColorCB.setSelected(false);
-			altColorButton.setColor(defaultAltRowColor);
-			altColorButton.setEnabled(false);
-		}
-		else {
-			altColorCB.setSelected(true);
-			altColorButton.setColor(altColor);
-		}
-
-	}
+    @Override
+    public JComponent getTopJComponent() {
+        return altColorCB;
+    }
 
 
-	/**
-	 * Listens for events in this panel.
-	 */
-	private class Listener implements ActionListener, HyperlinkListener {
+    @Override
+    protected void setValuesImpl(Frame owner) {
+        RText app = (RText) owner;
+        Map<String, Object> extraUiDefaults = app.getTheme().getExtraUiDefaults();
+        Color defaultAltRowColor = (Color) extraUiDefaults.get("rtext.listAltRowColor");
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
+        codeFoldingThresholdCB.setSelectedItem(app.getMainView().getMaxFileSizeForCodeFolding());
 
-			int defaultCodeFoldingThreshold = 12;
-			Object source = e.getSource();
+        Color altColor = CompletionCellRenderer.getAlternateBackground();
+        if (altColor == null) {
+            altColorCB.setSelected(false);
+            altColorButton.setColor(defaultAltRowColor);
+            altColorButton.setEnabled(false);
+        } else {
+            altColorCB.setSelected(true);
+            altColorButton.setColor(altColor);
+        }
+    }
 
-			if (codeFoldingThresholdCB == source) {
-				setDirty(true);
-			}
 
-			else if (altColorCB==source) {
-				altColorButton.setEnabled(altColorCB.isSelected());
-				setDirty(true);
-			}
+    /**
+     * Listens for events in this panel.
+     */
+    private class Listener implements ActionListener, HyperlinkListener {
 
-			else if (altColorButton==source) {
-				setDirty(true);
-			}
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
-			else if (rdButton==source) {
+            int defaultCodeFoldingThreshold = 12;
+            Object source = e.getSource();
 
-				// This panel's defaults are based on the current theme.
-				RText app = (RText)getOptionsDialog().getParent();
-				Map<String, Object> extraUiDefaults = app.getTheme().getExtraUiDefaults();
-				Color defaultAltRowColor = (Color)extraUiDefaults.get("rtext.listAltRowColor");
+            if (codeFoldingThresholdCB == source) {
+                setDirty(true);
+            } else if (altColorCB == source) {
+                altColorButton.setEnabled(altColorCB.isSelected());
+                setDirty(true);
+            } else if (altColorButton == source) {
+                setDirty(true);
+            } else if (rdButton == source) {
 
-				if (!Objects.equals(defaultCodeFoldingThreshold,
-							codeFoldingThresholdCB.getSelectedItem()) ||
-						altColorCB.isSelected() ||
-						!defaultAltRowColor.equals(altColorButton.getColor())) {
-					codeFoldingThresholdCB.setSelectedItem(defaultCodeFoldingThreshold);
-					altColorCB.setSelected(false);
-					altColorButton.setEnabled(false);
-					altColorButton.setColor(defaultAltRowColor);
-					setDirty(true);
-				}
+                // This panel's defaults are based on the current theme.
+                RText app = (RText) getOptionsDialog().getParent();
+                Map<String, Object> extraUiDefaults = app.getTheme().getExtraUiDefaults();
+                Color defaultAltRowColor = (Color) extraUiDefaults.get("rtext.listAltRowColor");
 
-			}
+                if (!Objects.equals(defaultCodeFoldingThreshold,
+                        codeFoldingThresholdCB.getSelectedItem()) ||
+                        altColorCB.isSelected() ||
+                        !defaultAltRowColor.equals(altColorButton.getColor())) {
+                    codeFoldingThresholdCB.setSelectedItem(defaultCodeFoldingThreshold);
+                    altColorCB.setSelected(false);
+                    altColorButton.setEnabled(false);
+                    altColorButton.setColor(defaultAltRowColor);
+                    setDirty(true);
+                }
 
-		}
+            }
 
-		@Override
-		public void hyperlinkUpdate(HyperlinkEvent e) {
-			if (e.getEventType()==EventType.ACTIVATED) {
-				if (!UIUtil.browse(e.getURL().toExternalForm())) {
-					UIManager.getLookAndFeel().provideErrorFeedback(
-													OptionsPanel.this);
-				}
-			}
-		}
+        }
 
-	}
+        @Override
+        public void hyperlinkUpdate(HyperlinkEvent e) {
+            if (e.getEventType() == EventType.ACTIVATED) {
+                if (!UIUtil.browse(e.getURL().toExternalForm())) {
+                    UIManager.getLookAndFeel().provideErrorFeedback(OptionsPanel.this);
+                }
+            }
+        }
+
+    }
 
 
 }

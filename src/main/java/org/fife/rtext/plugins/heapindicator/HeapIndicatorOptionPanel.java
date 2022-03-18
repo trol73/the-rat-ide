@@ -33,7 +33,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.fife.ui.RColorSwatchesButton;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.AbstractPluggableGUIApplication;
 import org.fife.ui.app.PluginOptionsDialogPanel;
 

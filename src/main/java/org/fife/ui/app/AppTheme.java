@@ -5,6 +5,8 @@
  */
 package org.fife.ui.app;
 
+import org.fife.ui.widgets.Hyperlink;
+
 import java.awt.*;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public interface AppTheme {
 	 *
 	 * @return The color to use for hyperlinks.  If this is {@code null},
 	 *         a default value is used.
-	 * @see org.fife.ui.Hyperlink
+	 * @see Hyperlink
 	 */
 	Color getHyperlinkForeground();
 

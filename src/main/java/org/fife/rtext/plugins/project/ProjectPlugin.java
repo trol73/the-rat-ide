@@ -35,7 +35,7 @@ import org.fife.rtext.plugins.project.model.Workspace;
 import org.fife.rtext.plugins.project.tree.AbstractWorkspaceTreeNode;
 import org.fife.rtext.plugins.project.tree.WorkspaceTree;
 import org.fife.rtext.plugins.project.tree.WorkspaceTreeStateSaver;
-import org.fife.ui.ImageTranscodingUtil;
+import org.fife.ui.utils.ImageTranscodingUtil;
 import org.fife.ui.app.GUIPlugin;
 import org.fife.ui.app.PluginOptionsDialogPanel;
 import org.fife.ui.app.AppAction;
@@ -285,6 +285,18 @@ public class ProjectPlugin extends GUIPlugin<RText> {
         if (workspace == null) {
             File defaultWorkspace = new File(getWorkspacesDir(), "Workspace.xml");
             workspace = new Workspace(this, defaultWorkspace);
+        }
+    }
+
+    public void reloadWorkspace() {
+        if (workspace == null) {
+            return;
+        }
+        File workspaceFile = new File(workspace.getFileFullPath());
+        try {
+            workspace = Workspace.load(this, workspaceFile);
+        } catch (IOException ioe) {
+            getApplication().displayException(ioe);
         }
     }
 

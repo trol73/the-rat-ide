@@ -37,8 +37,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileSystemView;
 
-import org.fife.ui.FSATextField;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.FSATextField;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rtextfilechooser.FileDisplayNames;
 
 

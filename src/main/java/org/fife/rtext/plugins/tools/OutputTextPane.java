@@ -23,7 +23,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.TextAction;
 
-import org.fife.ui.OptionsDialog;
+import org.fife.ui.options.OptionsDialog;
 import org.fife.ui.StandardAction;
 import org.fife.ui.app.console.AbstractConsoleTextArea;
 import org.fife.ui.rtextarea.RTextArea;

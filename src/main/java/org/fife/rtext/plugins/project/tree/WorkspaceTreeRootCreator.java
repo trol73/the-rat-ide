@@ -97,24 +97,21 @@ class WorkspaceTreeRootCreator implements WorkspaceVisitor {
 
 	@Override
 	public void visit(FileProjectEntry entry) {
-		FileProjectEntryTreeNode node = new FileProjectEntryTreeNode(
-															plugin, entry);
+		FileProjectEntryTreeNode node = new FileProjectEntryTreeNode(plugin, entry);
 		getCurrentProjectEntryParentNode().add(node);
 	}
 
 
 	@Override
 	public void visit(FolderProjectEntry entry) {
-		FolderProjectEntryTreeNode node = new FolderProjectEntryTreeNode(
-															plugin, entry);
+		FolderProjectEntryTreeNode node = new FolderProjectEntryTreeNode(plugin, entry);
 		getCurrentProjectEntryParentNode().add(node);
 	}
 
 
 	@Override
 	public void visit(LogicalFolderProjectEntry entry) {
-		LogicalFolderProjectEntryTreeNode node =
-				new LogicalFolderProjectEntryTreeNode(plugin, entry);
+		LogicalFolderProjectEntryTreeNode node = new LogicalFolderProjectEntryTreeNode(plugin, entry);
 		getCurrentProjectEntryParentNode().add(node);
 		entryParentNodeStack.push(node);
 	}

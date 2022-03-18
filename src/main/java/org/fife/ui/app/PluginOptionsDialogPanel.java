@@ -9,7 +9,7 @@
  */
 package org.fife.ui.app;
 
-import org.fife.ui.OptionsDialogPanel;
+import org.fife.ui.options.OptionsDialogPanel;
 
 
 /**

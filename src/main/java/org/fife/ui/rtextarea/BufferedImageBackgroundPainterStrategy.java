@@ -42,8 +42,7 @@ import java.util.Map;
  * @see org.fife.ui.rtextarea.ImageBackgroundPainterStrategy
  * @see org.fife.ui.rtextarea.VolatileImageBackgroundPainterStrategy
  */
-public class BufferedImageBackgroundPainterStrategy
-					extends ImageBackgroundPainterStrategy {
+public class BufferedImageBackgroundPainterStrategy extends ImageBackgroundPainterStrategy {
 
 	private BufferedImage bgImage;
 
@@ -117,8 +116,7 @@ public class BufferedImageBackgroundPainterStrategy
 
 	private BufferedImage createAcceleratedImage(int width, int height) {
 		GraphicsConfiguration gc= getRTextAreaBase().getGraphicsConfiguration();
-		BufferedImage image = gc.createCompatibleImage(width, height);
-		return image;
+		return gc.createCompatibleImage(width, height);
 	}
 
 

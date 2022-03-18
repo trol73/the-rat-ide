@@ -27,10 +27,10 @@ import org.fife.ctags.TagEntry;
 import org.fife.rsta.ac.AbstractSourceTree;
 import org.fife.rtext.*;
 import org.fife.rtext.optionsdialog.OptionsDialog;
-import org.fife.ui.ImageTranscodingUtil;
-import org.fife.ui.RScrollPane;
-import org.fife.ui.UIUtil;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.utils.ImageTranscodingUtil;
+import org.fife.ui.widgets.RScrollPane;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.app.*;
 import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.app.themes.FlatDarkTheme;
@@ -769,7 +769,7 @@ public class SourceBrowserPlugin extends GUIPlugin<RText>
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			org.fife.ui.OptionsDialog od = getApplication().getOptionsDialog();
+			org.fife.ui.options.OptionsDialog od = getApplication().getOptionsDialog();
 			od.initialize();
 			od.setSelectedOptionsPanel(msg.getString("Name"));
 			od.setVisible(true);

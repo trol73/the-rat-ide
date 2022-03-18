@@ -50,7 +50,7 @@
         <style token="MARKUP_TAG_DELIMITER" fg="F92672"/>
         <style token="MARKUP_TAG_NAME" fg="ABBFD3" bold="true"/>
         <style token="MARKUP_TAG_ATTRIBUTE" fg="B3B689"/>
-        <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="e1e2cf"/>
+        <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="E1E2CF"/>
         <style token="MARKUP_COMMENT" fg="878787"/>
         <style token="MARKUP_DTD" fg="A082BD"/>
         <style token="MARKUP_PROCESSING_INSTRUCTION" fg="A082BD"/>

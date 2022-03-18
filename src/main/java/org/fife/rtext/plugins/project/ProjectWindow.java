@@ -31,11 +31,11 @@ import org.fife.rtext.BottomLineBorder;
 import org.fife.rtext.RText;
 import org.fife.rtext.plugins.project.model.Workspace;
 import org.fife.rtext.plugins.project.tree.PhysicalLocationTreeNode;
-import org.fife.rtext.plugins.project.tree.WorkspaceRootTreeNode;
+import org.fife.rtext.plugins.project.tree.checkers.WorkspaceNameChecker;
 import org.fife.rtext.plugins.project.tree.WorkspaceTree;
-import org.fife.ui.MenuButton;
-import org.fife.ui.UIUtil;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.widgets.MenuButton;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowConstants;
 import org.fife.ui.dockablewindows.DockableWindowScrollPane;
@@ -233,7 +233,7 @@ class ProjectWindow extends DockableWindow {
 
             // Get the name for the new workspace.
             RenameDialog dialog = new RenameDialog(rtext, false, "Workspace",
-                    new WorkspaceRootTreeNode.WorkspaceNameChecker());
+                    new WorkspaceNameChecker());
             Icon icon = plugin.getApplication().getIconGroup().getIcon("application_double");
             dialog.setDescription(icon, Messages.getString("NewWorkspaceDialog.Desc"));
             dialog.setTitle(Messages.getString("NewWorkspaceDialog.Title"));
@@ -272,7 +272,6 @@ class ProjectWindow extends DockableWindow {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
             // Save the currently active workspace.
             RText rtext = plugin.getApplication();
             Workspace workspace = plugin.getWorkspace();
@@ -293,14 +292,12 @@ class ProjectWindow extends DockableWindow {
                 newWorkspace = Workspace.load(plugin, wsFile);
             } catch (IOException ioe) {
                 // If loading the new workspace fails, don't open it.
-                String msg = Messages.getString(
-                        "OpenWorkspaceDialog.ErrorOpeningWorkspace");
+                String msg = Messages.getString("OpenWorkspaceDialog.ErrorOpeningWorkspace");
                 rtext.displayException(ioe, msg);
                 return;
             }
 
             plugin.setWorkspace(newWorkspace);
-
         }
 
         private RTextFileChooser getFileChooser() {
@@ -308,8 +305,7 @@ class ProjectWindow extends DockableWindow {
                 chooser = new RTextFileChooser();
                 String title = Messages.getString("OpenWorkspaceDialog.Title");
                 chooser.setCustomTitle(title);
-                ResourceBundle msg = ResourceBundle.getBundle(
-                        "org.fife.rtext.FileFilters");
+                ResourceBundle msg = ResourceBundle.getBundle("org.fife.rtext.FileFilters");
                 String desc = msg.getString("XML");
                 ExtensionFileFilter filter = new ExtensionFileFilter(desc, "xml");
                 chooser.setFileFilter(filter);

@@ -15,150 +15,146 @@ import java.util.Iterator;
 import java.util.List;
 
 
-
 /**
- * A project entry representing a logical folder (i.e., not an actual
- * folder on the file system).
+ * A project entry representing a logical folder (i.e., not an actual folder on the file system).
  *
  * @author Robert Futrell
  * @version 1.0
  */
-public class LogicalFolderProjectEntry extends AbstractProjectEntry
-		implements ProjectEntryParent {
+public class LogicalFolderProjectEntry extends AbstractProjectEntry implements ProjectEntryParent {
 
-	private String name;
-	private final List<ProjectEntry> entries;
-
-
-	public LogicalFolderProjectEntry(ProjectEntryParent parent, String name) {
-		super(parent);
-		this.name = name;
-		entries = new ArrayList<>();
-	}
+    private String name;
+    private final List<ProjectEntry> entries;
 
 
-	@Override
-	public void accept(WorkspaceVisitor visitor) {
-		visitor.visit(this);
-		for (ProjectEntry entry : entries) {
-			entry.accept(visitor);
-		}
-		visitor.postVisit(this);
-	}
+    public LogicalFolderProjectEntry(ProjectEntryParent parent, String name) {
+        super(parent);
+        this.name = name;
+        entries = new ArrayList<>();
+    }
 
 
-	@Override
-	public void addEntry(ProjectEntry entry) {
-		entries.add(entry);
-	}
+    @Override
+    public void accept(WorkspaceVisitor visitor) {
+        visitor.visit(this);
+        for (ProjectEntry entry : entries) {
+            entry.accept(visitor);
+        }
+        visitor.postVisit(this);
+    }
 
 
-	@Override
-	public int compareTo(ProjectEntry o) {
-		if (o instanceof LogicalFolderProjectEntry) {
-			return name.compareTo(((LogicalFolderProjectEntry)o).getName());
-		}
-		return -1;
-	}
+    @Override
+    public void addEntry(ProjectEntry entry) {
+        entries.add(entry);
+    }
 
 
-	@Override
-	public final boolean equals(Object o) {
-		if (o==this) {
-			return true;
-		}
-		return o instanceof LogicalFolderProjectEntry &&
-				compareTo((LogicalFolderProjectEntry)o)==0;
-	}
+    @Override
+    public int compareTo(ProjectEntry o) {
+        if (o instanceof LogicalFolderProjectEntry) {
+            return name.compareTo(((LogicalFolderProjectEntry) o).getName());
+        }
+        return -1;
+    }
 
 
-	/**
-	 * Returns the index of the specified project entry.
-	 *
-	 * @param entry The entry to look for.
-	 * @return The index of the entry, or <code>-1</code> if it is not
-	 *         contained in this logical folder.
-	 */
-	private int getEntryIndex(ProjectEntry entry) {
-		for (int i=0; i<entries.size(); i++) {
-			if (entry==entries.get(i)) {
-				return i;
-			}
-		}
-		return -1;
-	}
+    @Override
+    public final boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        return o instanceof LogicalFolderProjectEntry && compareTo((LogicalFolderProjectEntry) o) == 0;
+    }
 
 
-	@Override
-	public Iterator<ProjectEntry> getEntryIterator() {
-		return entries.iterator();
-	}
+    /**
+     * Returns the index of the specified project entry.
+     *
+     * @param entry The entry to look for.
+     * @return The index of the entry, or <code>-1</code> if it is not
+     * contained in this logical folder.
+     */
+    private int getEntryIndex(ProjectEntry entry) {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entry == entries.get(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
 
-	@Override
-	public File getFile() {
-		return null;
-	}
+    @Override
+    public Iterator<ProjectEntry> getEntryIterator() {
+        return entries.iterator();
+    }
 
 
-	public String getName() {
-		return name;
-	}
+    @Override
+    public File getFile() {
+        return null;
+    }
 
 
-	@Override
-	public String getSaveData() {
-		return getName();
-	}
+    public String getName() {
+        return name;
+    }
 
 
-	@Override
-	public String getType() {
-		return LOGICAL_DIR_PROJECT_ENTRY;
-	}
+    @Override
+    public String getSaveData() {
+        return getName();
+    }
 
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
+    @Override
+    public String getType() {
+        return LOGICAL_DIR_PROJECT_ENTRY;
+    }
 
 
-	@Override
-	public boolean moveProjectEntryDown(ProjectEntry entry, boolean toBottom) {
-		int index = getEntryIndex(entry);
-		if (index>-1 && index<entries.size()-1) {
-			entries.remove(index);
-			int newIndex = toBottom ? entries.size() - 1 : index + 1;
-			entries.add(newIndex, entry);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 
 
-	@Override
-	public boolean moveProjectEntryUp(ProjectEntry entry, boolean toTop) {
-		int index = getEntryIndex(entry);
-		if (index>0) {
-			entries.remove(index);
-			int newIndex = toTop ? 0 : index - 1;
-			entries.add(newIndex, entry);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean moveProjectEntryDown(ProjectEntry entry, boolean toBottom) {
+        int index = getEntryIndex(entry);
+        if (index > -1 && index < entries.size() - 1) {
+            entries.remove(index);
+            int newIndex = toBottom ? entries.size() - 1 : index + 1;
+            entries.add(newIndex, entry);
+            return true;
+        }
+        return false;
+    }
 
 
-	@Override
-	public void removeEntry(ProjectEntry entry) {
-		entries.remove(entry);
-	}
+    @Override
+    public boolean moveProjectEntryUp(ProjectEntry entry, boolean toTop) {
+        int index = getEntryIndex(entry);
+        if (index > 0) {
+            entries.remove(index);
+            int newIndex = toTop ? 0 : index - 1;
+            entries.add(newIndex, entry);
+            return true;
+        }
+        return false;
+    }
 
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public void removeEntry(ProjectEntry entry) {
+        entries.remove(entry);
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
 }

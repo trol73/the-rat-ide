@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 
 import org.fife.rtext.RText;
-import org.fife.ui.OptionsDialog;
+import org.fife.ui.options.OptionsDialog;
 import org.fife.ui.app.AppAction;
 import org.fife.ui.app.themes.FlatDarkTheme;
 import org.fife.ui.app.themes.FlatLightTheme;

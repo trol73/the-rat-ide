@@ -12,7 +12,7 @@ package org.fife.ui.dockablewindows;
 import java.awt.Component;
 import javax.swing.border.Border;
 
-import org.fife.ui.RScrollPane;
+import org.fife.ui.widgets.RScrollPane;
 
 
 /**

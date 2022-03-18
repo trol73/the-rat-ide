@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.JTabbedPane;
 
-import org.fife.ui.OS;
+import org.fife.ui.utils.OS;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.app.prefs.TypeLoader;
 import org.fife.ui.app.themes.FlatDarkTheme;
@@ -218,11 +218,9 @@ public class RTextPrefs extends AppPrefs implements RTextActionInfo {
 
     @Override
     public void setDefaults() {
-
         Theme theme;
         try {
-            theme = Theme.load(getClass().getResourceAsStream(
-                    "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+            theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
         } catch (IOException ioe) {
             ioe.printStackTrace();
             return;

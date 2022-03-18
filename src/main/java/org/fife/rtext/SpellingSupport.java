@@ -40,7 +40,7 @@ public class SpellingSupport implements SpellingParserListener {
 		"AmericanEnglish",
 	};
 
-	private RText rtext;
+	private final RText rtext;
 	private SpellingParser spellingParser;
 	private boolean spellCheckingEnabled;
 	private Color spellCheckingColor;
@@ -49,8 +49,7 @@ public class SpellingSupport implements SpellingParserListener {
 	private int maxSpellingErrors;
 	private ViewSpellingErrorWindowAction viewAction;
 
-	private static final String VIEW_SPELLING_ERROR_WINDOW
-									= "viewSpellingErrorWindowAction";
+	private static final String VIEW_SPELLING_ERROR_WINDOW = "viewSpellingErrorWindowAction";
 
 
 	/**
@@ -68,7 +67,6 @@ public class SpellingSupport implements SpellingParserListener {
 	 * visible.
 	 */
 	private void addViewErrorWindowMenuItem() {
-
 		viewAction = new ViewSpellingErrorWindowAction(rtext);
 
 		// Add a menu item to toggle the visibility of the dockable window
@@ -79,7 +77,6 @@ public class SpellingSupport implements SpellingParserListener {
 		item.applyComponentOrientation(rtext.getComponentOrientation());
 		JMenu viewMenu = mb.getMenuByName(RTextMenuBar.MENU_DOCKED_WINDOWS);
 		viewMenu.add(item);
-
 	}
 
 
@@ -98,7 +95,6 @@ public class SpellingSupport implements SpellingParserListener {
 
 		// Add menu item later since menu bar not yet created(!)
 		SwingUtilities.invokeLater(this::addViewErrorWindowMenuItem);
-
 	}
 
 

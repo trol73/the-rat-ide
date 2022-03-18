@@ -9,6 +9,8 @@
  */
 package org.fife.ui;
 
+import org.fife.ui.utils.OS;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;

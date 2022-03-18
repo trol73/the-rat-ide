@@ -36,7 +36,7 @@ import org.fife.rtext.RText;
 import org.fife.rtext.RTextEditorPane;
 import org.fife.rtext.plugins.sourcebrowser.SourceBrowserPlugin.ExtendedTagEntry;
 import org.fife.ui.RTreeSelectionModel;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.AppAction;
 import org.fife.ui.rtextarea.SearchEngine;
 

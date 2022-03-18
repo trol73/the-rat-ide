@@ -5,7 +5,7 @@
  */
 package org.fife.ui.app.themes;
 
-import org.fife.ui.Hyperlink;
+import org.fife.ui.widgets.Hyperlink;
 import org.fife.ui.app.AppTheme;
 
 import javax.swing.*;

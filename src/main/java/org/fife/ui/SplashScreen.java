@@ -10,6 +10,8 @@
  */
 package org.fife.ui;
 
+import org.fife.ui.utils.UIUtil;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;

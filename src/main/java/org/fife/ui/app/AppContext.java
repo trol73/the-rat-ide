@@ -5,12 +5,14 @@
 package org.fife.ui.app;
 
 import org.fife.jgoodies.looks.common.ShadowPopupFactory;
-import org.fife.ui.UIUtil;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.app.themes.NativeTheme;
 import org.fife.util.DarculaUtil;
 import org.fife.util.SubstanceUtil;
+import ru.trolsoft.ide.therat.AvrRatDevicesUtils;
+import ru.trolsoft.therat.RatKt;
 
 import javax.swing.*;
 import java.io.File;
@@ -339,7 +341,6 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void savePreferences(T app) throws IOException {
-
 		File dir = getPreferencesDir();
 		if (!dir.exists()) {
 			dir.mkdirs();
@@ -389,7 +390,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 
 		P prefs = loadPreferences();
 
-		// Make Darcula and Metal not use bold fonts
+		// Make Dracula and Metal not use bold fonts
 		UIManager.put("swing.boldMetal", Boolean.FALSE);
 
 		initializeAndConfigureTheme(prefs.appTheme);

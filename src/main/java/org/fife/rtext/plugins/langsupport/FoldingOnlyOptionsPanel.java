@@ -18,8 +18,8 @@ import javax.swing.border.Border;
 
 import org.fife.rtext.AbstractMainView;
 import org.fife.rtext.RText;
-import org.fife.ui.OptionsDialogPanel;
-import org.fife.ui.UIUtil;
+import org.fife.ui.options.OptionsDialogPanel;
+import org.fife.ui.utils.UIUtil;
 
 
 /**
@@ -29,178 +29,174 @@ import org.fife.ui.UIUtil;
  * @author Robert Futrell
  * @version 1.0
  */
-class FoldingOnlyOptionsPanel extends OptionsDialogPanel {
+public class FoldingOnlyOptionsPanel extends OptionsDialogPanel {
 
-	private final String language;
-	private final JCheckBox enabledCB;
-	private final JButton rdButton;
-	private final Listener listener;
+    private final String language;
+    private final JCheckBox enabledCB;
+    private final JButton rdButton;
+    private final Listener listener;
 
-	private static final String DEFAULT_PANEL_NAME = "Options.General.Folding.Name";
+    private static final String DEFAULT_PANEL_NAME = "Options.General.Folding.Name";
 
-	/**
-	 * Constructor.
-	 */
-	FoldingOnlyOptionsPanel(RText app, String language) {
-		this(app, language, true);
-	}
-
-
-	/**
-	 * Constructor.
-	 */
-	FoldingOnlyOptionsPanel(RText app, String language, boolean showIcon) {
-		this(app, DEFAULT_PANEL_NAME, language, showIcon);
-	}
+    /**
+     * Constructor.
+     */
+    FoldingOnlyOptionsPanel(RText app, String language) {
+        this(app, language, true);
+    }
 
 
-	/**
-	 * Constructor.
-	 */
-	FoldingOnlyOptionsPanel(RText app, String nameKey, String language) {
-		this(app, nameKey, language, true);
-	}
+    /**
+     * Constructor.
+     */
+    public FoldingOnlyOptionsPanel(RText app, String language, boolean showIcon) {
+        this(app, DEFAULT_PANEL_NAME, language, showIcon);
+    }
 
 
-	/**
-	 * Constructor.
-	 */
-	FoldingOnlyOptionsPanel(RText app, String nameKey, String language, boolean showIcon) {
-
-		this.language = language;
-		ResourceBundle msg = Plugin.MSG;
-		setName(msg.getString(nameKey));
-		listener = new Listener();
-
-		// Load the proper icon, and listen for theme changes to update the icon
-		// accordingly.
-		if (showIcon) {
-			String langName = language.substring(language.lastIndexOf('/') + 1);
-			String image = "fileTypes/" + langName;
-			setIcon(app.getIconGroup().getIcon(image));
-			app.addPropertyChangeListener(RText.ICON_STYLE_PROPERTY, e -> {
-				setIcon(app.getIconGroup().getIcon(image));
-			});
-		}
-
-		ComponentOrientation o = ComponentOrientation.
-											getOrientation(getLocale());
-
-		setLayout(new BorderLayout());
-		Border empty5Border = UIUtil.getEmpty5Border();
-		setBorder(empty5Border);
-
-		Box cp = Box.createVerticalBox();
-		cp.setBorder(null);
-		add(cp, BorderLayout.NORTH);
-
-		Box box = Box.createVerticalBox();
-		box.setBorder(new OptionPanelBorder(msg.
-				getString("Options.General.Section.Folding")));
-		cp.add(box);
-		cp.add(Box.createVerticalStrut(5));
-
-		enabledCB = createCB("Options.General.EnableCodeFolding");
-		addLeftAligned(box, enabledCB, 5);
-
-		cp.add(Box.createVerticalStrut(5));
-		rdButton = new JButton(msg.getString("Options.General.RestoreDefaults"));
-		rdButton.addActionListener(listener);
-		addLeftAligned(cp, rdButton, 5);
-
-		cp.add(Box.createVerticalGlue());
-
-		applyComponentOrientation(o);
-
-	}
+    /**
+     * Constructor.
+     */
+    protected FoldingOnlyOptionsPanel(RText app, String nameKey, String language) {
+        this(app, nameKey, language, true);
+    }
 
 
-	private JCheckBox createCB(String key) {
-		JCheckBox cb = new JCheckBox(Plugin.MSG.getString(key));
-		cb.addActionListener(listener);
-		return cb;
-	}
+    /**
+     * Constructor.
+     */
+    FoldingOnlyOptionsPanel(RText app, String nameKey, String language, boolean showIcon) {
+
+        this.language = language;
+        ResourceBundle msg = Plugin.MSG;
+        setName(msg.getString(nameKey));
+        listener = new Listener();
+
+        // Load the proper icon, and listen for theme changes to update the icon
+        // accordingly.
+        if (showIcon) {
+            String langName = language.substring(language.lastIndexOf('/') + 1);
+            String image = "fileTypes/" + langName;
+            setIcon(app.getIconGroup().getIcon(image));
+            app.addPropertyChangeListener(RText.ICON_STYLE_PROPERTY, e -> {
+                setIcon(app.getIconGroup().getIcon(image));
+            });
+        }
+
+        ComponentOrientation o = ComponentOrientation.
+                getOrientation(getLocale());
+
+        setLayout(new BorderLayout());
+        Border empty5Border = UIUtil.getEmpty5Border();
+        setBorder(empty5Border);
+
+        Box cp = Box.createVerticalBox();
+        cp.setBorder(null);
+        add(cp, BorderLayout.NORTH);
+
+        Box box = Box.createVerticalBox();
+        box.setBorder(new OptionPanelBorder(msg.getString("Options.General.Section.Folding")));
+        cp.add(box);
+        cp.add(Box.createVerticalStrut(5));
+
+        enabledCB = createCB("Options.General.EnableCodeFolding");
+        addLeftAligned(box, enabledCB, 5);
+
+        cp.add(Box.createVerticalStrut(5));
+        rdButton = new JButton(msg.getString("Options.General.RestoreDefaults"));
+        rdButton.addActionListener(listener);
+        addLeftAligned(cp, rdButton, 5);
+
+        cp.add(Box.createVerticalGlue());
+
+        applyComponentOrientation(o);
+
+    }
 
 
-	private void doApplyCodeFoldingPreference(RText rtext) {
-		AbstractMainView view = rtext.getMainView();
-		view.setCodeFoldingEnabledFor(language, enabledCB.isSelected());
-	}
+    private JCheckBox createCB(String key) {
+        JCheckBox cb = new JCheckBox(Plugin.MSG.getString(key));
+        cb.addActionListener(listener);
+        return cb;
+    }
 
 
-	/**
-	 * Applies the selected code folding preference.  Subclasses can override
-	 * if they display more options.
-	 *
-	 * @param owner The parent {@link RText} application.
-	 */
-	@Override
-	protected final void doApplyImpl(Frame owner) {
-		doApplyCodeFoldingPreference((RText)owner);
-	}
+    private void doApplyCodeFoldingPreference(RText rtext) {
+        AbstractMainView view = rtext.getMainView();
+        view.setCodeFoldingEnabledFor(language, enabledCB.isSelected());
+    }
 
 
-	/**
-	 * The default implementation always returns <code>null</code>.  Subclasses
-	 * can override if they add more than just check boxes to the panel.
-	 */
-	@Override
-	protected OptionsPanelCheckResult ensureValidInputsImpl() {
-		return null;
-	}
+    /**
+     * Applies the selected code folding preference.  Subclasses can override
+     * if they display more options.
+     *
+     * @param owner The parent {@link RText} application.
+     */
+    @Override
+    protected final void doApplyImpl(Frame owner) {
+        doApplyCodeFoldingPreference((RText) owner);
+    }
 
 
-	@Override
-	public JComponent getTopJComponent() {
-		return enabledCB;
-	}
+    /**
+     * The default implementation always returns <code>null</code>.  Subclasses
+     * can override if they add more than just check boxes to the panel.
+     */
+    @Override
+    protected OptionsPanelCheckResult ensureValidInputsImpl() {
+        return null;
+    }
 
 
-	private void setCodeFoldingValueImpl(RText rtext) {
-		AbstractMainView view = rtext.getMainView();
-		enabledCB.setSelected(view.isCodeFoldingEnabledFor(language));
-	}
+    @Override
+    public JComponent getTopJComponent() {
+        return enabledCB;
+    }
 
 
-	/**
-	 * Checks or unchecks the "enable code folding" check box.  Subclasses can
-	 * override this if they add more options to this panel.
-	 */
-	@Override
-	protected final void setValuesImpl(Frame owner) {
-		setCodeFoldingValueImpl((RText)owner);
-	}
+    private void setCodeFoldingValueImpl(RText rtext) {
+        AbstractMainView view = rtext.getMainView();
+        enabledCB.setSelected(view.isCodeFoldingEnabledFor(language));
+    }
 
 
-	/**
-	 * Listens for events in this options panel.
-	 */
-	private class Listener implements ActionListener {
+    /**
+     * Checks or unchecks the "enable code folding" check box.  Subclasses can
+     * override this if they add more options to this panel.
+     */
+    @Override
+    protected final void setValuesImpl(Frame owner) {
+        setCodeFoldingValueImpl((RText) owner);
+    }
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
 
-			Object source = e.getSource();
+    /**
+     * Listens for events in this options panel.
+     */
+    private class Listener implements ActionListener {
 
-			if (enabledCB==source) {
-				setEnabledCBSelected(enabledCB.isSelected());
-				setDirty(true);
-			}
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
-			else if (rdButton==source &&
-					!enabledCB.isSelected()) {
-				setEnabledCBSelected(true);
-				setDirty(true);
-			}
+            Object source = e.getSource();
 
-		}
+            if (enabledCB == source) {
+                setEnabledCBSelected(enabledCB.isSelected());
+                setDirty(true);
+            } else if (rdButton == source && !enabledCB.isSelected()) {
+                setEnabledCBSelected(true);
+                setDirty(true);
+            }
 
-		private void setEnabledCBSelected(boolean selected) {
-			enabledCB.setSelected(selected); // Should be a no-op
-			// Toggle enabled state of any other check boxes.
-		}
+        }
 
-	}
+        private void setEnabledCBSelected(boolean selected) {
+            enabledCB.setSelected(selected); // Should be a no-op
+            // Toggle enabled state of any other check boxes.
+        }
+
+    }
 
 
 }

@@ -15,7 +15,7 @@ import java.awt.Component;
 import java.io.File;
 import javax.swing.JList;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 
 import org.pushingpixels.substance.api.ComponentState;
 import org.pushingpixels.substance.api.renderer.SubstanceDefaultListCellRenderer;

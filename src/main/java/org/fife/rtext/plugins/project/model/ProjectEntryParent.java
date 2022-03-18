@@ -13,8 +13,7 @@ import java.util.Iterator;
 
 
 /**
- * A <code>ModelEntity</code> that can be the parent of a
- * <code>ProjectEntry</code>.
+ * A <code>ModelEntity</code> that can be the parent of a <code>ProjectEntry</code>.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -44,8 +43,7 @@ public interface ProjectEntryParent extends ModelEntity {
 	 * possible.
 	 *
 	 * @param entry The node to move down.
-	 * @param toBottom Whether to move it to the bottom, as opposed to
-	 *        just down one position.
+	 * @param toBottom Whether to move it to the bottom, as opposed to just down one position.
 	 * @return Whether the operation was successful.
 	 * @see #moveProjectEntryUp(ProjectEntry, boolean)
 	 */
@@ -57,8 +55,7 @@ public interface ProjectEntryParent extends ModelEntity {
 	 * possible.
 	 *
 	 * @param entry The node to move up.
-	 * @param toTop Whether to move it to the top, as opposed to
-	 *        just up one position.
+	 * @param toTop Whether to move it to the top, as opposed to just up one position.
 	 * @return Whether the operation was successful.
 	 * @see #moveProjectEntryDown(ProjectEntry, boolean)
 	 */

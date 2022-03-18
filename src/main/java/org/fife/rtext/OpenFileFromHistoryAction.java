@@ -24,49 +24,49 @@ import org.fife.ui.app.AppAction;
  */
 class OpenFileFromHistoryAction extends AppAction<RText> {
 
-	private String fileFullPath;
+    private String fileFullPath;
 
 
-	/**
-	 * Creates a new <code>OpenFileFromHistoryAction</code>.
-	 *
-	 * @param owner the main window of this rtext instance.
-	 * @see #setFileFullPath(String)
-	 */
-	OpenFileFromHistoryAction(RText owner) {
-		super(owner);
-	}
+    /**
+     * Creates a new <code>OpenFileFromHistoryAction</code>.
+     *
+     * @param owner the main window of this rtext instance.
+     * @see #setFileFullPath(String)
+     */
+    OpenFileFromHistoryAction(RText owner) {
+        super(owner);
+    }
 
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-		RText owner = getApplication();
-		AbstractMainView mainView = owner.getMainView();
-		RTextEditorPane textArea = mainView.getCurrentTextArea();
+        RText owner = getApplication();
+        AbstractMainView mainView = owner.getMainView();
+        RTextEditorPane textArea = mainView.getCurrentTextArea();
 
-		// If the only document open is untitled and empty, remove
-		// (and thus replace) it.
-		if (mainView.getNumDocuments()==1 &&
-			textArea.getFileName().equals(owner.getNewFileName()) &&
-			textArea.getDocument().getLength()==0)
-				mainView.closeCurrentDocument();
+        // If the only document open is untitled and empty, remove
+        // (and thus replace) it.
+        if (mainView.getNumDocuments() == 1 &&
+                textArea.getFileName().equals(owner.getNewFileName()) &&
+                textArea.getDocument().getLength() == 0)
+            mainView.closeCurrentDocument();
 
-		// Attempt to add the old text file.
-		// "null" encoding means check for Unicode before using default.
-		mainView.openFile(fileFullPath, null);
+        // Attempt to add the old text file.
+        // "null" encoding means check for Unicode before using default.
+        mainView.openFile(fileFullPath, null);
 
-	}
+    }
 
 
-	/**
-	 * Sets the file to open.
-	 *
-	 * @param fileFullPath The full path of the file to open.
-	 */
-	public void setFileFullPath(String fileFullPath) {
-		this.fileFullPath = fileFullPath;
-	}
+    /**
+     * Sets the file to open.
+     *
+     * @param fileFullPath The full path of the file to open.
+     */
+    public void setFileFullPath(String fileFullPath) {
+        this.fileFullPath = fileFullPath;
+    }
 
 
 }

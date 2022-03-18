@@ -17,6 +17,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serial;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -41,8 +42,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Segment;
 
+import org.fife.rtext.RText;
+import org.fife.ui.EscapableDialog;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.TextEditorPane;
+import org.fife.ui.widgets.ResizableFrameContentPane;
 
 
 /**
@@ -65,8 +69,7 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 
 	private TextEditorPane textArea;
 
-	private static final ResourceBundle MSG = ResourceBundle.getBundle(
-							"org.fife.rsta.ui.TextFilePropertiesDialog");
+	private static final ResourceBundle MSG = ResourceBundle.getBundle("org.fife.rsta.ui.TextFilePropertiesDialog");
 
 	private static final String[] LINE_TERMINATOR_LABELS = {
 		MSG.getString("SysDef"),
@@ -110,48 +113,43 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		String command = e.getActionCommand();
 
 		if ("TerminatorComboBox".equals(command)) {
 			okButton.setEnabled(true);
-		}
-
-		else if ("encodingCombo".equals(command)) {
+		} else if ("encodingCombo".equals(command)) {
 			okButton.setEnabled(true);
-		}
-
-		else if ("OKButton".equals(command)) {
+		} else if ("OKButton".equals(command)) {
 			String terminator = getSelectedLineTerminator();
-			if (terminator!=null) {
+			if (terminator != null) {
 				String old = (String)textArea.getLineSeparator();
 				if (!terminator.equals(old)) {
 					textArea.setLineSeparator(terminator);
 				}
 			}
 			String encoding = (String)encodingCombo.getSelectedItem();
-			if (encoding!=null) {
-				textArea.setEncoding(encoding);
+			if (encoding != null) {
+				try {
+					textArea.changeEncoding(encoding);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					throw new RuntimeException(ex);
+				}
 			}
 			setVisible(false);
-		}
-
-		else if ("CancelButton".equals(command)) {
+		} else if ("CancelButton".equals(command)) {
 			escapePressed();
 		}
-
 	}
 
 
 	private int calculateWordCount(TextEditorPane textArea) {
-
 		int wordCount = 0;
 		RSyntaxDocument doc = (RSyntaxDocument)textArea.getDocument();
 
 		BreakIterator bi = BreakIterator.getWordInstance();
 		bi.setText(new DocumentCharIterator(textArea.getDocument()));
-		for (int nextBoundary=bi.first(); nextBoundary!=BreakIterator.DONE;
-				nextBoundary=bi.next()) {
+		for (int nextBoundary = bi.first(); nextBoundary != BreakIterator.DONE; nextBoundary = bi.next()) {
 			// getWordInstance() returns boundaries for both words and
 			// non-words (whitespace, punctuation, etc.)
 			try {
@@ -165,7 +163,6 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 		}
 
 		return wordCount;
-
 	}
 
 
@@ -190,7 +187,6 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 		panel.setBorder(BorderFactory.createEmptyBorder(10, left, 0, right));
 		panel.add(buttonPanel, BorderLayout.LINE_END);
 		return panel;
-
 	}
 
 
@@ -201,8 +197,7 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 	 * @return The title for this dialog.
 	 */
 	protected String createTitle(String fileName) {
-		return MessageFormat.format(
-			MSG.getString("Title"), textArea.getFileName());
+		return MessageFormat.format(MSG.getString("Title"), textArea.getFileName());
 	}
 
 
@@ -226,32 +221,27 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 			count++;
 		}
 
-		String suffix;
-		switch (count) {
-			case 0:
-			    suffix = "bytes";
-			    break;
-			case 1:
-			    suffix = "KB";
-			    break;
-			case 2:
-			    suffix = "MB";
-			    break;
-			case 3:
-			    suffix = "GB";
-			    break;
-			case 4:
-            default: // SpotBugs, never happens
-			    suffix = "TB";
-			    break;
-		}
-
 		NumberFormat fileSizeFormat = NumberFormat.getNumberInstance();
 		fileSizeFormat.setGroupingUsed(true);
 		fileSizeFormat.setMinimumFractionDigits(0);
 		fileSizeFormat.setMaximumFractionDigits(1);
-		return fileSizeFormat.format(prevSize) + " " + suffix;
+		return fileSizeFormat.format(prevSize) + " " + suffixToStr(count);
+	}
 
+	private static String suffixToStr(int count) {
+		switch (count) {
+			case 0:
+			    return "bytes";
+			case 1:
+			    return "KB";
+			case 2:
+			    return "MB";
+			case 3:
+			    return "GB";
+			case 4:
+            default: // SpotBugs, never happens
+			    return "TB";
+		}
 	}
 
 
@@ -296,8 +286,7 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 		setSelectedLineTerminator((String)textArea.getLineSeparator());
 		terminatorCombo.setActionCommand("TerminatorComboBox");
 		terminatorCombo.addActionListener(this);
-		JLabel terminatorLabel = UIUtil.newLabel(MSG, "LineTerminator",
-				terminatorCombo);
+		JLabel terminatorLabel = UIUtil.newLabel(MSG, "LineTerminator", terminatorCombo);
 
 		encodingCombo = new JComboBox<>();
 		if (textArea.isReadOnly()) {
@@ -331,8 +320,7 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 		}
 		else {
 			Date modifiedDate = new Date(temp);
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					"hh:mm a  EEE, MMM d, yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a  EEE, MMM d, yyyy");
 			modifiedString = sdf.format(modifiedDate);
 		}
 		JLabel modifiedLabel = new JLabel(MSG.getString("LastModified"));
@@ -376,7 +364,6 @@ public class TextFilePropertiesDialog extends EscapableDialog implements ActionL
 		applyComponentOrientation(o);
 		pack();
 		setLocationRelativeTo(getParent());
-
 	}
 
 

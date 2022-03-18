@@ -44,7 +44,6 @@ public final class RTextAppThemes {
 
 
 	static List<AppTheme> get() {
-
 		Color lightListAltRowColor = new Color(0xf4f4f4);
 		Color darkListAltRowColor = new Color(60, 63, 65);
 
@@ -60,7 +59,8 @@ public final class RTextAppThemes {
 
 		FlatDarkTheme flatDarkTheme = new FlatDarkTheme();
 		flatDarkTheme.setHyperlinkForeground(new Color(0x589df6));
-		flatDarkTheme.addExtraUiDefault("rtext.editorTheme", "/org/fife/ui/rsyntaxtextarea/themes/monokai.xml");
+		//flatDarkTheme.addExtraUiDefault("rtext.editorTheme", "/org/fife/ui/rsyntaxtextarea/themes/monokai.xml");
+		flatDarkTheme.addExtraUiDefault("rtext.editorTheme", "/org/fife/ui/rsyntaxtextarea/themes/trol_dark.xml");
 		flatDarkTheme.addExtraUiDefault("rtext.iconGroupName", "IntelliJ Icons (Dark)");
 		flatDarkTheme.addExtraUiDefault("rtext.labelErrorForeground", DARK_MODIFIED_DOCUMENT_NAME_COLOR);
 		flatDarkTheme.addExtraUiDefault("rtext.listAltRowColor", darkListAltRowColor);

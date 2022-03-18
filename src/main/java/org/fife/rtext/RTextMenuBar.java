@@ -35,9 +35,9 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.Action;
 
-import org.fife.ui.OS;
+import org.fife.ui.utils.OS;
 import org.fife.ui.RecentFilesMenu;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.MenuBar;
 import org.fife.ui.app.icons.IconGroup;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
@@ -72,6 +72,8 @@ public class RTextMenuBar extends MenuBar<RText>
 	 * A key to get the Search menu via {@link #getMenuByName(String)}.
 	 */
 	public static final String MENU_SEARCH		= "Search";
+
+	public static final String MENU_PROJECT		= "Project";
 
 	/**
 	 * A key to get the View menu via {@link #getMenuByName(String)}.
@@ -148,6 +150,9 @@ public class RTextMenuBar extends MenuBar<RText>
 	private RecentFilesMenu recentFilesMenu;
 	private JMenu savedMacroMenu;
 
+	private JMenuItem buildItem;
+	private JMenuItem uploadItem;
+
 
 	/**
 	 * Creates an instance of the menu bar.
@@ -175,10 +180,8 @@ public class RTextMenuBar extends MenuBar<RText>
 
 			for (String theme : themes) {
 
-				String themeTitleCase = Character.toUpperCase(theme.charAt(0)) +
-					theme.substring(1);
-				String title = MessageFormat.format(msg.getString(
-					"CopyAsStyledTextAction.Themed"), themeTitleCase);
+				String themeTitleCase = Character.toUpperCase(theme.charAt(0)) + theme.substring(1);
+				String title = MessageFormat.format(msg.getString("CopyAsStyledTextAction.Themed"), themeTitleCase);
 
 				subMenu.add(createCopyAsStyledTextMenuItem(title, theme));
 			}
@@ -202,8 +205,7 @@ public class RTextMenuBar extends MenuBar<RText>
 	/**
 	 * Adds the file specified to the file history.
 	 *
-	 * @param fileFullPath Full path to a file to add to the file history in
-	 *        the File menu.
+	 * @param fileFullPath Full path to a file to add to the file history in the File menu.
 	 * @see #getFileHistoryString
 	 */
 	private void addFileToFileHistory(String fileFullPath) {
@@ -222,7 +224,6 @@ public class RTextMenuBar extends MenuBar<RText>
 
 	@Override
 	public void addNotify() {
-
 		super.addNotify();
 
 		// Populate file history here to avoid issue with Darcula
@@ -427,7 +428,6 @@ public class RTextMenuBar extends MenuBar<RText>
 
 
 	private JMenu createHelpMenu(ResourceBundle menuMsg, RText rtext) {
-
 		JMenu menu = createMenu(menuMsg, "MenuHelp");
 
 		// Help submenu's items.
@@ -450,7 +450,6 @@ public class RTextMenuBar extends MenuBar<RText>
 
 
 	private JMenu createSearchMenu(ResourceBundle menuMsg, int defaultModifier, int shift) {
-
 		RText rtext = getApplication();
 		JMenu menu = createMenu(menuMsg, "MenuSearch");
 
@@ -472,8 +471,7 @@ public class RTextMenuBar extends MenuBar<RText>
 		findInFilesItem = createMenuItem(rtext.getAction(RText.FIND_IN_FILES_ACTION));
 		menu.add(findInFilesItem);
 
-		replaceInFilesItem = createMenuItem(
-			rtext.getAction(RText.REPLACE_IN_FILES_ACTION));
+		replaceInFilesItem = createMenuItem(rtext.getAction(RText.REPLACE_IN_FILES_ACTION));
 		menu.add(replaceInFilesItem);
 
 		menu.addSeparator();
@@ -516,9 +514,23 @@ public class RTextMenuBar extends MenuBar<RText>
 		return menu;
 	}
 
+	private JMenu createProjectMenu(ResourceBundle menuMsg, int defaultModifier, int shift) {
+		RText rtext = getApplication();
+		JMenu menu = createMenu(menuMsg, "MenuProject");
+
+		buildItem = createMenuItem(rtext.getAction(RText.BUILD_ACTION));
+		buildItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, defaultModifier));
+		menu.add(buildItem);
+
+		uploadItem = createMenuItem(rtext.getAction(RText.UPLOAD_ACTION));
+		uploadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
+		menu.add(uploadItem);
+
+		return menu;
+	}
+
 
 	private JMenu createViewMenu(ResourceBundle menuMsg) {
-
 		RText rtext = getApplication();
 		JMenu viewMenu = createMenu(menuMsg, "MenuView");
 
@@ -609,8 +621,7 @@ public class RTextMenuBar extends MenuBar<RText>
 
 		viewMenu.addSeparator();
 
-		filePropItem = createMenuItem(rtext.getAction(
-			RText.FILE_PROPERTIES_ACTION));
+		filePropItem = createMenuItem(rtext.getAction(RText.FILE_PROPERTIES_ACTION));
 		viewMenu.add(filePropItem);
 
 		return viewMenu;
@@ -618,7 +629,6 @@ public class RTextMenuBar extends MenuBar<RText>
 
 
 	private JMenu createWindowMenu(ResourceBundle menuMsg, ResourceBundle msg) {
-
 		RText rtext = getApplication();
 		JMenu windowMenu = createMenu(menuMsg, "MenuWindow");
 
@@ -670,7 +680,6 @@ public class RTextMenuBar extends MenuBar<RText>
 	 *         file history, then <code>null</code> is returned.
 	 */
 	public String getFileHistoryString() {
-
 		StringBuilder retVal = new StringBuilder();
 
 		int historyCount = recentFilesMenu.getItemCount();
@@ -697,7 +706,6 @@ public class RTextMenuBar extends MenuBar<RText>
 
 	@Override
 	protected void initializeUI() {
-
 		RText app = getApplication();
 
 		// Variables to create the menu.
@@ -721,6 +729,12 @@ public class RTextMenuBar extends MenuBar<RText>
 		registerMenuByName(MENU_SEARCH, menu);
 		add(menu);
 
+		// Project menu.
+		menu = createProjectMenu(menuMsg, defaultModifier, shift);
+		registerMenuByName(MENU_PROJECT, menu);
+		add(menu);
+
+
 		// View submenu.
 		viewMenu = createViewMenu(menuMsg);
 		registerMenuByName(MENU_VIEW, viewMenu);
@@ -743,7 +757,6 @@ public class RTextMenuBar extends MenuBar<RText>
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-
 		String prop = e.getPropertyName();
 
 		if (prop.equals(AbstractMainView.TEXT_AREA_ADDED_PROPERTY)) {
@@ -850,8 +863,7 @@ public class RTextMenuBar extends MenuBar<RText>
 				savedMacroMenu.add(new JMenuItem(a));
 			}
 
-			savedMacroMenu.applyComponentOrientation(
-										getComponentOrientation());
+			savedMacroMenu.applyComponentOrientation(getComponentOrientation());
 
 		}
 
@@ -859,10 +871,10 @@ public class RTextMenuBar extends MenuBar<RText>
 
 
 	/**
-	 * Sets whether or not the "Window" menu is visible.  This menu should
+	 * Sets whether the "Window" menu is visible.  This menu should
 	 * only be visible on the MDI view.
 	 *
-	 * @param visible Whether or not the menu should be visible.
+	 * @param visible Whether the menu should be visible.
 	 */
 	public void setWindowMenuVisible(boolean visible) {
 		if (visible)
@@ -919,8 +931,7 @@ public class RTextMenuBar extends MenuBar<RText>
 		// would have been updated by super.updateUI(ui)).  We must also check
 		// windowMenu for null as this is called during initialization.
 		RText rtext = getApplication();
-		if (rtext!=null && rtext.getMainViewStyle()!=RText.MDI_VIEW &&
-				windowMenu!=null) {
+		if (rtext!=null && rtext.getMainViewStyle()!=RText.MDI_VIEW && windowMenu!=null) {
 			SwingUtilities.updateComponentTreeUI(windowMenu);
 		}
 

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="the-rat">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/the-rat.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

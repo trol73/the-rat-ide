@@ -23,7 +23,7 @@ import javax.swing.text.JTextComponent;
 
 import org.fife.rsta.ui.RComboBoxModel;
 import org.fife.ui.EscapableDialog;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.ResizableFrameContentPane;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;

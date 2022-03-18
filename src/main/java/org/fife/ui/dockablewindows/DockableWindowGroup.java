@@ -25,9 +25,9 @@ import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.TabbedPaneUI;
 import javax.swing.table.JTableHeader;
 
-import org.fife.ui.ImageTranscodingUtil;
-import org.fife.ui.UIUtil;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.utils.ImageTranscodingUtil;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindowPanel.ContentPanel;
 import org.fife.util.DarculaUtil;
 import org.fife.util.FlatUtil;
@@ -84,8 +84,7 @@ class DockableWindowGroup extends JPanel {
 
 
     /**
-     * Returns whether or not the specified dockable window is contained in
-     * this <code>DWindPanel</code>.
+     * Returns whether the specified dockable window is contained in this <code>DWindPanel</code>.
      *
      * @param window The dockable window to look for.
      * @return The index in the tabbed pane of the dockable window, or
@@ -110,8 +109,7 @@ class DockableWindowGroup extends JPanel {
 
 
     /**
-     * Returns the number of dockable windows contained in this tabbed
-     * pane.
+     * Returns the number of dockable windows contained in this tabbed pane.
      *
      * @return The dockable window count in this tabbed pane.
      */
@@ -206,7 +204,7 @@ class DockableWindowGroup extends JPanel {
      * Removes the specified dockable window from this tabbed pane.
      *
      * @param window The dockable window.
-     * @return Whether or not the window was successfully removed.
+     * @return Whether the window was successfully removed.
      */
     boolean removeDockableWindow(DockableWindow window) {
         int index = containsDockableWindow(window);
@@ -554,8 +552,7 @@ class DockableWindowGroup extends JPanel {
                 } else {
                     try {
                         InputStream in = getClass().getResourceAsStream(iconName);
-                        icon = new ImageIcon(ImageTranscodingUtil.rasterize(
-                                iconName, in, 16, 16));
+                        icon = new ImageIcon(ImageTranscodingUtil.rasterize(iconName, in, 16, 16));
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
                     }

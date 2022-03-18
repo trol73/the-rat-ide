@@ -73,6 +73,9 @@ public interface RTextActionInfo {
 	String VIEW_SPLIT_NONE_ACTION	= "viewSplitNoneAction";
 	String VIEW_SPLIT_VERT_ACTION	= "viewSplitVerticallyAction";
 
+	String BUILD_ACTION             = "buildAction";
+	String UPLOAD_ACTION            = "uploadAction";
+
 	String[] ACTION_NAMES = {
 		NEW_ACTION,
 		OPEN_ACTION,
@@ -122,6 +125,7 @@ public interface RTextActionInfo {
 		VIEW_SPLIT_HORIZ_ACTION,
 		VIEW_SPLIT_NONE_ACTION,
 		VIEW_SPLIT_VERT_ACTION,
-
+		BUILD_ACTION,
+		UPLOAD_ACTION
 	};
 }

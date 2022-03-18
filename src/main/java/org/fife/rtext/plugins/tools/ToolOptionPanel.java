@@ -18,7 +18,7 @@ import javax.swing.table.TableColumnModel;
 
 import org.fife.rtext.AbstractConsoleTextAreaOptionPanel;
 import org.fife.ui.KeyStrokeCellRenderer;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.console.AbstractConsoleTextArea;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowConstants;
@@ -144,13 +144,13 @@ class ToolOptionPanel extends AbstractConsoleTextAreaOptionPanel<ToolPlugin>
 		window.setActive(visibleCB.isSelected());
 		window.setPosition(locationCombo.getSelectedIndex());
 
-		Color c = exceptionsCB.isSelected() ? exceptionsButton.getColor() : null;
+		Color c = cbExceptions.isSelected() ? exceptionsButton.getColor() : null;
 		window.setForeground(AbstractConsoleTextArea.STYLE_EXCEPTION, c);
-		c = promptCB.isSelected() ? promptButton.getColor() : null;
+		c = cbPrompt.isSelected() ? promptButton.getColor() : null;
 		window.setForeground(AbstractConsoleTextArea.STYLE_PROMPT, c);
-		c = stdoutCB.isSelected() ? stdoutButton.getColor() : null;
+		c = cbStdout.isSelected() ? stdoutButton.getColor() : null;
 		window.setForeground(AbstractConsoleTextArea.STYLE_STDOUT, c);
-		c = stderrCB.isSelected() ? stderrButton.getColor() : null;
+		c = cbStderr.isSelected() ? stderrButton.getColor() : null;
 		window.setForeground(AbstractConsoleTextArea.STYLE_STDERR, c);
 
 		ToolManager tm = ToolManager.get();
@@ -221,13 +221,13 @@ class ToolOptionPanel extends AbstractConsoleTextAreaOptionPanel<ToolPlugin>
 		visibleCB.setSelected(window.isActive());
 		setToolOutputPanelPlacement(window.getPosition());
 
-		stdoutCB.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_STDOUT));
+		cbStdout.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_STDOUT));
 		stdoutButton.setEnabled(window.isStyleUsed(AbstractConsoleTextArea.STYLE_STDOUT));
-		stderrCB.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_STDERR));
+		cbStderr.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_STDERR));
 		stderrButton.setEnabled(window.isStyleUsed(AbstractConsoleTextArea.STYLE_STDERR));
-		promptCB.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_PROMPT));
+		cbPrompt.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_PROMPT));
 		promptButton.setEnabled(window.isStyleUsed(AbstractConsoleTextArea.STYLE_PROMPT));
-		exceptionsCB.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_EXCEPTION));
+		cbExceptions.setSelected(window.isStyleUsed(AbstractConsoleTextArea.STYLE_EXCEPTION));
 		exceptionsButton.setEnabled(window.isStyleUsed(AbstractConsoleTextArea.STYLE_EXCEPTION));
 
 		stdoutButton.setColor(window.getForeground(AbstractConsoleTextArea.STYLE_STDOUT));

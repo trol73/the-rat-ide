@@ -7,6 +7,9 @@
  */
 package org.fife.rsta.ui;
 
+import org.fife.ui.EscapableDialog;
+import org.fife.ui.widgets.ResizableFrameContentPane;
+
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Container;

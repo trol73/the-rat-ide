@@ -15,7 +15,7 @@ import java.awt.event.KeyEvent;
 
 import org.fife.rtext.RText;
 import org.fife.rtext.StatusBar;
-import org.fife.ui.OS;
+import org.fife.ui.utils.OS;
 import org.fife.ui.app.AppAction;
 
 
@@ -43,8 +43,7 @@ public class CapsLockAction extends AppAction<RText> {
 		RText rtext = getApplication();
 		if (rtext.getOS()!=OS.MAC_OS_X) {
 			try {
-				boolean state = rtext.getToolkit().getLockingKeyState(
-										KeyEvent.VK_CAPS_LOCK);
+				boolean state = rtext.getToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
 				StatusBar statusBar = (StatusBar)rtext.getStatusBar();
 				statusBar.setCapsLockIndicatorEnabled(state);
 			} catch (UnsupportedOperationException uoe) {

@@ -43,18 +43,19 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.fife.ui.OptionsDialogPanel;
+import org.fife.ui.options.OptionsDialogPanel;
 import org.fife.ui.RColorSwatchesButton;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.LabelValueComboBox;
-import org.fife.ui.UIUtil;
+import org.fife.ui.options.OptionsDialog;
+import org.fife.ui.widgets.LabelValueComboBox;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.modifiabletable.*;
 import org.fife.util.SubstanceUtil;
 
 
 /**
  * Option panel for configuring an <code>RTextFileChooser</code>.  Your
- * subclass of {@link org.fife.ui.OptionsDialog} should call this class's
+ * subclass of {@link OptionsDialog} should call this class's
  * {@link #initialize} method in the dialog's <code>initialize</code> method,
  * and this class's {@link #configureFileChooser} method in the dialog's
  * <code>doApplyImpl</code> method.

@@ -19,7 +19,8 @@ import org.fife.rtext.SearchManager.SearchingMode;
 import org.fife.rtext.actions.AbstractSearchAction;
 import org.fife.rtext.actions.CapsLockAction;
 import org.fife.rtext.actions.ToggleTextModeAction;
-import org.fife.ui.UIUtil;
+import org.fife.rtext.plugins.project.model.Project;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.autocomplete.Util;
 import org.fife.ui.rsyntaxtextarea.ErrorStrip;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
@@ -31,6 +32,7 @@ import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.ui.search.*;
 import ru.trolsoft.ide.config.history.FileList;
 import ru.trolsoft.ide.config.history.FilePositionHistory;
+import ru.trolsoft.ide.utils.ProjectUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -409,8 +411,7 @@ public abstract class AbstractMainView extends JPanel
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        actionPerformed(new ActionEvent(this,
-                                ActionEvent.ACTION_PERFORMED, actionCommand));
+                        actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, actionCommand));
                     }
                 });
             }
@@ -2104,7 +2105,6 @@ public abstract class AbstractMainView extends JPanel
 
         // Switch back to the tab that was being edited originally.
         setSelectedIndex(origTab);
-
     }
 
 
@@ -2154,9 +2154,7 @@ public abstract class AbstractMainView extends JPanel
      * @param prefs       A properties object used to initialize some fields on
      *                    this main view.
      */
-    protected void initialize(RText owner, String[] filesToOpen,
-                              RTextPrefs prefs) {
-
+    protected void initialize(RText owner, String[] filesToOpen, RTextPrefs prefs) {
         // Remember the owner of this tabbed pane.
         this.owner = owner;
         updateBookmarkIcon();
@@ -2173,8 +2171,7 @@ public abstract class AbstractMainView extends JPanel
         setBackgroundImageAlpha(prefs.imageAlpha);
         Object prefsBackgroundObject = prefs.backgroundObject;
         if (prefsBackgroundObject instanceof String) {
-            Image image = UIUtil.getImageFromFile(
-                    (String) prefsBackgroundObject);
+            Image image = UIUtil.getImageFromFile((String) prefsBackgroundObject);
             if (image != null) {
                 setBackgroundObject(image);
                 setBackgroundImageFileName((String) prefsBackgroundObject);
@@ -2438,7 +2435,8 @@ public abstract class AbstractMainView extends JPanel
                 return false;
             }
             try {
-                RTextEditorPane tempTextArea = createRTextEditorPane(loc, charSet);
+                String encoding = detectFileEncoding(loc, charSet);
+                RTextEditorPane tempTextArea = createRTextEditorPane(loc, encoding);
                 addTextArea(tempTextArea);
                 filePositionHistory.restoreTextArea(tempTextArea);
             } catch (IOException ioe) {
@@ -2465,6 +2463,15 @@ public abstract class AbstractMainView extends JPanel
         }
         ensureFilesAreOpened(); // Keep at least 1 document open.
         return false; // Nothing was opened.
+    }
+
+    private String detectFileEncoding(FileLocation loc, String charSet) {
+        String path = loc.getFileFullPath();
+        Project project = ProjectUtils.getProjectForFile(path, owner);
+        if (project != null && !project.getEncoding().isEmpty()) {
+            charSet = project.getEncoding();
+        }
+        return filePositionHistory.restoreEncoding(path, charSet);
     }
 
 
@@ -3257,6 +3264,9 @@ public abstract class AbstractMainView extends JPanel
         if (currentTextArea != null) {
             currentTextArea.addCaretListener(new IdeCaretListener(textArea, owner));
         }
+
+        updateStatusBarOnEditorChange();
+
 //		org.fife.ui.rtextarea.LineNumberList$Listener@5934a71
 //		org.fife.ui.rsyntaxtextarea.MarkOccurrencesSupport@4f28c656
 //		org.fife.ui.rsyntaxtextarea.ErrorStrip$Listener@2aac81fa
@@ -3269,6 +3279,22 @@ public abstract class AbstractMainView extends JPanel
 //		currentTextArea.addCaretListener();
 //		currentTextArea.removeCaretListener();
 
+    }
+
+    private void updateStatusBarOnEditorChange() {
+        AbstractMainView mainView = owner.getMainView();
+        if (mainView == null) {
+            return;
+        }
+        RTextEditorPane editor = mainView.getCurrentTextArea();
+        if (editor == null) {
+            return;
+        }
+        Project project = ProjectUtils.getProjectForCurrentFile(owner);
+        String device = project == null ? null : project.getDevice();
+        StatusBar statusBar = (StatusBar) owner.getStatusBar();
+        statusBar.setDeviceIndicatorValue(device);
+        statusBar.setEncoding(editor.getEncoding());
     }
 
 
@@ -3360,10 +3386,8 @@ public abstract class AbstractMainView extends JPanel
             fractionalMetricsEnabled = enabled;
             int count = getNumDocuments();
             for (int i = 0; i < count; i++)
-                getRTextEditorPaneAt(i).setFractionalFontMetricsEnabled(
-                        enabled);
-            firePropertyChange(FRACTIONAL_METRICS_PROPERTY,
-                    !enabled, enabled);
+                getRTextEditorPaneAt(i).setFractionalFontMetricsEnabled(enabled);
+            firePropertyChange(FRACTIONAL_METRICS_PROPERTY, !enabled, enabled);
         }
     }
 
@@ -3372,8 +3396,7 @@ public abstract class AbstractMainView extends JPanel
      * Sets whether files with no extension have their content type guessed
      * at via whether they have a "<code>#!</code>" in their first line.
      *
-     * @param guess Whether to guess the content type of files with no
-     *              extension.
+     * @param guess Whether to guess the content type of files with no extension.
      * @see #getGuessFileContentType()
      */
     public void setGuessFileContentType(boolean guess) {
@@ -3508,7 +3531,6 @@ public abstract class AbstractMainView extends JPanel
      * @see #getIgnoreBackupExtensions()
      */
     public void setIgnoreBackupExtensions(boolean ignore) {
-
         if (ignore != ignoreBackupExtensions) {
 
             ignoreBackupExtensions = ignore;
@@ -3809,8 +3831,7 @@ public abstract class AbstractMainView extends JPanel
         if (maxFileSizeForCodeFolding != size) {
             int old = maxFileSizeForCodeFolding;
             maxFileSizeForCodeFolding = size;
-            firePropertyChange(MAX_FILE_SIZE_FOR_CODE_FOLDING_PROPERTY, old,
-                    maxFileSizeForCodeFolding);
+            firePropertyChange(MAX_FILE_SIZE_FOR_CODE_FOLDING_PROPERTY, old, maxFileSizeForCodeFolding);
         }
     }
 
@@ -4015,7 +4036,6 @@ public abstract class AbstractMainView extends JPanel
      * @see #getSyntaxFilters()
      */
     public void setSyntaxFilters(SyntaxFilters syntaxFilters) {
-
         this.syntaxFilters.setPreservingPluginAdded(syntaxFilters);
 
         // Reset all open files' color schemes if necessary.

@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextActionInfo;
 import org.fife.rtext.RTextPrefs;
-import org.fife.ui.ImageTranscodingUtil;
+import org.fife.ui.utils.ImageTranscodingUtil;
 import org.fife.ui.app.AbstractGUIApplication;
 import org.fife.ui.app.AppAction;
 import org.fife.ui.app.GUIApplication.AboutAction;
@@ -25,7 +25,7 @@ import org.fife.ui.rtextarea.RTextAreaEditorKit;
 
 
 /**
- * Creates all of the actions for RText.
+ * Creates all the actions for RText.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -46,9 +46,7 @@ public final class ActionFactory implements RTextActionInfo {
 	 * @param prefs The application's preferences.
 	 */
 	public static void addActions(RText rtext, RTextPrefs prefs) {
-
-		ResourceBundle msg = ResourceBundle.getBundle(
-									"org.fife.rtext.actions.Actions");
+		ResourceBundle msg = ResourceBundle.getBundle("org.fife.rtext.actions.Actions");
 
 		ClassLoader cl = ActionFactory.class.getClassLoader();
 
@@ -188,17 +186,10 @@ public final class ActionFactory implements RTextActionInfo {
 				ComponentOrientation.RIGHT_TO_LEFT);
 		rtext.addAction(RTL_ACTION, a);
 
-		a = new MoveFocusLeftAction(rtext, msg);
-		rtext.addAction(MOVE_FOCUS_LEFT_ACTION, a);
-
-		a = new MoveFocusRightAction(rtext, msg);
-		rtext.addAction(MOVE_FOCUS_RIGHT_ACTION, a);
-
-		a = new MoveFocusUpAction(rtext, msg);
-		rtext.addAction(MOVE_FOCUS_UP_ACTION, a);
-
-		a = new MoveFocusDownAction(rtext, msg);
-		rtext.addAction(MOVE_FOCUS_DOWN_ACTION, a);
+		rtext.addAction(MOVE_FOCUS_LEFT_ACTION, new MoveFocusLeftAction(rtext, msg));
+		rtext.addAction(MOVE_FOCUS_RIGHT_ACTION, new MoveFocusRightAction(rtext, msg));
+		rtext.addAction(MOVE_FOCUS_UP_ACTION, new MoveFocusUpAction(rtext, msg));
+		rtext.addAction(MOVE_FOCUS_DOWN_ACTION, new MoveFocusDownAction(rtext, msg));
 
 		a = new ViewSplitAction(rtext, msg, null, "SplitHorizontallyAction",
 								VIEW_SPLIT_HORIZ_ACTION);
@@ -212,17 +203,12 @@ public final class ActionFactory implements RTextActionInfo {
 								VIEW_SPLIT_VERT_ACTION);
 		rtext.addAction(VIEW_SPLIT_VERT_ACTION, a);
 
-		a = new NextDocumentAction(rtext, msg, true);
-		rtext.addAction(NEXT_DOCUMENT_ACTION, a);
+		rtext.addAction(NEXT_DOCUMENT_ACTION, new NextDocumentAction(rtext, msg, true));
+		rtext.addAction(PREVIOUS_DOCUMENT_ACTION, new NextDocumentAction(rtext, msg, false));
+		rtext.addAction(INC_FONT_SIZES_ACTION, new IncreaseFontSizeAction(rtext, msg));
+		rtext.addAction(DEC_FONT_SIZES_ACTION, new DecreaseFontSizeAction(rtext, msg));
 
-		a = new NextDocumentAction(rtext, msg, false);
-		rtext.addAction(PREVIOUS_DOCUMENT_ACTION, a);
-
-		a = new IncreaseFontSizeAction(rtext, msg);
-		rtext.addAction(INC_FONT_SIZES_ACTION, a);
-
-		a = new DecreaseFontSizeAction(rtext, msg);
-		rtext.addAction(DEC_FONT_SIZES_ACTION, a);
-
+		rtext.addAction(BUILD_ACTION, new BuildAction(rtext, msg));
+		rtext.addAction(UPLOAD_ACTION, new UploadAction(rtext, msg));
 	}
 }

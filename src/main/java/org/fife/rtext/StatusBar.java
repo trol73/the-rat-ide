@@ -17,10 +17,13 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.swing.JLabel;
 
+import org.fife.rtext.plugins.project.model.Project;
 import org.fife.ui.StatusBarPanel;
+import ru.trolsoft.ide.utils.ProjectUtils;
 
 
 /**
@@ -36,14 +39,15 @@ import org.fife.ui.StatusBarPanel;
  * @author Robert Futrell
  * @version 1.0
  */
-public class StatusBar extends org.fife.ui.StatusBar
-        implements PropertyChangeListener {
+public class StatusBar extends org.fife.ui.StatusBar implements PropertyChangeListener {
 
     private final JLabel selectionLengthIndicator;
     private final JLabel rowAndColumnIndicator;
     private JLabel overwriteModeIndicator;
     private final JLabel capsLockIndicator;
     private final JLabel readOnlyIndicator;
+    private final JLabel deviceIndicator;
+    private final JLabel encodingIndicator;
 
     private final RText rtext;
     private int row;
@@ -55,6 +59,8 @@ public class StatusBar extends org.fife.ui.StatusBar
     private StatusBarPanel capsLockPanel;
     private StatusBarPanel readOnlyPanel;
     private StatusBarPanel selectionLengthPanel;
+    private StatusBarPanel devicePanel;
+    private StatusBarPanel encodingPanel;
 
     private final String fileSaveSuccessfulText;
     private final String openedFileText;
@@ -106,32 +112,41 @@ public class StatusBar extends org.fife.ui.StatusBar
         overwriteModeIndicator = createLabel(msg, "OverwriteModeIndicator");
         overwriteModeIndicator = createLabel(msg, "OverwriteModeIndicator");
         selectionLengthIndicator = new JLabel();
+        deviceIndicator = new JLabel();
+        encodingIndicator = new JLabel();
 
         // Make the layout such that different items can be different sizes.
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
 
+        // Create a label showing the encoding
+        c.weightx = 0;
+        encodingPanel = new StatusBarPanel(new BorderLayout(), encodingIndicator);
+        addStatusBarComponent(encodingPanel, c);
+
+
+        // Create a label showing the device name
+        c.weightx = 0;
+        devicePanel = new StatusBarPanel(new BorderLayout(), deviceIndicator);
+        addStatusBarComponent(devicePanel, c);
+
         // Create a label showing the selection length
         c.weightx = 0;
-        selectionLengthPanel = new StatusBarPanel(new BorderLayout(),
-                selectionLengthIndicator);
+        selectionLengthPanel = new StatusBarPanel(new BorderLayout(), selectionLengthIndicator);
         addStatusBarComponent(selectionLengthPanel, c);
 
         // Create a Read Only indicator.
         c.weightx = 0.0;
-        readOnlyPanel = new StatusBarPanel(new BorderLayout(),
-                readOnlyIndicator);
+        readOnlyPanel = new StatusBarPanel(new BorderLayout(), readOnlyIndicator);
         readOnlyIndicator.setEnabled(false);
         addStatusBarComponent(readOnlyPanel, c);
 
         // Create a Caps lock indicator.
         c.weightx = 0.0;
-        capsLockPanel = new StatusBarPanel(new BorderLayout(),
-                capsLockIndicator);
+        capsLockPanel = new StatusBarPanel(new BorderLayout(), capsLockIndicator);
         // On Mac OS X at least, the OS doesn't support getLockingKeyState().
         try {
-            capsLockIndicator.setEnabled(Toolkit.getDefaultToolkit().
-                    getLockingKeyState(KeyEvent.VK_CAPS_LOCK));
+            capsLockIndicator.setEnabled(Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK));
         } catch (UnsupportedOperationException e) {
             capsLockIndicator.setText("-");
             setCapsLockIndicatorEnabled(false);
@@ -140,8 +155,7 @@ public class StatusBar extends org.fife.ui.StatusBar
 
         // Create and add a panel containing the overwrite/insert message.
         c.weightx = 0.0;
-        overwritePanel = new StatusBarPanel(new BorderLayout(),
-                overwriteModeIndicator);
+        overwritePanel = new StatusBarPanel(new BorderLayout(), overwriteModeIndicator);
         setOverwriteModeIndicatorEnabled(overwriteModeEnabled);
         addStatusBarComponent(overwritePanel, c);
 
@@ -156,8 +170,7 @@ public class StatusBar extends org.fife.ui.StatusBar
             @Override
             public Dimension getPreferredSize() {
                 Dimension preferredSize = super.getPreferredSize();
-                return new Dimension(Math.max(50, preferredSize.width),
-                        preferredSize.height);
+                return new Dimension(Math.max(50, preferredSize.width), preferredSize.height);
             }
         };
         temp1.add(rowAndColumnIndicator);
@@ -170,8 +183,7 @@ public class StatusBar extends org.fife.ui.StatusBar
      * plugins.
      */
     @Override
-    public void addStatusBarComponent(StatusBarPanel panel,
-                                      int index, GridBagConstraints constraints) {
+    public void addStatusBarComponent(StatusBarPanel panel, int index, GridBagConstraints constraints) {
         super.addStatusBarComponent(panel, index + 1, constraints);
     }
 
@@ -233,7 +245,7 @@ public class StatusBar extends org.fife.ui.StatusBar
 
 
     /**
-     * Returns whether or not the row/column indicator is visible.
+     * Returns whether the row/column indicator is visible.
      *
      * @return Whether the row/column indicator is enabled.
      */
@@ -249,7 +261,6 @@ public class StatusBar extends org.fife.ui.StatusBar
      */
     @Override
     public void propertyChange(PropertyChangeEvent e) {
-
         String property = e.getPropertyName();
 
         // If a file was just saved...
@@ -263,8 +274,7 @@ public class StatusBar extends org.fife.ui.StatusBar
         // If they opened a file...
         else if (property.equals(AbstractMainView.TEXT_AREA_ADDED_PROPERTY)) {
             RTextEditorPane textArea = (RTextEditorPane) e.getNewValue();
-            setStatusMessage(MessageFormat.format(openedFileText,
-                    textArea.getFileName()));
+            setStatusMessage(MessageFormat.format(openedFileText, textArea.getFileName()));
         }
 
         // If they saved a read-only file with a different filename (hence it
@@ -323,6 +333,10 @@ public class StatusBar extends org.fife.ui.StatusBar
         readOnlyIndicator.setEnabled(enabled);
     }
 
+    public void setDeviceIndicatorEnabled(boolean enabled) {
+        deviceIndicator.setEnabled(enabled);
+    }
+
 
     /**
      * Setter function for the row in row/column indicator.
@@ -351,8 +365,7 @@ public class StatusBar extends org.fife.ui.StatusBar
     /**
      * Enables or disables the row/column indicator.
      *
-     * @param isVisible Whether or not the row/column indicator should be
-     *                  visible.
+     * @param isVisible Whether the row/column indicator should be visible.
      */
     public void setRowColumnIndicatorVisible(boolean isVisible) {
         if (isVisible != rowColumnIndicatorVisible) {
@@ -387,14 +400,12 @@ public class StatusBar extends org.fife.ui.StatusBar
      */
     private void updateSelectionLengthDisplay() {
         RTextEditorPane textArea = rtext.getMainView().getCurrentTextArea();
-        int selectionLength = textArea.getSelectionEnd() -
-                textArea.getSelectionStart();
+        int selectionLength = textArea.getSelectionEnd() - textArea.getSelectionStart();
 
         if (selectionLength == 0) {
             selectionLengthPanel.setVisible(false);
         } else {
-            String newValue = MessageFormat.format(selectionLengthText,
-                    selectionLength);
+            String newValue = MessageFormat.format(selectionLengthText, selectionLength);
             selectionLengthIndicator.setText(newValue);
             if (!selectionLengthPanel.isVisible()) {
                 selectionLengthPanel.setVisible(true);
@@ -402,5 +413,15 @@ public class StatusBar extends org.fife.ui.StatusBar
         }
     }
 
+    public void setDeviceIndicatorValue(String device) {
+        deviceIndicator.setEnabled(device != null);
+        if (device != null) {
+            deviceIndicator.setText(device);
+        }
+    }
+
+    public void setEncoding(String encoding) {
+        encodingIndicator.setText(encoding);
+    }
 
 }

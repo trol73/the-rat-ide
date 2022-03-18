@@ -4,7 +4,7 @@
  */
 package org.fife.ui.app.console;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.util.SubstanceUtil;
 
 import javax.swing.*;
@@ -21,157 +21,160 @@ import java.awt.event.MouseEvent;
  */
 public abstract class AbstractConsoleTextArea extends JTextPane {
 
-	public static final Color DEFAULT_LIGHT_PROMPT_FG = new Color(0,192,0);
+    public static final Color DEFAULT_LIGHT_PROMPT_FG = new Color(0, 192, 0);
 
-	public static final Color DEFAULT_LIGHT_STDOUT_FG = Color.blue;
+    public static final Color DEFAULT_LIGHT_STDOUT_FG = Color.blue;
 
-	public static final Color DEFAULT_LIGHT_STDERR_FG = Color.red;
+    public static final Color DEFAULT_LIGHT_STDERR_FG = Color.red;
 
-	public static final Color DEFAULT_LIGHT_EXCEPTION_FG = new Color(111, 49, 152);
+    public static final Color DEFAULT_LIGHT_EXCEPTION_FG = new Color(111, 49, 152);
 
-	public static final Color DEFAULT_DARK_PROMPT_FG	= new Color(0x30, 0xff, 0x2f);
+    public static final Color DEFAULT_DARK_PROMPT_FG = new Color(0x30, 0xff, 0x2f);
 
-	public static final Color DEFAULT_DARK_STDOUT_FG	= new Color(0, 255, 255);
+    public static final Color DEFAULT_DARK_STDOUT_FG = new Color(0, 255, 255);
 
-	public static final Color DEFAULT_DARK_STDERR_FG	= new Color(0xff, 0x80, 0x80);
+    public static final Color DEFAULT_DARK_STDERR_FG = new Color(0xff, 0x80, 0x80);
 
-	public static final Color DEFAULT_DARK_EXCEPTION_FG = new Color(0xa0649a);
+    public static final Color DEFAULT_DARK_EXCEPTION_FG = new Color(0xa0649a);
 
-	public static final String STYLE_PROMPT			= "prompt";
-	public static final String STYLE_STDIN			= "stdin";
-	public static final String STYLE_STDOUT			= "stdout";
-	public static final String STYLE_STDERR			= "stderr";
-	public static final String STYLE_EXCEPTION		= "exception";
-
-	private JPopupMenu popup;
+    public static final Color DEFAULT_LIGHT_BACKGROUND = new Color(0xbbbbbb);
+    public static final Color DEFAULT_DARK_BACKGROUND = Color.BLACK;
 
 
-	/**
-	 * Creates the popup menu for this text area.
-	 *
-	 * @return The popup menu.
-	 */
-	protected abstract JPopupMenu createPopupMenu();
+    public static final String STYLE_PROMPT = "prompt";
+    public static final String STYLE_STDIN = "stdin";
+    public static final String STYLE_STDOUT = "stdout";
+    public static final String STYLE_STDERR = "stderr";
+    public static final String STYLE_EXCEPTION = "exception";
+    public static final String STYLE_BACKGROUND = "background";
+
+    private JPopupMenu popup;
 
 
-	/**
-	 * Installs the styles used by this text component.
-	 *
-	 * @param checkForSubstance Whether to work around a Substance oddity.
-	 */
-	protected void installDefaultStyles(boolean checkForSubstance) {
-
-		if (!SubstanceUtil.isSubstanceInstalled()) {
-			// If we do this with a SubstanceLookAndFeel installed, we go into
-			// an infinite loop of updateUI()'s called (in calls to
-			// SwingUtilities.invokeLater()).  For some reason, Substance has
-			// to update JTextPaneUI's whenever the font changes.  Sigh...
-			setFont(getDefaultFont());
-		}
-
-		restoreDefaultColors();
-		setTabSize(4); // Do last
-
-	}
+    /**
+     * Creates the popup menu for this text area.
+     *
+     * @return The popup menu.
+     */
+    protected abstract JPopupMenu createPopupMenu();
 
 
-	/**
-	 * Returns the font to use in the console.  Subclasses can override.
-	 *
-	 * @return The font to use.
-	 */
-	protected Font getDefaultFont() {
-		Font currentFont = getFont();
-		return new Font(Font.MONOSPACED, currentFont.getStyle(), currentFont.getSize());
-	}
+    /**
+     * Installs the styles used by this text component.
+     *
+     * @param checkForSubstance Whether to work around a Substance oddity.
+     */
+    protected void installDefaultStyles(boolean checkForSubstance) {
+        if (!SubstanceUtil.isSubstanceInstalled()) {
+            // If we do this with a SubstanceLookAndFeel installed, we go into
+            // an infinite loop of updateUI()'s called (in calls to
+            // SwingUtilities.invokeLater()).  For some reason, Substance has
+            // to update JTextPaneUI's whenever the font changes.  Sigh...
+            setFont(getDefaultFont());
+        }
+
+        restoreDefaultColors();
+        setTabSize(4); // Do last
+    }
 
 
-	/**
-	 * Changes all consoles to use the default colors for the current
-	 * application theme.
-	 */
-	public void restoreDefaultColors() {
-
-		Font font = getDefaultFont();
-		boolean isDark = UIUtil.isDarkLookAndFeel();
-
-		Style defaultStyle = getStyle(StyleContext.DEFAULT_STYLE);
-		StyleConstants.setFontFamily(defaultStyle, font.getFamily());
-		StyleConstants.setFontSize(defaultStyle, font.getSize());
-
-		Style prompt = addStyle(STYLE_PROMPT, defaultStyle);
-		Color promptColor = isDark ? DEFAULT_DARK_PROMPT_FG : DEFAULT_LIGHT_PROMPT_FG;
-		StyleConstants.setForeground(prompt, promptColor);
-
-		/*Style stdin = */addStyle(STYLE_STDIN, defaultStyle);
-
-		Style stdout = addStyle(STYLE_STDOUT, defaultStyle);
-		Color stdoutColor = isDark ? DEFAULT_DARK_STDOUT_FG : DEFAULT_LIGHT_STDOUT_FG;
-		StyleConstants.setForeground(stdout, stdoutColor);
-
-		Style stderr = addStyle(STYLE_STDERR, defaultStyle);
-		Color stderrColor = isDark ? DEFAULT_DARK_STDERR_FG : DEFAULT_LIGHT_STDERR_FG;
-		StyleConstants.setForeground(stderr, stderrColor);
-
-		Style exception = addStyle(STYLE_EXCEPTION, defaultStyle);
-		Color exceptionColor = isDark ? DEFAULT_DARK_EXCEPTION_FG : DEFAULT_LIGHT_EXCEPTION_FG;
-		StyleConstants.setForeground(exception, exceptionColor);
-
-	}
+    /**
+     * Returns the font to use in the console.  Subclasses can override.
+     *
+     * @return The font to use.
+     */
+    protected Font getDefaultFont() {
+        Font currentFont = getFont();
+        return new Font(Font.MONOSPACED, currentFont.getStyle(), currentFont.getSize());
+    }
 
 
-	/**
-	 * Sets the tab size in this text pane.
-	 *
-	 * @param tabSize The new tab size, in characters.
-	 */
-	private void setTabSize(int tabSize) {
+    /**
+     * Changes all consoles to use the default colors for the current application theme.
+     */
+    public void restoreDefaultColors() {
+        Font font = getDefaultFont();
+        boolean isDark = UIUtil.isDarkLookAndFeel();
 
-		FontMetrics fm = getFontMetrics(getFont());
-		int charWidth = fm.charWidth('m');
-		int tabWidth = charWidth * tabSize;
+        Style defaultStyle = getStyle(StyleContext.DEFAULT_STYLE);
+        StyleConstants.setFontFamily(defaultStyle, font.getFamily());
+        StyleConstants.setFontSize(defaultStyle, font.getSize());
 
-		// NOTE: Array length is arbitrary, represents the maximum number of
-		// tabs handled on a single line.
-		TabStop[] tabs = new TabStop[50];
-		for (int j=0; j<tabs.length; j++) {
-			tabs[j] = new TabStop((j+1)*tabWidth);
-		}
+        Style prompt = addStyle(STYLE_PROMPT, defaultStyle);
+        Color promptColor = isDark ? DEFAULT_DARK_PROMPT_FG : DEFAULT_LIGHT_PROMPT_FG;
+        StyleConstants.setForeground(prompt, promptColor);
 
-		TabSet tabSet = new TabSet(tabs);
-		SimpleAttributeSet attributes = new SimpleAttributeSet();
-		StyleConstants.setTabSet(attributes, tabSet);
+        /*Style stdin = */
+        addStyle(STYLE_STDIN, defaultStyle);
 
-		int length = getDocument().getLength();
-		getStyledDocument().setParagraphAttributes(0, length, attributes, true);
+        Style stdout = addStyle(STYLE_STDOUT, defaultStyle);
+        Color stdoutColor = isDark ? DEFAULT_DARK_STDOUT_FG : DEFAULT_LIGHT_STDOUT_FG;
+        StyleConstants.setForeground(stdout, stdoutColor);
 
-	}
+        Style stderr = addStyle(STYLE_STDERR, defaultStyle);
+        Color stderrColor = isDark ? DEFAULT_DARK_STDERR_FG : DEFAULT_LIGHT_STDERR_FG;
+        StyleConstants.setForeground(stderr, stderrColor);
 
+        Style exception = addStyle(STYLE_EXCEPTION, defaultStyle);
+        Color exceptionColor = isDark ? DEFAULT_DARK_EXCEPTION_FG : DEFAULT_LIGHT_EXCEPTION_FG;
+        StyleConstants.setForeground(exception, exceptionColor);
 
-	/**
-	 * Displays this text area's popup menu.
-	 *
-	 * @param e The location at which to display the popup.
-	 */
-	protected void showPopupMenu(MouseEvent e) {
-		if (popup==null) {
-			popup = createPopupMenu();
-		}
-		if (popup != null) {
-			popup.show(this, e.getX(), e.getY());
-		}
-	}
+        Style background = addStyle(STYLE_BACKGROUND, defaultStyle);
+        Color backgroundColor = isDark ? DEFAULT_DARK_BACKGROUND : DEFAULT_LIGHT_BACKGROUND;
+        StyleConstants.setBackground(exception, backgroundColor);
+    }
 
 
-	/**
-	 * Overridden to also update the UI of the popup menu.
-	 */
-	@Override
-	public void updateUI() {
-		super.updateUI();
-		installDefaultStyles(true);
-		if (popup!=null) {
-			SwingUtilities.updateComponentTreeUI(popup);
-		}
-	}
+    /**
+     * Sets the tab size in this text pane.
+     *
+     * @param tabSize The new tab size, in characters.
+     */
+    private void setTabSize(int tabSize) {
+        FontMetrics fm = getFontMetrics(getFont());
+        int charWidth = fm.charWidth('m');
+        int tabWidth = charWidth * tabSize;
+
+        // NOTE: Array length is arbitrary, represents the maximum number of
+        // tabs handled on a single line.
+        TabStop[] tabs = new TabStop[50];
+        for (int j = 0; j < tabs.length; j++) {
+            tabs[j] = new TabStop((j + 1) * tabWidth);
+        }
+
+        TabSet tabSet = new TabSet(tabs);
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        StyleConstants.setTabSet(attributes, tabSet);
+
+        int length = getDocument().getLength();
+        getStyledDocument().setParagraphAttributes(0, length, attributes, true);
+    }
+
+
+    /**
+     * Displays this text area's popup menu.
+     *
+     * @param e The location at which to display the popup.
+     */
+    protected void showPopupMenu(MouseEvent e) {
+        if (popup == null) {
+            popup = createPopupMenu();
+        }
+        if (popup != null) {
+            popup.show(this, e.getX(), e.getY());
+        }
+    }
+
+
+    /**
+     * Overridden to also update the UI of the popup menu.
+     */
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        installDefaultStyles(true);
+        if (popup != null) {
+            SwingUtilities.updateComponentTreeUI(popup);
+        }
+    }
 }

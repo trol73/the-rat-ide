@@ -36,14 +36,17 @@ import javax.swing.text.Document;
 
 import org.fife.ui.*;
 import org.fife.ui.modifiabletable.*;
+import org.fife.ui.options.OptionsDialogPanel;
 import org.fife.ui.rsyntaxtextarea.templates.CodeTemplate;
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate;
 import org.fife.ui.rtextarea.RTextArea;
+import org.fife.ui.utils.UIUtil;
+import org.fife.ui.widgets.RScrollPane;
 
 
 /**
  * An options panel that can be added to an
- * <code>org.fife.ui.OptionsDialog</code> to manage the templates
+ * <code>org.fife.ui.options.OptionsDialog</code> to manage the templates
  * available to all instances of <code>RSyntaxTextArea</code>.
  *
  * @author Robert Futrell

@@ -10,7 +10,7 @@
  */
 package org.fife.ui.breadcrumbbar;
 
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 
 import java.awt.Component;
 import java.awt.ComponentOrientation;

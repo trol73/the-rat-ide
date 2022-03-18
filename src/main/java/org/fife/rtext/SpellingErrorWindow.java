@@ -16,8 +16,8 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.*;
 
-import org.fife.ui.RScrollPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.RScrollPane;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.dockablewindows.DockableWindowConstants;
 import org.fife.ui.dockablewindows.DockableWindowScrollPane;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;

@@ -37,9 +37,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.fife.ui.EscapableDialog;
-import org.fife.ui.OptionsDialogPanel;
+import org.fife.ui.options.OptionsDialogPanel;
 import org.fife.ui.ResizableFrameContentPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.modifiabletable.AbstractRowHandler;
 import org.fife.ui.modifiabletable.ModifiableTable;
 import org.fife.ui.modifiabletable.ModifiableTableChangeEvent;

@@ -35,10 +35,10 @@ import javax.swing.event.ChangeListener;
 import org.fife.rtext.AbstractMainView;
 import org.fife.rtext.RText;
 import org.fife.rtext.SearchManager.SearchingMode;
-import org.fife.ui.OptionsDialogPanel;
-import org.fife.ui.SelectableLabel;
-import org.fife.ui.LabelValueComboBox;
-import org.fife.ui.UIUtil;
+import org.fife.ui.options.OptionsDialogPanel;
+import org.fife.ui.widgets.SelectableLabel;
+import org.fife.ui.widgets.LabelValueComboBox;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.app.GUIApplication;
 import org.fife.util.TranslucencyUtil;
 

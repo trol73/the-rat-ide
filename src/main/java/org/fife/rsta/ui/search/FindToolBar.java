@@ -41,7 +41,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
-import org.fife.rsta.ui.AssistanceIconPanel;
+import org.fife.ui.widgets.AssistanceIconPanel;
 import org.fife.rsta.ui.UIUtil;
 import org.fife.ui.rtextarea.SearchContext;
 

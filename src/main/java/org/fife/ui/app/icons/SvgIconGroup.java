@@ -5,7 +5,7 @@
  */
 package org.fife.ui.app.icons;
 
-import org.fife.ui.ImageTranscodingUtil;
+import org.fife.ui.utils.ImageTranscodingUtil;
 import org.fife.ui.app.AbstractGUIApplication;
 
 import javax.swing.*;

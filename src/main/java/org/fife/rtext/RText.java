@@ -1,7 +1,7 @@
 /*
  * 11/14/2003
  *
- * RText.java - A syntax highlighting programmer's text editor written in Java.
+ * RText.java - A syntax highlighting pro§grammer's text editor written in Java.
  * Copyright (C) 2003 Robert Futrell
  * http://fifesoft.com/rtext
  * Licensed under a modified BSD license.
@@ -30,10 +30,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.text.Element;
 
 import org.fife.help.HelpDialog;
-import org.fife.rsta.ui.CollapsibleSectionPanel;
+import org.fife.rtext.plugins.project.ProjectPlugin;
+import org.fife.rtext.plugins.project.model.Workspace;
+import org.fife.ui.widgets.CollapsibleSectionPanel;
 import org.fife.rtext.actions.ActionFactory;
+import org.fife.rtext.plugins.buildoutput.BuildOutputWindow;
 import org.fife.ui.CustomizableToolBar;
-import org.fife.ui.OptionsDialog;
+import org.fife.ui.options.OptionsDialog;
 import org.fife.ui.SplashScreen;
 import org.fife.ui.app.*;
 import org.fife.ui.app.icons.IconGroup;
@@ -50,6 +53,8 @@ import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
 import org.fife.ui.rtextfilechooser.FileChooserOwner;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.util.TranslucencyUtil;
+
+import ru.trolsoft.therat.RatKt;
 
 
 /**
@@ -191,7 +196,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     // What to do when user does something.
     @Override
     public void actionPerformed(ActionEvent e) {
-
         String command = e.getActionCommand();
 
         switch (command) {
@@ -232,7 +236,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      */
     @Override
     public void caretUpdate(CaretEvent e) {
-
         // NOTE: e may be "null"; we do this sometimes to force caret
         // updates to update e.g. the current line highlight.
         RTextEditorPane textArea = mainView.getCurrentTextArea();
@@ -242,8 +245,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         Element map = textArea.getDocument().getDefaultRootElement();
         int line = map.getElementIndex(dot);
         int lineStartOffset = map.getElement(line).getStartOffset();
-        ((StatusBar) getStatusBar()).setRowAndColumn(
-                line + 1, dot - lineStartOffset + 1);
+        ((StatusBar) getStatusBar()).setRowAndColumn(line + 1, dot - lineStartOffset + 1);
 
     }
 
@@ -301,7 +303,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      */
     @Override
     protected JMenuBar createMenuBar(RTextPrefs prefs) {
-
         //splashScreen.updateStatus(msg.getString("CreatingMenuBar"), 75);
 
         menuBar = new RTextMenuBar(this);
@@ -310,7 +311,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         menuBar.setWindowMenuVisible(prefs.mainView == MDI_VIEW);
 
         return menuBar;
-
     }
 
 
@@ -542,10 +542,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      */
     @Override
     public HelpDialog getHelpDialog() {
-DockableWindowPanel dwp = (DockableWindowPanel) mainContentPanel;
-for (var w : dwp.getDockableWindows()) {
-    System.out.println("::" + w);
-}
         // Create the help dialog if it hasn't already been.
         if (helpDialog == null) {
             String contentsPath = getInstallLocation() + "/doc/";
@@ -554,9 +550,7 @@ for (var w : dwp.getDockableWindows()) {
             File test = new File(helpPath);
             if (!test.isDirectory())
                 helpPath = contentsPath + "en/";
-            helpDialog = new HelpDialog(this,
-                    contentsPath + "HelpDialogContents.xml",
-                    helpPath);
+            helpDialog = new HelpDialog(this,contentsPath + "HelpDialogContents.xml", helpPath);
             helpDialog.setBackButtonIcon(getIconGroup().getIcon("back"));
             helpDialog.setForwardButtonIcon(getIconGroup().getIcon("forward"));
         }
@@ -1632,6 +1626,34 @@ for (var w : dwp.getDockableWindows()) {
         if (action != null) { // Can be null when the app is first starting up
             action.putValue(Action.SMALL_ICON, icon);
         }
+    }
+
+    public org.fife.rtext.plugins.buildoutput.Plugin getBuildOutputPlugin() {
+        for (Plugin<?> p : getPlugins()) {
+            if (p instanceof org.fife.rtext.plugins.buildoutput.Plugin pp) {
+                return pp;
+            }
+        }
+        return null;
+    }
+
+    public BuildOutputWindow getBuildOutputWindow() {
+        var plugin = getBuildOutputPlugin();
+        return plugin == null ? null : plugin.getDockableWindow();
+    }
+
+    public ProjectPlugin getProjectPlugin() {
+        for (Plugin<?> p : getPlugins()) {
+            if (p instanceof ProjectPlugin) {
+                return ((ProjectPlugin)p);
+            }
+        }
+        return null;
+    }
+
+    public Workspace getWorkspace() {
+        ProjectPlugin plugin = getProjectPlugin();
+        return plugin != null ? plugin.getWorkspace() : null;
     }
 
 

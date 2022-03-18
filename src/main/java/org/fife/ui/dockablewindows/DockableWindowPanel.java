@@ -22,8 +22,8 @@ import java.util.TreeSet;
 import javax.swing.*;
 import javax.swing.plaf.SplitPaneUI;
 
-import org.fife.ui.CleanSplitPaneUI;
-import org.fife.ui.WebLookAndFeelUtils;
+import org.fife.ui.widgets.CleanSplitPaneUI;
+import org.fife.ui.utils.WebLookAndFeelUtils;
 
 
 /**

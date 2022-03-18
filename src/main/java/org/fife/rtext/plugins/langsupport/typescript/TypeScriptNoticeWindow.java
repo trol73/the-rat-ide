@@ -25,8 +25,8 @@ import org.fife.rtext.AbstractParserNoticeWindow;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextEditorPane;
 import org.fife.rtext.plugins.langsupport.Plugin;
-import org.fife.ui.RScrollPane;
-import org.fife.ui.UIUtil;
+import org.fife.ui.widgets.RScrollPane;
+import org.fife.ui.utils.UIUtil;
 import org.fife.ui.dockablewindows.DockableWindowScrollPane;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 
