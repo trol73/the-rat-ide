@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -82,6 +83,7 @@ public class FileSystemTreePlugin extends GUIPlugin<RText> {
         putDockableWindow(name, wind);
         try {
             new FileSystemTreeStateSaver().restoreState(tree);
+        } catch (NoSuchFileException ignore) {
         } catch (IOException e) {
             e.printStackTrace();
         }

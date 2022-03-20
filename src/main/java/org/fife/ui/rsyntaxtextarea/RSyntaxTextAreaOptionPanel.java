@@ -54,8 +54,7 @@ import org.fife.ui.widgets.SelectableLabel;
  * @version 0.5
  */
 public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
-        implements ActionListener, PropertyChangeListener,
-        ListSelectionListener {
+        implements ActionListener, PropertyChangeListener, ListSelectionListener {
 
     /**
      * ID used to identify this option panel.
@@ -85,10 +84,10 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
 
     private boolean isSettingStyle;
 
-    private static final String DEFAULTS_RESTORED = "RSTAOpts.defaultsRestored";
-    private static final String SYNTAX_COLOR_PROPERTY = "RSTAOpts.syntaxColor";
-    private static final String SYNTAX_FONT_PROPERTY = "RSTAOpts.syntaxFont";
-    private static final String UNKNOWN_PROPERTY = "RSTAOpts.unknown";
+//    private static final String DEFAULTS_RESTORED = "RSTAOpts.defaultsRestored";
+//    private static final String SYNTAX_COLOR_PROPERTY = "RSTAOpts.syntaxColor";
+//    private static final String SYNTAX_FONT_PROPERTY = "RSTAOpts.syntaxFont";
+//    private static final String UNKNOWN_PROPERTY = "RSTAOpts.unknown";
 
     private static final String[] SAMPLES = {
             "previewAvrRat.txt", "previewJava.txt", "previewPerl.txt", "previewXml.txt"
@@ -105,10 +104,8 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
      * Constructor.
      */
     public RSyntaxTextAreaOptionPanel() {
-
         setId(OPTION_PANEL_ID);
-        ComponentOrientation orientation = ComponentOrientation.
-                getOrientation(getLocale());
+        ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
 
         ResourceBundle msg = ResourceBundle.getBundle("org.fife.ui.rsyntaxtextarea.OptionPanel");
 
@@ -124,8 +121,7 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
         label.setText(msg.getString("Note.UseThemesInstead"));
         label.addHyperlinkListener(e -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                getOptionsDialog().setSelectedOptionsPanel(
-                        UIOptionPanel.OPTION_PANEL_ID);
+                getOptionsDialog().setSelectedOptionsPanel(UIOptionPanel.OPTION_PANEL_ID);
             }
         });
         cp.add(label);
@@ -320,7 +316,7 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
             Object newBG = backgroundDialog.getChosenBackground();
             // Non-null newBG means user hit OK, not Cancel.
             if (newBG != null && !newBG.equals(background)) {
-                Object oldBG = background;
+                //Object oldBG = background;
                 setBackgroundObject(newBG);
                 setBackgroundImageFileName(backgroundDialog.getCurrentImageFileName());
                 refreshSyntaxHighlightingSection();
@@ -475,8 +471,7 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
      * @return The text the label should display.
      */
     protected static String getPreviewText(boolean underline) {
-        return underline ? "<html><u>Hello, world!</u>" :
-                "Hello, world!";
+        return underline ? "<html><u>Hello, world!</u>" : "Hello, world!";
     }
 
 
@@ -547,7 +542,6 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
      */
     @Override
     public void propertyChange(PropertyChangeEvent e) {
-
         if (isSettingStyle)
             return;
 
@@ -789,7 +783,6 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
      */
     @Override
     public void valueChanged(ListSelectionEvent e) {
-
         int index = syntaxList.getSelectedIndex();
         index = indexToStyle(index); // To get index into schemes.
         isSettingStyle = true;

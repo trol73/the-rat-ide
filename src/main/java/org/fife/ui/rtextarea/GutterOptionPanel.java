@@ -43,25 +43,22 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 public class GutterOptionPanel extends OptionsDialogPanel
 		implements PropertyChangeListener, ActionListener, ItemListener {
 
-	private JCheckBox lnEnabledCB;
-	private FontSelector fontSelector;
-	private RColorSwatchesButton lnColorButton;
-	private JCheckBox enableBookmarkingCB;
-	private RColorSwatchesButton borderColorButton;
-	private RColorSwatchesButton foldBackgroundButton;
-	private RColorSwatchesButton armedFoldBackgroundButton;
+	private final JCheckBox lnEnabledCB;
+	private final FontSelector fontSelector;
+	private final RColorSwatchesButton lnColorButton;
+	private final JCheckBox enableBookmarkingCB;
+	private final RColorSwatchesButton borderColorButton;
+	private final RColorSwatchesButton foldBackgroundButton;
+	private final RColorSwatchesButton armedFoldBackgroundButton;
 
 
 	/**
 	 * Constructor.
 	 */
 	public GutterOptionPanel() {
+		ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
 
-		ComponentOrientation orientation = ComponentOrientation.
-									getOrientation(getLocale());
-
-		ResourceBundle msg = ResourceBundle.getBundle(
-					"org.fife.ui.rtextarea.GutterOptionPanel");
+		ResourceBundle msg = ResourceBundle.getBundle("org.fife.ui.rtextarea.GutterOptionPanel");
 
 		setName(msg.getString("Title"));
 
@@ -74,8 +71,7 @@ public class GutterOptionPanel extends OptionsDialogPanel
 
 		// Line number options.
 		Box lineNumbersPanel = new Box(BoxLayout.Y_AXIS);
-		lineNumbersPanel.setBorder(new OptionPanelBorder(
-									msg.getString("LineNumbers")));
+		lineNumbersPanel.setBorder(new OptionPanelBorder(msg.getString("LineNumbers")));
 		lnEnabledCB = new JCheckBox(msg.getString("Enabled"));
 		lnEnabledCB.addItemListener(this);
 		JComponent temp = new JPanel(new BorderLayout());
@@ -91,8 +87,7 @@ public class GutterOptionPanel extends OptionsDialogPanel
 		lineNumbersPanel.add(Box.createVerticalStrut(5));
 		JLabel lnColorLabel = new JLabel(msg.getString("Color"));
 		lnColorButton = new RColorSwatchesButton();
-		lnColorButton.addPropertyChangeListener(
-					RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
+		lnColorButton.addPropertyChangeListener(RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
 		lnColorLabel.setLabelFor(lnColorButton);
 		temp = new Box(BoxLayout.LINE_AXIS);
 		temp.add(lnColorLabel);
@@ -110,16 +105,13 @@ public class GutterOptionPanel extends OptionsDialogPanel
 		foldPanel.setBorder(new OptionPanelBorder(msg.getString("FoldArea")));
 		JLabel foldBackgroundLabel = new JLabel(msg.getString("FoldBackground"));
 		foldBackgroundButton = new RColorSwatchesButton();
-		foldBackgroundButton.addPropertyChangeListener(
-					RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
+		foldBackgroundButton.addPropertyChangeListener(RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
 		JPanel foldBgButtonPanel = new JPanel(new BorderLayout());
 		addLeftAligned(foldBgButtonPanel, foldBackgroundButton);
 		foldBackgroundLabel.setLabelFor(foldBackgroundButton);
-		JLabel armedFoldBackgroundLabel = new JLabel(
-				msg.getString("ArmedFoldBackground"));
+		JLabel armedFoldBackgroundLabel = new JLabel(msg.getString("ArmedFoldBackground"));
 		armedFoldBackgroundButton = new RColorSwatchesButton();
-		armedFoldBackgroundButton.addPropertyChangeListener(
-					RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
+		armedFoldBackgroundButton.addPropertyChangeListener(RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
 		JPanel armedFoldBgButtonPanel = new JPanel(new BorderLayout());
 		addLeftAligned(armedFoldBgButtonPanel, armedFoldBackgroundButton);
 		armedFoldBackgroundLabel.setLabelFor(armedFoldBackgroundButton);
@@ -137,8 +129,7 @@ public class GutterOptionPanel extends OptionsDialogPanel
 		otherPanel.setBorder(new OptionPanelBorder(msg.getString("Other")));
 		JLabel borderColorLabel = new JLabel(msg.getString("BorderColor"));
 		borderColorButton = new RColorSwatchesButton();
-		borderColorButton.addPropertyChangeListener(
-					RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
+		borderColorButton.addPropertyChangeListener(RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
 		borderColorLabel.setLabelFor(borderColorButton);
 		temp = new Box(BoxLayout.LINE_AXIS);
 		temp.add(borderColorLabel);
@@ -165,7 +156,6 @@ public class GutterOptionPanel extends OptionsDialogPanel
 		add(topPanel, BorderLayout.NORTH);
 
 		applyComponentOrientation(orientation);
-
 	}
 
 
@@ -176,7 +166,6 @@ public class GutterOptionPanel extends OptionsDialogPanel
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		String command = e.getActionCommand();
 
 		if ("RestoreDefaults".equals(command)) {
@@ -265,7 +254,7 @@ public class GutterOptionPanel extends OptionsDialogPanel
 
 
 	/**
-	 * Called when a check box is selected or deselected.
+	 * Called when a checkbox is selected or deselected.
 	 *
 	 * @param e The event.
 	 */

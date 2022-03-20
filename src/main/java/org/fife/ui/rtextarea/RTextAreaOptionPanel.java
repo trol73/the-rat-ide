@@ -288,7 +288,6 @@ public class RTextAreaOptionPanel extends OptionsDialogPanel
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
         String command = e.getActionCommand();
 
         if ("RestoreDefaults".equals(command)) {
@@ -467,7 +466,6 @@ public class RTextAreaOptionPanel extends OptionsDialogPanel
      */
     @Override
     protected void doApplyImpl(Frame owner) {
-
         RText rtext = (RText) owner;
         AbstractMainView mainView = rtext.getMainView();
 
@@ -513,7 +511,6 @@ public class RTextAreaOptionPanel extends OptionsDialogPanel
 
     @Override
     protected OptionsPanelCheckResult ensureValidInputsImpl() {
-
         // Ensure the tab size specified is valid.
         int temp;
         try {
@@ -990,8 +987,7 @@ public class RTextAreaOptionPanel extends OptionsDialogPanel
         @Override
         public Component getListCellRendererComponent(JList list,
                                                       Object value, int index, boolean selected, boolean hasFocus) {
-            super.getListCellRendererComponent(list, value, index,
-                    selected, hasFocus);
+            super.getListCellRendererComponent(list, value, index, selected, hasFocus);
             int i = (Integer) value;
             setText(InputEvent.getModifiersExText(i));
             return this;

@@ -50,13 +50,12 @@ public class RTextAppContext extends AppContext<RText, RTextPrefs> {
 
 	@Override
 	protected RText createApplicationImpl(String[] filesToOpen, RTextPrefs preferences) {
-
 		RText rtext = new RText(this, filesToOpen, preferences);
 
 		// For some reason, when using MDI_VIEW, the first window
 		// isn't selected (although it is activated)...
 		// INVESTIGATE ME!!
-		if (rtext.getMainViewStyle()==RText.MDI_VIEW) {
+		if (rtext.getMainViewStyle() == RText.MDI_VIEW) {
 			rtext.getMainView().setSelectedIndex(0);
 		}
 
@@ -69,7 +68,6 @@ public class RTextAppContext extends AppContext<RText, RTextPrefs> {
 
 	@Override
 	protected void populatePrefsFromApplication(RText rtext, RTextPrefs prefs) {
-
 		// The "common" preferences
 		super.populatePrefsFromApplication(rtext, prefs);
 		prefs.appTheme = RTextUtilities.getAppThemeToSave(rtext);
@@ -108,7 +106,7 @@ public class RTextAppContext extends AppContext<RText, RTextPrefs> {
 		prefs.marginLineColor			= mainView.getMarginLineColor();
 		prefs.highlightSecondaryLanguages = mainView.getHighlightSecondaryLanguages();
 		prefs.secondaryLanguageColors = new Color[3];
-		for (int i=0; i<prefs.secondaryLanguageColors.length; i++) {
+		for (int i = 0; i < prefs.secondaryLanguageColors.length; i++) {
 			prefs.secondaryLanguageColors[i] = mainView.getSecondaryLanguageColor(i);
 		}
 		prefs.hyperlinksEnabled			= mainView.getHyperlinksEnabled();
@@ -170,6 +168,5 @@ public class RTextAppContext extends AppContext<RText, RTextPrefs> {
 		prefs.codeFoldingEnabledFor		= mainView.getCodeFoldingEnabledForString();
 
 		prefs.useSearchDialogs			= mainView.getSearchManager().getSearchingMode() == SearchManager.SearchingMode.DIALOGS;
-
 	}
 }

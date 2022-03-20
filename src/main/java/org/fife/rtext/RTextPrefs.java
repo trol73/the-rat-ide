@@ -200,11 +200,9 @@ public class RTextPrefs extends AppPrefs implements RTextActionInfo {
      *
      * @param props The preferences object to check.
      */
-    private static void possiblyFixSyntaxSchemeBackground(
-            RTextPrefs props) {
+    private static void possiblyFixSyntaxSchemeBackground(RTextPrefs props) {
         Object bgObj = props.backgroundObject;
-        if (bgObj instanceof Color) {
-            Color color = (Color) bgObj;
+        if (bgObj instanceof Color color) {
             for (int i = 0; i < props.colorScheme.getStyleCount(); i++) {
                 Style s = props.colorScheme.getStyle(i);
                 // Some schemes are null (generic token types)
@@ -220,7 +218,7 @@ public class RTextPrefs extends AppPrefs implements RTextActionInfo {
     public void setDefaults() {
         Theme theme;
         try {
-            theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+            theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/trol_dark.xml"));
         } catch (IOException ioe) {
             ioe.printStackTrace();
             return;
@@ -327,7 +325,6 @@ public class RTextPrefs extends AppPrefs implements RTextActionInfo {
         dropShadowsInEditor = getDefaultDropShadowsInEditorValue();
         codeFoldingEnabledFor = "";
         useSearchDialogs = true;
-
     }
 
 

@@ -36,8 +36,7 @@ import org.fife.ui.dockablewindows.DockableWindowPanel;
  * @author Robert Futrell
  * @version 0.5
  */
-public abstract class AbstractPluggableGUIApplication<P extends AppPrefs>
-        extends AbstractGUIApplication<P> {
+public abstract class AbstractPluggableGUIApplication<P extends AppPrefs> extends AbstractGUIApplication<P> {
 
     /**
      * List of installed plug-ins.

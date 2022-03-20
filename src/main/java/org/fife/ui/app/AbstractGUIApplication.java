@@ -26,6 +26,7 @@ import java.util.jar.Manifest;
 import javax.swing.*;
 
 import org.fife.io.IOUtil;
+import org.fife.rtext.RTextPrefs;
 import org.fife.ui.*;
 import org.fife.help.HelpDialog;
 import org.fife.ui.SplashScreen;
@@ -1331,7 +1332,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
      * Sets the theme used by this application.
      *
      * @param newTheme The theme to install.  This cannot be {@code null}.
-     * @see #setThemeAdditionalProperties(AppTheme)
+     * @see #setThemeAdditionalProperties(AppTheme, RTextPrefs)
      * @see #getTheme()
      * @see #setTheme(String)
      */
@@ -1356,7 +1357,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
             newTheme.installIntoUiDefaults(); // Call before updateComponentTreeUI()
             SwingUtilities.updateComponentTreeUI(this); // Sometimes needed, e.g. FlatLaF => Windows
             updateLookAndFeel(UIManager.getLookAndFeel());
-            setThemeAdditionalProperties(newTheme);
+            setThemeAdditionalProperties(newTheme, null);
         }
     }
 
@@ -1370,7 +1371,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
      * @param theme The theme being installed.
      * @see #setTheme(AppTheme)
      */
-    protected void setThemeAdditionalProperties(AppTheme theme) {
+    protected void setThemeAdditionalProperties(AppTheme theme, RTextPrefs prefs) {
         // Do nothing - subclasses can override
     }
 

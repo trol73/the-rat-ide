@@ -287,7 +287,6 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 	 */
 	@SuppressWarnings("unchecked")
 	public P loadPreferences() {
-
 		File preferencesFile = getPreferencesFile();
 		if (preferencesFile == null) {
 			return null;
@@ -295,7 +294,7 @@ public abstract class AppContext<T extends GUIApplication, P extends AppPrefs> {
 
 		P prefs = null;
 		String prefsClassName = getPreferencesClassName();
-		if (prefsClassName!=null) {
+		if (prefsClassName != null) {
 			try {
 				Class<?> prefsClass = Class.forName(prefsClassName);
 				prefs = (P)prefsClass.getDeclaredConstructor().newInstance();

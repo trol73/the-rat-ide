@@ -6,6 +6,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +106,7 @@ public class FilePositionHistory {
                     records.add(rec);
                 }
             }
+        } catch (NoSuchFileException ignore) {
         } catch (Exception e) {
             e.printStackTrace();
         }

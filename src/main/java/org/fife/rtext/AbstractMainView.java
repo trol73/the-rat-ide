@@ -4240,8 +4240,7 @@ public abstract class AbstractMainView extends JPanel
      * @see #getTextMode()
      */
     public void setTextMode(int mode) {
-        if (mode != RTextEditorPane.INSERT_MODE &&
-                mode != RTextEditorPane.OVERWRITE_MODE) {
+        if (mode != RTextEditorPane.INSERT_MODE && mode != RTextEditorPane.OVERWRITE_MODE) {
             throw new IllegalArgumentException("Invalid mode: " + mode);
         }
         textMode = mode;

@@ -12,6 +12,7 @@ package org.fife.rtext.plugins.project;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -96,6 +97,7 @@ public class ProjectPlugin extends GUIPlugin<RText> {
         getTree().setExpandsSelectedPaths(true);
         try {
             new WorkspaceTreeStateSaver().restoreState(getTree());
+        } catch (NoSuchFileException ignore) {
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -9,6 +9,39 @@
  */
 package org.fife.rtext;
 
+import org.fife.help.HelpDialog;
+import org.fife.rtext.actions.ActionFactory;
+import org.fife.rtext.plugins.buildoutput.BuildOutputWindow;
+import org.fife.rtext.plugins.project.ProjectPlugin;
+import org.fife.rtext.plugins.project.model.Workspace;
+import org.fife.ui.CustomizableToolBar;
+import org.fife.ui.SplashScreen;
+import org.fife.ui.app.AbstractPluggableGUIApplication;
+import org.fife.ui.app.AppTheme;
+import org.fife.ui.app.ExceptionDialog;
+import org.fife.ui.app.Plugin;
+import org.fife.ui.app.icons.IconGroup;
+import org.fife.ui.app.icons.RasterImageIconGroup;
+import org.fife.ui.app.icons.SvgIconGroup;
+import org.fife.ui.dockablewindows.DockableWindow;
+import org.fife.ui.dockablewindows.DockableWindowConstants;
+import org.fife.ui.dockablewindows.DockableWindowPanel;
+import org.fife.ui.options.OptionsDialog;
+import org.fife.ui.rsyntaxtextarea.CodeTemplateManager;
+import org.fife.ui.rsyntaxtextarea.FileLocation;
+import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
+import org.fife.ui.rsyntaxtextarea.Theme;
+import org.fife.ui.rtextarea.RTextArea;
+import org.fife.ui.rtextfilechooser.FileChooserOwner;
+import org.fife.ui.rtextfilechooser.RTextFileChooser;
+import org.fife.ui.widgets.CollapsibleSectionPanel;
+import org.fife.util.TranslucencyUtil;
+
+import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.text.Element;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,39 +55,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.text.Element;
-
-import org.fife.help.HelpDialog;
-import org.fife.rtext.plugins.project.ProjectPlugin;
-import org.fife.rtext.plugins.project.model.Workspace;
-import org.fife.ui.widgets.CollapsibleSectionPanel;
-import org.fife.rtext.actions.ActionFactory;
-import org.fife.rtext.plugins.buildoutput.BuildOutputWindow;
-import org.fife.ui.CustomizableToolBar;
-import org.fife.ui.options.OptionsDialog;
-import org.fife.ui.SplashScreen;
-import org.fife.ui.app.*;
-import org.fife.ui.app.icons.IconGroup;
-import org.fife.ui.app.icons.RasterImageIconGroup;
-import org.fife.ui.app.icons.SvgIconGroup;
-import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextArea;
-import org.fife.ui.dockablewindows.DockableWindow;
-import org.fife.ui.dockablewindows.DockableWindowConstants;
-import org.fife.ui.dockablewindows.DockableWindowPanel;
-import org.fife.ui.rsyntaxtextarea.CodeTemplateManager;
-import org.fife.ui.rsyntaxtextarea.FileLocation;
-import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
-import org.fife.ui.rtextfilechooser.FileChooserOwner;
-import org.fife.ui.rtextfilechooser.RTextFileChooser;
-import org.fife.util.TranslucencyUtil;
-
-import ru.trolsoft.therat.RatKt;
 
 
 /**
@@ -82,7 +82,7 @@ import ru.trolsoft.therat.RatKt;
  * {@link org.fife.rtext.AbstractMainView}, which keeps the state of all of the
  * text areas in synch (fonts used, colors, etc.).  This class (RText) contains
  * an instance of a subclass of {@link org.fife.rtext.AbstractMainView} (which
- * contains all of the text areas) as well as the menu, source browser, and
+ * contains all the text areas) as well as the menu, source browser, and
  * status bar.
  *
  * @author Robert Futrell
@@ -821,7 +821,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      * @param theme The theme instance.
      */
     private void installRstaTheme(Theme theme) {
-
         setSyntaxScheme(theme.scheme);
 
         if (mainView == null) {
@@ -1011,9 +1010,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
 
     @Override
-    protected void preStatusBarInit(RTextPrefs prefs,
-                                    SplashScreen splashScreen) {
-
+    protected void preStatusBarInit(RTextPrefs prefs, SplashScreen splashScreen) {
         long start = System.currentTimeMillis();
 
         final String[] filesToOpen = null;
@@ -1053,7 +1050,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
         // Hack - since mainView is instantiated too late in our app bootstrap,
         // but it requires some theme additional properties, re-set them here.
-        setThemeAdditionalProperties(getTheme());
+        setThemeAdditionalProperties(getTheme(), prefs);
 
         csp = new CollapsibleSectionPanel(false);
         csp.add(mainView);
@@ -1211,8 +1208,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
             }
 
             // Update property change listeners.
-            PropertyChangeListener[] propertyChangeListeners =
-                    fromView.getPropertyChangeListeners();
+            PropertyChangeListener[] propertyChangeListeners = fromView.getPropertyChangeListeners();
             for (PropertyChangeListener listener : propertyChangeListeners) {
                 fromView.removePropertyChangeListener(listener);
                 mainView.addPropertyChangeListener(listener);
@@ -1234,8 +1230,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
             // If we have switched to a tabbed view, artificially
             // fire stateChanged if the last document is selected,
             // because it isn't fired naturally if this is so.
-            if ((mainView instanceof RTextTabbedPaneView) &&
-                    mainView.getSelectedIndex() == mainView.getNumDocuments() - 1)
+            if ((mainView instanceof RTextTabbedPaneView) && mainView.getSelectedIndex() == mainView.getNumDocuments() - 1)
                 ((RTextTabbedPaneView) mainView).stateChanged(new ChangeEvent(mainView));
 
 
@@ -1255,12 +1250,9 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
             if (mainView instanceof RTextMDIView)
                 mainView.setSelectedIndex(mainView.getSelectedIndex());
 
-
-            firePropertyChange(MAIN_VIEW_STYLE_PROPERTY, oldMainViewStyle,
-                    mainViewStyle);
+            firePropertyChange(MAIN_VIEW_STYLE_PROPERTY, oldMainViewStyle, mainViewStyle);
 
         } // End of if ((viewStyle==TABBED_VIEW || ...
-
     }
 
 
@@ -1270,8 +1262,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      *
      * @param fileFullPath  Full path to the text file currently being edited
      *                      (to be displayed in the window's title bar).  If
-     *                      <code>null</code>, the currently displayed message is not
-     *                      changed.
+     *                      <code>null</code>, the currently displayed message is not changed.
      * @param statusMessage The message to be displayed in the status bar.
      *                      If <code>null</code>, the status bar message is not changed.
      */
@@ -1323,8 +1314,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     /**
      * Sets the syntax highlighting color scheme being used.
      *
-     * @param colorScheme The new color scheme to use.  If
-     *                    <code>null</code>, nothing changes.
+     * @param colorScheme The new color scheme to use.  If <code>null</code>, nothing changes.
      * @see #getSyntaxScheme()
      */
     public void setSyntaxScheme(SyntaxScheme colorScheme) {
@@ -1334,8 +1324,9 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
             // do not end up with the same copy passed to us (which could be
             // in the process of being edited in an options dialog).
             this.colorScheme = (SyntaxScheme) colorScheme.clone();
-            if (mainView != null)
+            if (mainView != null) {
                 mainView.setSyntaxScheme(this.colorScheme);
+            }
         }
     }
 
@@ -1456,17 +1447,21 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
 
     @Override
-    protected void setThemeAdditionalProperties(AppTheme theme) {
+    protected void setThemeAdditionalProperties(AppTheme theme, RTextPrefs prefs) {
         if (iconGroupMap != null) {
             setIconGroupByName((String) theme.getExtraUiDefaults().get("rtext.iconGroupName"));
         }
 
-        try {
-            Theme rstaTheme = RTextAppThemes.getRstaTheme(theme);
-            installRstaTheme(rstaTheme);
-        } catch (IOException ioe) {
-            displayException(ioe);
-            return;
+        if (prefs == null) {
+            try {
+                Theme rstaTheme = RTextAppThemes.getRstaTheme(theme);
+                installRstaTheme(rstaTheme);
+            } catch (IOException ioe) {
+                displayException(ioe);
+                return;
+            }
+        } else {
+            mainView.setSyntaxScheme(prefs.colorScheme);
         }
 
         if (mainView != null) {

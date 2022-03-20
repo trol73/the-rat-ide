@@ -3,6 +3,7 @@ package ru.trolsoft.ide.config.history;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class FileList {
         list.clear();
         try (Stream<String> lines = Files.lines(Paths.get(path), Charset.defaultCharset())) {
             lines.forEachOrdered(list::add);
+        } catch (NoSuchFileException ignore) {
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -86,7 +86,6 @@ public final class RTextAppThemes {
 	 * @throws IOException If an IO error occurs.
 	 */
 	public static Theme getRstaTheme(AppTheme theme) throws IOException {
-
 		String rstaThemeName = (String)theme.getExtraUiDefaults().get("rtext.editorTheme");
 
 		return Theme.load(RTextAppThemes.class.getResourceAsStream(rstaThemeName));

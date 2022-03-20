@@ -89,8 +89,7 @@ class LanguageOptionPanel extends OptionsDialogPanel implements ListSelectionLis
 
         JPanel languagePanel = new JPanel();
         languagePanel.setBorder(BorderFactory.createCompoundBorder(
-                new OptionPanelBorder(
-                        msg.getString("OptLaLabel")),
+                new OptionPanelBorder(msg.getString("OptLaLabel")),
                 UIUtil.getEmpty5Border()));
         languagePanel.setLayout(new BorderLayout());
         JPanel temp = new JPanel(new BorderLayout());
