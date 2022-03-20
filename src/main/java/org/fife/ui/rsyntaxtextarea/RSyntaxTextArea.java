@@ -1194,7 +1194,7 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	public FontMetrics getFontMetricsForTokenType(int type) {
 		FontMetrics fm = syntaxScheme.getStyle(type).fontMetrics;
-		return fm!=null ? fm : defaultFontMetrics;
+		return fm != null ? fm : defaultFontMetrics;
 	}
 
 

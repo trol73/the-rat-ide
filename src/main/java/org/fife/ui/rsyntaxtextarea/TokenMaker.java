@@ -45,8 +45,7 @@ public interface TokenMaker {
 	 * @param startOffset The offset in the document at which this token
 	 *        occurs.
 	 */
-	void addToken(char[] array, int start, int end, int tokenType,
-				  int startOffset);
+	void addToken(char[] array, int start, int end, int tokenType, int startOffset);
 
 
 	/**
@@ -135,8 +134,7 @@ public interface TokenMaker {
 	 * <code>null</code> is returned, a default <code>OccurrenceMarker</code>
 	 * is used.
 	 *
-	 * @return The occurrence marker for this language, or <code>null</code>
-	 *         for none.
+	 * @return The occurrence marker for this language, or <code>null</code> for none.
 	 */
 	OccurrenceMarker getOccurrenceMarker();
 
@@ -163,8 +161,7 @@ public interface TokenMaker {
 	 * @return The first <code>Token</code> in a linked list representing
 	 *         the syntax highlighted text.
 	 */
-	Token getTokenList(Segment text, int initialTokenType,
-					   int startOffset);
+	Token getTokenList(Segment text, int initialTokenType, int startOffset);
 
 
 	/**

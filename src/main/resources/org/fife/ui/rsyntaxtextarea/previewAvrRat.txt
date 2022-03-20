@@ -3,6 +3,13 @@
 vectors {
 }
 
+proc spi_write_byte (b: r24) {
+	SPDR = r24
+wait:
+	if (!SPSR->SPIF) goto wait
+	ret
+}
+
 
 proc drawCircle(circle_x: r24, circle_y: r22, radius: r20) {
    use r19 as x0, r16 as y0

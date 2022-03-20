@@ -17,21 +17,19 @@ package org.fife.ui.rsyntaxtextarea;
  * @author Robert Futrell
  * @version 1.0
  */
-class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
-								implements SyntaxConstants {
-
+class DefaultTokenMakerFactory extends AbstractTokenMakerFactory implements SyntaxConstants {
 
 	@Override
 	protected void initTokenMakerMap() {
-
 		String pkg = "org.fife.ui.rsyntaxtextarea.modes.";
+		String pkgEx = "ru.trolsoft.ide.syntaxhighlight.";
 
 		putMapping(SYNTAX_STYLE_NONE,			pkg + "PlainTextTokenMaker");
 		putMapping(SYNTAX_STYLE_ACTIONSCRIPT,	pkg + "ActionScriptTokenMaker");
 		putMapping(SYNTAX_STYLE_ASSEMBLER_X86,	pkg + "AssemblerX86TokenMaker");
 		putMapping(SYNTAX_STYLE_ASSEMBLER_6502,	pkg + "Assembler6502TokenMaker");
 		putMapping(SYNTAX_STYLE_ASSEMBLER_AVR,	pkg + "AssemblerAvrTokenMaker");
-		putMapping(SYNTAX_STYLE_AVR_RAT,	    pkg + "AvrRatTokenMaker");
+		putMapping(SYNTAX_STYLE_AVR_RAT,	    pkgEx + "AvrRatTokenMaker");
 		putMapping(SYNTAX_STYLE_BBCODE,			pkg + "BBCodeTokenMaker");
 		putMapping(SYNTAX_STYLE_C,				pkg + "CTokenMaker");
 		putMapping(SYNTAX_STYLE_CLOJURE,		pkg + "ClojureTokenMaker");
@@ -81,7 +79,6 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory
 		putMapping(SYNTAX_STYLE_WINDOWS_BATCH,	pkg + "WindowsBatchTokenMaker");
 		putMapping(SYNTAX_STYLE_XML,			pkg + "XMLTokenMaker");
 		putMapping(SYNTAX_STYLE_YAML,			pkg + "YamlTokenMaker");
-
 	}
 
 

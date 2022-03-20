@@ -32,6 +32,7 @@ import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.ui.search.*;
 import ru.trolsoft.ide.config.history.FileList;
 import ru.trolsoft.ide.config.history.FilePositionHistory;
+import ru.trolsoft.ide.syntaxhighlight.AvrRatTokenMaker;
 import ru.trolsoft.ide.utils.ProjectUtils;
 
 import javax.imageio.ImageIO;
@@ -3295,6 +3296,7 @@ public abstract class AbstractMainView extends JPanel
         StatusBar statusBar = (StatusBar) owner.getStatusBar();
         statusBar.setDeviceIndicatorValue(device);
         statusBar.setEncoding(editor.getEncoding());
+        AvrRatTokenMaker.setDevice(device);
     }
 
 
