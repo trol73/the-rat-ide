@@ -27,7 +27,6 @@ import javax.swing.event.HyperlinkEvent;
  */
 public interface LinkGeneratorResult {
 
-
 	/**
 	 * Executes the action associated with this object.  This method is called
 	 * when the user clicks on the hyperlinked range of text in the editor.<p>

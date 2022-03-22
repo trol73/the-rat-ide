@@ -31,7 +31,6 @@ package org.fife.ui.rsyntaxtextarea;
  */
 public interface LinkGenerator {
 
-
 	/**
 	 * If a region of text under the mouse position should be considered a
 	 * hyperlink, a result object is returned.  This object describes what
@@ -40,8 +39,7 @@ public interface LinkGenerator {
 	 *
 	 * @param textArea The text component.
 	 * @param offs The offset in the document under the mouse position.
-	 * @return The link information, or <code>null</code> if no link is at the
-	 *         specified offset.
+	 * @return The link information, or <code>null</code> if no link is at the specified offset.
 	 */
 	LinkGeneratorResult isLinkAtOffset(RSyntaxTextArea textArea, int offs);
 

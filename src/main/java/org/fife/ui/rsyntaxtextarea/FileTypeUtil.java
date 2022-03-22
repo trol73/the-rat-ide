@@ -7,6 +7,7 @@ package org.fife.ui.rsyntaxtextarea;
 import javax.swing.text.BadLocationException;
 import java.io.File;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -119,7 +120,6 @@ public final class FileTypeUtil implements SyntaxConstants {
 
 
 	private static String fileFilterToPatternImpl(String filter) {
-
 		StringBuilder sb = new StringBuilder("^");
 
 		for (int i = 0; i < filter.length(); i++) {
@@ -154,7 +154,6 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * @return The mapping.
 	 */
 	public Map<String, List<String>> getDefaultContentTypeToFilterMap() {
-
 		// Deep copy
 		Map<String, List<String>> result = new HashMap<>();
 
@@ -175,10 +174,9 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
 	 * @see #guessContentType(File)
-	 * @see #guessContentType(File, boolean)
+	 * @see #guessContentType(File, boolean, Function)
 	 */
 	public String guessContentType(RSyntaxTextArea textArea) {
-
 		String style = SyntaxConstants.SYNTAX_STYLE_NONE;
 
 		String firstLine;
@@ -247,11 +245,11 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 *         {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
 	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
-	 * @see #guessContentType(File, boolean)
+	 * @see #guessContentType(File, boolean, Function)
 	 * @see #guessContentType(RSyntaxTextArea)
 	 */
 	public String guessContentType(File file) {
-		return guessContentType(file, null);
+		return guessContentType(file, null, null);
 	}
 
 
@@ -272,11 +270,11 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 *         {@code SyntaxConstants.SYNTAX_STYLE_NONE} if nothing can be
 	 *         determined, but will never be {@code null}.
 	 * @see SyntaxConstants
-	 * @see #guessContentType(File, boolean)
+	 * @see #guessContentType(File, boolean, Function)
 	 * @see #guessContentType(RSyntaxTextArea)
 	 */
-	public String guessContentType(File file, Map<String, List<String>> filters) {
-		return guessContentType(file, filters, DEFAULT_IGNORE_BACKUP_EXTENSIONS);
+	public String guessContentType(File file, Map<String, List<String>> filters, Function<List<String>, String> conflictResolver) {
+		return guessContentType(file, filters, DEFAULT_IGNORE_BACKUP_EXTENSIONS, conflictResolver);
 	}
 
 	/**
@@ -291,8 +289,8 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * @see #guessContentType(File)
 	 * @see #guessContentType(RSyntaxTextArea)
 	 */
-	public String guessContentType(File file, boolean ignoreBackupExtensions) {
-		return guessContentType(file, null, ignoreBackupExtensions);
+	public String guessContentType(File file, boolean ignoreBackupExtensions, Function<List<String>, String> conflictResolver) {
+		return guessContentType(file, null, ignoreBackupExtensions, conflictResolver);
 	}
 
 
@@ -316,8 +314,8 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * @see #guessContentType(File)
 	 * @see #guessContentType(RSyntaxTextArea)
 	 */
-	public String guessContentType(File file, Map<String, List<String>> filters, boolean ignoreBackupExtensions) {
-
+	public String guessContentType(File file, Map<String, List<String>> filters, boolean ignoreBackupExtensions,
+								   Function<List<String>, String> conflictResolver) {
 		if (file == null) {
 			return SyntaxConstants.SYNTAX_STYLE_NONE;
 		}
@@ -335,7 +333,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 			fileName = stripBackupExtensions(fileName);
 		}
 
-		String style = guessContentTypeImpl(fileName, filters);
+		String style = guessContentTypeImpl(fileName, filters, conflictResolver);
 
 		return style != null ? style : SyntaxConstants.SYNTAX_STYLE_NONE;
 	}
@@ -350,9 +348,10 @@ public final class FileTypeUtil implements SyntaxConstants {
 	 * @return The syntax style for the file, or {@code null} if nothing could
 	 *         be determined.
 	 */
-	private static String guessContentTypeImpl(String fileName, Map<String, List<String>> filters) {
-
+	private static String guessContentTypeImpl(String fileName, Map<String, List<String>> filters,
+											   Function<List<String>, String> conflictResolver) {
 		String syntaxStyle = null;
+		List<String> allStyles = new ArrayList<>();
 
 		// First go by pattern matching (mostly by extension)
 		for (Map.Entry<String, List<String>> entry : filters.entrySet()) {
@@ -360,14 +359,17 @@ public final class FileTypeUtil implements SyntaxConstants {
 				Pattern p = fileFilterToPattern(filter);
 				if (p.matcher(fileName).matches()) {
 					syntaxStyle = entry.getKey();
+					allStyles.add(syntaxStyle);
 					// Stop immediately if we find a non-wildcard match
-					if (!filter.contains("*") && !filter.contains("?")) {
-						break;
-					}
+//					if (!filter.contains("*") && !filter.contains("?")) {
+//						break;
+//					}
 				}
 			}
 		}
-
+		if (allStyles.size() > 1 && conflictResolver != null) {
+			return conflictResolver.apply(allStyles);
+		}
 		return syntaxStyle;
 	}
 
@@ -378,19 +380,18 @@ public final class FileTypeUtil implements SyntaxConstants {
 
 
 	private void initializeFilters() {
-
 		map = new HashMap<>();
 
 		initFiltersImpl(map, SYNTAX_STYLE_INTEL_HEX, "*.hex");
 		initFiltersImpl(map, SYNTAX_STYLE_AVR_RAT, "*.art", "*.arth");
 		initFiltersImpl(map, SYNTAX_STYLE_ACTIONSCRIPT, "*.as", "*.asc");
-		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_AVR, "*.asm");
-		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_6502, "*.s");
-		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_X86, "*.asm");
+		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_AVR, "*.asm", "*.s");
+		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_6502, "*.asm", "*.s");
+		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_X86, "*.asm", "*.s");
 		initFiltersImpl(map, SYNTAX_STYLE_BBCODE, "*.bbc");
-		initFiltersImpl(map, SYNTAX_STYLE_C, "*.c");
+		initFiltersImpl(map, SYNTAX_STYLE_C, "*.c", "*.h");
 		initFiltersImpl(map, SYNTAX_STYLE_CLOJURE, "*.clj");
-		initFiltersImpl(map, SYNTAX_STYLE_CPLUSPLUS, "*.cpp", "*.cxx", "*.h", "*.hpp");
+		initFiltersImpl(map, SYNTAX_STYLE_CPLUSPLUS, "*.cpp", "*.cxx", "*.hpp");
 		initFiltersImpl(map, SYNTAX_STYLE_CSHARP, "*.cs");
 		initFiltersImpl(map, SYNTAX_STYLE_CSS, "*.css");
 		initFiltersImpl(map, SYNTAX_STYLE_CSV, "*.csv");
@@ -423,7 +424,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_PERL, "*.perl", "*.pl", "*.pm");
 		initFiltersImpl(map, SYNTAX_STYLE_PHP, "*.php");
 		initFiltersImpl(map, SYNTAX_STYLE_PROPERTIES_FILE, "*.properties");
-		initFiltersImpl(map, SYNTAX_STYLE_PYTHON, "*.py");
+		initFiltersImpl(map, SYNTAX_STYLE_PYTHON, "*.py", "make.builder");
 		initFiltersImpl(map, SYNTAX_STYLE_RUBY, "*.rb", "Vagrantfile");
 		initFiltersImpl(map, SYNTAX_STYLE_SAS, "*.sas");
 		initFiltersImpl(map, SYNTAX_STYLE_SCALA, "*.scala");
@@ -433,8 +434,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_UNIX_SHELL, "*.sh", "*.?sh");
 		initFiltersImpl(map, SYNTAX_STYLE_VISUAL_BASIC, "*.vb");
 		initFiltersImpl(map, SYNTAX_STYLE_WINDOWS_BATCH, "*.bat", "*.cmd");
-		initFiltersImpl(map, SYNTAX_STYLE_XML, "*.xml", "*.xsl", "*.xsd", "*.xslt", "*.wsdl", "*.svg",
-			"*.tmx", "*.pom", "*.manifest");
+		initFiltersImpl(map, SYNTAX_STYLE_XML, "*.xml", "*.xsl", "*.xsd", "*.xslt", "*.wsdl", "*.svg", "*.tmx", "*.pom", "*.manifest");
 		initFiltersImpl(map, SYNTAX_STYLE_YAML, "*.yml", "*.yaml");
 	}
 

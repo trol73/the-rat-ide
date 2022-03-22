@@ -318,8 +318,7 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
 
                 int tokenCount = tokenTypeCount * 7 + 1; // Version string
                 if (tokens.length != tokenCount) {
-                    throw new Exception(
-                            "Not enough tokens in packed color scheme: expected " +
+                    throw new Exception("Not enough tokens in packed color scheme: expected " +
                                     tokenCount + ", found " + tokens.length);
                 }
 
@@ -422,6 +421,8 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
         Color register = new Color(0xcc, 0xcc, 0xff);
         Color instruction = new Color(34, 126, 218);
         Color port = new Color(8, 73, 108);
+        Color portBit = new Color(58, 120, 208);
+        Color interruptVector = new Color(58, 190, 248);
         Color operator = new Color(128, 64, 64);
         Color regex = new Color(0, 128, 164);
         Color variable = new Color(255, 153, 0);
@@ -476,6 +477,9 @@ public class SyntaxScheme implements Cloneable, TokenTypes {
         styles[REGISTER] = new Style(register);
         styles[CPU_INSTRUCTION] = new Style(instruction);
         styles[IO_PORT] = new Style(port);
+        styles[IO_PORT_BIT] = new Style(portBit);
+        styles[INTERRUPT_VECTOR] = new Style(interruptVector);
+        styles[LABEL] = new Style(Color.WHITE);
         styles[MARKUP_TAG_DELIMITER] = new Style(Color.RED);
         styles[MARKUP_TAG_NAME] = new Style(Color.BLUE);
         styles[MARKUP_TAG_ATTRIBUTE] = new Style(new Color(63, 127, 127));

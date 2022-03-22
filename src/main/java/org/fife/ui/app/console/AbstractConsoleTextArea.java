@@ -121,7 +121,7 @@ public abstract class AbstractConsoleTextArea extends JTextPane {
 
         Style background = addStyle(STYLE_BACKGROUND, defaultStyle);
         Color backgroundColor = isDark ? DEFAULT_DARK_BACKGROUND : DEFAULT_LIGHT_BACKGROUND;
-        StyleConstants.setBackground(exception, backgroundColor);
+        StyleConstants.setBackground(background, backgroundColor);
     }
 
 

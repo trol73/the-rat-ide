@@ -1,6 +1,6 @@
 package ru.trolsoft.ide.utils;
 
-public class StringHashUtils {
+public class StringUtils {
 
     public static int hash(String s) {
         // s[0]*31^(n-1) + s[1]*31^(n-2) + … + s[n-1]
@@ -18,5 +18,14 @@ public class StringHashUtils {
             hash = 31 * hash + array[i];
         }
         return hash;
+    }
+
+    public static boolean isValidInt(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
     }
 }

@@ -24,14 +24,13 @@ import javax.swing.event.HyperlinkEvent;
  */
 public class SelectRegionLinkGeneratorResult implements LinkGeneratorResult {
 
-	private RSyntaxTextArea textArea;
-	private int sourceOffset;
-	private int selStart;
-	private int selEnd;
+	private final RSyntaxTextArea textArea;
+	private final int sourceOffset;
+	private final int selStart;
+	private final int selEnd;
 
 
-	public SelectRegionLinkGeneratorResult(RSyntaxTextArea textArea,
-			int sourceOffset, int selStart, int selEnd) {
+	public SelectRegionLinkGeneratorResult(RSyntaxTextArea textArea, int sourceOffset, int selStart, int selEnd) {
 		this.textArea = textArea;
 		this.sourceOffset = sourceOffset;
 		this.selStart = selStart;
@@ -53,6 +52,5 @@ public class SelectRegionLinkGeneratorResult implements LinkGeneratorResult {
 	public int getSourceOffset() {
 		return sourceOffset;
 	}
-
 
 }

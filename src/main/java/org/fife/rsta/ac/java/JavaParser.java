@@ -30,7 +30,7 @@ import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 
 /**
  * Parses Java code in an <tt>RSyntaxTextArea</tt>.<p>
- *
+ * <p>
  * Like all RSTA <tt>Parser</tt>s, a <tt>JavaParser</tt> instance is notified
  * when the RSTA's text content changes.  After a small delay, it will parse
  * the content as Java code, building an AST and looking for any errors.  When
@@ -40,10 +40,10 @@ import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
  * the source code in the text area.  Note that the <tt>CompilationUnit</tt>
  * may be incomplete if there were parsing/syntax errors (it will usually be
  * complete "up to" the error in the content).<p>
- *
+ * <p>
  * This parser cannot be shared amongst multiple instances of
  * <tt>RSyntaxTextArea</tt>.<p>
- *
+ * <p>
  * Please keep in mind that this class is a work-in-progress!
  *
  * @author Robert Futrell
@@ -51,112 +51,111 @@ import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
  */
 public class JavaParser extends AbstractParser {
 
-	/**
-	 * The property change event that's fired when the document is re-parsed.
-	 * Applications can listen for this property change and update themselves
-	 * accordingly.
-	 */
-	public static final String PROPERTY_COMPILATION_UNIT = "CompilationUnit";
+    /**
+     * The property change event that's fired when the document is re-parsed.
+     * Applications can listen for this property change and update themselves
+     * accordingly.
+     */
+    public static final String PROPERTY_COMPILATION_UNIT = "CompilationUnit";
 
-	private CompilationUnit cu;
-	private PropertyChangeSupport support;
-	private DefaultParseResult result;
-
-
-	/**
-	 * Constructor.
-	 */
-	public JavaParser(RSyntaxTextArea textArea) {
-		support = new PropertyChangeSupport(this);
-		result = new DefaultParseResult(this);
-	}
+    private CompilationUnit cu;
+    private final PropertyChangeSupport support;
+    private final DefaultParseResult result;
 
 
-	/**
-	 * Adds all notices from the Java parser to the results object.
-	 */
-	private void addNotices(RSyntaxDocument doc) {
-
-		result.clearNotices();
-		int count = cu==null ? 0 : cu.getParserNoticeCount();
-
-		if (count==0) {
-			return;
-		}
-
-		for (int i=0; i<count; i++) {
-			ParserNotice notice = cu.getParserNotice(i);
-			int offs = getOffset(doc, notice);
-			if (offs>-1) {
-				int len = notice.getLength();
-				result.addNotice(new DefaultParserNotice(this,
-						notice.getMessage(), notice.getLine(), offs, len));
-			}
-		}
-
-	}
+    /**
+     * Constructor.
+     */
+    public JavaParser(RSyntaxTextArea textArea) {
+        support = new PropertyChangeSupport(this);
+        result = new DefaultParseResult(this);
+    }
 
 
-	public void addPropertyChangeListener(String prop, PropertyChangeListener l) {
-		 support.addPropertyChangeListener(prop, l);
-	}
+    /**
+     * Adds all notices from the Java parser to the results object.
+     */
+    private void addNotices(RSyntaxDocument doc) {
+
+        result.clearNotices();
+        int count = cu == null ? 0 : cu.getParserNoticeCount();
+
+        if (count == 0) {
+            return;
+        }
+
+        for (int i = 0; i < count; i++) {
+            ParserNotice notice = cu.getParserNotice(i);
+            int offs = getOffset(doc, notice);
+            if (offs > -1) {
+                int len = notice.getLength();
+                result.addNotice(new DefaultParserNotice(this, notice.getMessage(), notice.getLine(), offs, len));
+            }
+        }
+
+    }
 
 
-	/**
-	 * Returns the compilation unit from the last time the text area was
-	 * parsed.
-	 *
-	 * @return The compilation unit, or <code>null</code> if it hasn't yet
-	 *         been parsed or an unexpected error occurred while parsing.
-	 */
-	public CompilationUnit getCompilationUnit() {
-		return cu;
-	}
+    public void addPropertyChangeListener(String prop, PropertyChangeListener l) {
+        support.addPropertyChangeListener(prop, l);
+    }
 
 
-	public int getOffset(RSyntaxDocument doc, ParserNotice notice) {
-		Element root = doc.getDefaultRootElement();
-		Element elem = root.getElement(notice.getLine());
-		int offs = elem.getStartOffset() + notice.getColumn();
-		return offs>=elem.getEndOffset() ? -1 : offs;
-	}
+    /**
+     * Returns the compilation unit from the last time the text area was
+     * parsed.
+     *
+     * @return The compilation unit, or <code>null</code> if it hasn't yet
+     * been parsed or an unexpected error occurred while parsing.
+     */
+    public CompilationUnit getCompilationUnit() {
+        return cu;
+    }
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ParseResult parse(RSyntaxDocument doc, String style) {
-
-		cu = null;
-		result.clearNotices();
-		// Always spell check all lines, for now.
-		int lineCount = doc.getDefaultRootElement().getElementCount();
-		result.setParsedLines(0, lineCount-1);
-
-		DocumentReader r = new DocumentReader(doc);
-		Scanner scanner = new Scanner(r);
-		scanner.setDocument(doc);
-		ASTFactory fact = new ASTFactory();
-		long start = System.currentTimeMillis();
-		try {
-			cu = fact.getCompilationUnit("SomeFile.java", scanner); // TODO: Real name?
-			long time = System.currentTimeMillis() - start;
-			result.setParseTime(time);
-		} finally {
-			r.close();
-		}
-
-		addNotices(doc);
-		support.firePropertyChange(PROPERTY_COMPILATION_UNIT, null, cu);
-		return result;
-
-	}
+    public int getOffset(RSyntaxDocument doc, ParserNotice notice) {
+        Element root = doc.getDefaultRootElement();
+        Element elem = root.getElement(notice.getLine());
+        int offs = elem.getStartOffset() + notice.getColumn();
+        return offs >= elem.getEndOffset() ? -1 : offs;
+    }
 
 
-	public void removePropertyChangeListener(String prop, PropertyChangeListener l) {
-		support.removePropertyChangeListener(prop, l);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParseResult parse(RSyntaxDocument doc, String style) {
+
+        cu = null;
+        result.clearNotices();
+        // Always spell check all lines, for now.
+        int lineCount = doc.getDefaultRootElement().getElementCount();
+        result.setParsedLines(0, lineCount - 1);
+
+        DocumentReader r = new DocumentReader(doc);
+        Scanner scanner = new Scanner(r);
+        scanner.setDocument(doc);
+        ASTFactory fact = new ASTFactory();
+        long start = System.currentTimeMillis();
+        try {
+            cu = fact.getCompilationUnit("SomeFile.java", scanner); // TODO: Real name?
+            long time = System.currentTimeMillis() - start;
+            result.setParseTime(time);
+        } finally {
+            r.close();
+        }
+
+        addNotices(doc);
+        support.firePropertyChange(PROPERTY_COMPILATION_UNIT, null, cu);
+        return result;
+
+    }
+
+
+    public void removePropertyChangeListener(String prop, PropertyChangeListener l) {
+        support.removePropertyChangeListener(prop, l);
+    }
 
 
 }

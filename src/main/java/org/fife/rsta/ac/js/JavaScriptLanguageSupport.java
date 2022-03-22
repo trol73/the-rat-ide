@@ -269,7 +269,6 @@ return DEFAULT;
 
 	@Override
 	public void install(RSyntaxTextArea textArea) {
-
 		// We use a custom auto-completion.
 		// AutoCompletion ac = createAutoCompletion(p);
 		AutoCompletion ac = new JavaScriptAutoCompletion(provider, textArea);

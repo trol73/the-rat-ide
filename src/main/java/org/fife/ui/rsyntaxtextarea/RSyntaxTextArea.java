@@ -2715,8 +2715,7 @@ private boolean fractionalFontMetricsEnabled;
 	public void setMarkOccurrences(boolean markOccurrences) {
 		if (markOccurrences) {
 			if (markOccurrencesSupport==null) {
-				markOccurrencesSupport = new MarkOccurrencesSupport(markOccurrencesDelay,
-					markOccurrencesColor);
+				markOccurrencesSupport = new MarkOccurrencesSupport(markOccurrencesDelay, markOccurrencesColor);
 				markOccurrencesSupport.install(this);
 				firePropertyChange(MARK_OCCURRENCES_PROPERTY, false, true);
 			}
@@ -2836,8 +2835,7 @@ private boolean fractionalFontMetricsEnabled;
 			paintMatchedBracketPair = paintPair;
 			doBracketMatching();
 			repaint();
-			firePropertyChange(PAINT_MATCHED_BRACKET_PAIR_PROPERTY,
-					!paintMatchedBracketPair, paintMatchedBracketPair);
+			firePropertyChange(PAINT_MATCHED_BRACKET_PAIR_PROPERTY, !paintMatchedBracketPair, paintMatchedBracketPair);
 		}
 	}
 
@@ -3082,7 +3080,6 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #getPaintTabLines()
 	 */
 	public void setTabLineColor(Color c) {
-
 		if (c==null) {
 			c = Color.gray;
 		}
@@ -3160,9 +3157,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * the hyperlink modifier.
 	 */
 	private void stopScanningForLinks() {
-
 		if (isScanningForLinks) {
-
 			isScanningForLinks = false;
 			linkGeneratorResult = null;
 			hoveredOverLinkOffset = -1;
@@ -3215,8 +3210,7 @@ private boolean fractionalFontMetricsEnabled;
 	 * Renders the text on the line containing the "matched bracket" after a
 	 * delay.
 	 */
-	private final class MatchedBracketPopupTimer extends Timer
-			implements ActionListener, CaretListener {
+	private final class MatchedBracketPopupTimer extends Timer implements ActionListener, CaretListener {
 
 		private MatchedBracketPopup popup;
 		private int origDot;
@@ -3230,7 +3224,6 @@ private boolean fractionalFontMetricsEnabled;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			if (popup != null) {
 				popup.dispose();
 			}
@@ -3343,8 +3336,7 @@ private boolean fractionalFontMetricsEnabled;
 	/**
 	 * Handles hyperlinks.
 	 */
-	private class RSyntaxTextAreaMutableCaretEvent
-					extends RTextAreaMutableCaretEvent {
+	private class RSyntaxTextAreaMutableCaretEvent extends RTextAreaMutableCaretEvent {
 
 		private Insets insets;
 
@@ -3353,15 +3345,13 @@ private boolean fractionalFontMetricsEnabled;
 			insets = new Insets(0, 0, 0, 0);
 		}
 
-		private boolean equal(LinkGeneratorResult e1,
-				LinkGeneratorResult e2) {
+		private boolean equal(LinkGeneratorResult e1, LinkGeneratorResult e2) {
 			return e1.getSourceOffset()==e2.getSourceOffset();
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (getHyperlinksEnabled() && isScanningForLinks &&
-					hoveredOverLinkOffset>-1) {
+			if (getHyperlinksEnabled() && isScanningForLinks && hoveredOverLinkOffset>-1) {
 				fireHyperlinkUpdate(HyperlinkEvent.EventType.ACTIVATED);
 				stopScanningForLinks();
 			}

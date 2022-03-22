@@ -27,31 +27,30 @@ import org.fife.ui.app.AppAction;
  */
 public class CapsLockAction extends AppAction<RText> {
 
+    /**
+     * Constructor.
+     *
+     * @param rtext The parent application.
+     */
+    public CapsLockAction(RText rtext) {
+        super(rtext, rtext.getResourceBundle(), "NotUsed");
+    }
 
-	/**
-	 * Constructor.
-	 *
-	 * @param rtext The parent application.
-	 */
-	public CapsLockAction(RText rtext) {
-		super(rtext, rtext.getResourceBundle(), "NotUsed");
-	}
 
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		RText rtext = getApplication();
-		if (rtext.getOS()!=OS.MAC_OS_X) {
-			try {
-				boolean state = rtext.getToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
-				StatusBar statusBar = (StatusBar)rtext.getStatusBar();
-				statusBar.setCapsLockIndicatorEnabled(state);
-			} catch (UnsupportedOperationException uoe) {
-				// Swallow; some OS's (OS X, some Linux) just
-				// don't support this.
-			}
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        RText rtext = getApplication();
+        if (rtext.getOS() != OS.MAC_OS_X) {
+            try {
+                boolean state = rtext.getToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+                StatusBar statusBar = (StatusBar) rtext.getStatusBar();
+                statusBar.setCapsLockIndicatorEnabled(state);
+            } catch (UnsupportedOperationException uoe) {
+                // Swallow; some OS's (OS X, some Linux) just
+                // don't support this.
+            }
+        }
+    }
 
 
 }

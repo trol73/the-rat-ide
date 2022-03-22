@@ -1,4 +1,4 @@
-package ru.trolsoft.ide.utils;
+package ru.trolsoft.ide.builder;
 
 import org.fife.rtext.RText;
 import org.fife.rtext.plugins.buildoutput.BuildOutputWindow;
@@ -7,6 +7,7 @@ import org.fife.rtext.plugins.project.model.Project;
 import ru.trolsoft.ide.therat.AvrRatDevicesUtils;
 import ru.trolsoft.therat.RatKt;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,24 @@ public class ProjectBuilder {
     }
 
     private void buildMakeFileProject() {
-        // TODO
-
+        window.clearConsoles();
+        String path = project.getMainFile();
+        File pwd = new File(path).getParentFile();
+        window.prompt("Compile " + project.getName() + "\n");
+        window.execute("make -f " + project.getMainFile(), pwd);
+//        window.execute(new BuildTask() {
+//            @Override
+//            public void run() {
+//                String path = project.getMainFile();
+//                window.prompt("Compile " + path + "\n");
+//                String devPath = AvrRatDevicesUtils.getFolder().getAbsolutePath();
+//                List<String> defines = new ArrayList<>();
+//                PrintStream out = getOutStream();
+//                PrintStream err = getErrStream();
+//                RatKt.compileProject(path, devPath, defines, out, err);
+//                window.prompt("Done.\n");
+//            }
+//        });
     }
 
     private void buildMakeBuilderProject() {

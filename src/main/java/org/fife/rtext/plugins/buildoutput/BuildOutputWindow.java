@@ -12,7 +12,6 @@ package org.fife.rtext.plugins.buildoutput;
 import org.fife.rtext.RText;
 import org.fife.ui.widgets.RScrollPane;
 import org.fife.ui.utils.UIUtil;
-import org.fife.ui.utils.WebLookAndFeelUtils;
 import org.fife.ui.dockablewindows.DockableWindow;
 import org.fife.ui.dockablewindows.DockableWindowConstants;
 
@@ -22,6 +21,7 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 
 
 /**
@@ -208,8 +208,10 @@ public class BuildOutputWindow extends DockableWindow implements PropertyChangeL
 //        }
     }
 
-    public void execute(String cmd) {
+    public void execute(String cmd, File pwd) {
+        textArea.setPwd(pwd);
         textArea.handleSubmit(cmd);
+        textArea.resetPwd();
     }
 
     public void execute(BuildTask task) {

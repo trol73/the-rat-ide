@@ -219,10 +219,11 @@ FloatLiteral			= (({Digit}+)("."{Digit}+)?(e[+-]?{Digit}+)? | ({Digit}+)?("."{Di
 ErrorNumberFormat			= (({IntegerLiteral}|{HexLiteral}|{BinaryLiteral}|{FloatLiteral}){NonSeparator}+)
 
 
-Separator					= ([\(\)\{\}\[\]])
+Separator				= ([\(\)\{\}\[\]])
 Separator2				= ([\;,.])
 
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
+Label				    = (({Letter}|{Digit})+[\:])
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
@@ -282,6 +283,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	{LineTerminator}				{ addNullToken(); return firstToken; }
 
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
+
+    {Label}					{ addToken(Token.LABEL); }
 
 	{WhiteSpace}					{ addToken(Token.WHITESPACE); }
 

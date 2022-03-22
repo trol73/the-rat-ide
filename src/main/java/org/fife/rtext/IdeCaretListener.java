@@ -45,7 +45,8 @@ public class IdeCaretListener implements CaretListener {
 
     private void checkIncludeInstruction(String str, int col) {
         if (!str.toLowerCase().contains("include")) {
-            //textEditor.selectIncludeFile(null);
+            rText.setSelectedIncludedFile(null);
+            setStatusMessage("");
             return;
         }
         if (col > 0) {
@@ -85,14 +86,12 @@ public class IdeCaretListener implements CaretListener {
             }
             File includeFile = getIncludeFile(quotedName);
             if (includeFile != null) {
-                //setStatusMessage("<html>" + Translator.get("text_editor.press_alt_enter_to_open_file") + " <b>" + quotedName + "</b>");
-                setStatusMessage("<html>text_editor.press_alt_enter_to_open_file" + " <b>" + quotedName + "</b>");
-                rText.openFile(includeFile);
-//                textEditor.selectIncludeFile(includeFile);
+                setStatusMessage("<html>Press Alt+Enter to open file " + " <b>" + quotedName + "</b>");
+                rText.setSelectedIncludedFile(includeFile);
                 return;
             }
         } catch (StringIndexOutOfBoundsException ignore) {}
-        setStatusMessage(null);
+        setStatusMessage("");
     }
 
 //    private void checkAssemblerInstruction(String str) {

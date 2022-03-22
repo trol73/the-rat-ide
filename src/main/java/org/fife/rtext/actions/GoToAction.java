@@ -32,53 +32,50 @@ import org.fife.ui.app.AppAction;
 class GoToAction extends AppAction<RText> {
 
 
-	/**
-	 * Constructor.
-	 *
-	 * @param owner The parent RText instance.
-	 * @param msg The resource bundle to use for localization.
-	 * @param icon The icon associated with the action.
-	 */
-	GoToAction(RText owner, ResourceBundle msg, Icon icon) {
-		super(owner, msg, "GoToAction");
-		setIcon(icon);
-	}
+    /**
+     * Constructor.
+     *
+     * @param owner The parent RText instance.
+     * @param msg   The resource bundle to use for localization.
+     * @param icon  The icon associated with the action.
+     */
+    GoToAction(RText owner, ResourceBundle msg, Icon icon) {
+        super(owner, msg, "GoToAction");
+        setIcon(icon);
+    }
 
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-		RText rtext = getApplication();
-		AbstractMainView mainView = rtext.getMainView();
+        RText rtext = getApplication();
+        AbstractMainView mainView = rtext.getMainView();
 
-		if (mainView.goToDialog==null) {
-			mainView.goToDialog = new GoToDialog(rtext);
-			mainView.goToDialog.setErrorDialogTitle(
-					rtext.getString("ErrorDialogTitle"));
-		}
+        if (mainView.goToDialog == null) {
+            mainView.goToDialog = new GoToDialog(rtext);
+            mainView.goToDialog.setErrorDialogTitle(rtext.getString("ErrorDialogTitle"));
+        }
 
-		// Prepare and show the GoTo Line dialog.
-		RTextEditorPane editor = mainView.getCurrentTextArea();
-		mainView.goToDialog.setMaxLineNumberAllowed(editor.getLineCount());
-		mainView.goToDialog.setVisible(true);
+        // Prepare and show the GoTo Line dialog.
+        RTextEditorPane editor = mainView.getCurrentTextArea();
+        mainView.goToDialog.setMaxLineNumberAllowed(editor.getLineCount());
+        mainView.goToDialog.setVisible(true);
 
-		// If a real line number is returned, go to that line number.
-		int line = mainView.goToDialog.getLineNumber();
-		if (line>0) {
+        // If a real line number is returned, go to that line number.
+        int line = mainView.goToDialog.getLineNumber();
+        if (line > 0) {
+            try {
+                editor.setCaretPosition(editor.getLineStartOffset(line - 1));
+            } catch (BadLocationException ble) {
+                String temp = rtext.getString("InternalErrorILN", Integer.toString(line));
+                JOptionPane.showMessageDialog(rtext, temp,
+                        rtext.getString("ErrorDialogTitle"),
+                        JOptionPane.ERROR_MESSAGE);
+            }
 
-			try {
-				editor.setCaretPosition(editor.getLineStartOffset(line-1));
-			} catch (BadLocationException ble) {
-				String temp = rtext.getString("InternalErrorILN",
-									Integer.toString(line));
-				JOptionPane.showMessageDialog(rtext, temp,
-									rtext.getString("ErrorDialogTitle"),
-									JOptionPane.ERROR_MESSAGE);
-			}
+        }
 
-		}
-
-	}
+    }
 
 
 }

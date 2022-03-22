@@ -12,9 +12,12 @@ package org.fife.rtext;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.fife.ui.rsyntaxtextarea.FileTypeUtil;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.python.antlr.ast.Str;
 
 
 /**
@@ -54,7 +57,6 @@ public class SyntaxFilters implements SyntaxConstants {
 	 *        then default filter strings are used for all syntax styles.
 	 */
 	public SyntaxFilters(String filterStr) {
-
 		// One filter set for every file type except plain text.
 		filters = new HashMap<>();
 		restoreDefaultFileFilters();
@@ -172,7 +174,7 @@ public class SyntaxFilters implements SyntaxConstants {
 	 * @return The syntax style for the file, or <code>null</code> if not found
 	 *         in that map.
 	 */
-	public String getSyntaxStyleForFile(String fileName, boolean ignoreBackupExtensions) {
+	public String getSyntaxStyleForFile(String fileName, boolean ignoreBackupExtensions, Function<List<String>, String> conflictResolver) {
 		if (fileName == null) {
 			return SyntaxConstants.SYNTAX_STYLE_NONE;
 		}
@@ -181,8 +183,8 @@ public class SyntaxFilters implements SyntaxConstants {
 		if (addedFilters != null) {
 			allFilters.putAll(addedFilters);
 		}
-		return FileTypeUtil.get().guessContentType(new File(fileName),
-			allFilters, ignoreBackupExtensions);
+
+		return FileTypeUtil.get().guessContentType(new File(fileName), allFilters, ignoreBackupExtensions, conflictResolver);
 	}
 
 
@@ -238,7 +240,6 @@ public class SyntaxFilters implements SyntaxConstants {
 	 * @see #getFiltersForStyle(String)
 	 */
 	public void setFiltersForSyntaxStyle(String style, String filterString) {
-
 		List<String> filters = getFiltersForStyle(style);
 		filters.clear();
 
@@ -254,7 +255,6 @@ public class SyntaxFilters implements SyntaxConstants {
 		if (oldSpacePos<filterString.length()-1) {
 			filters.add(filterString.substring(oldSpacePos));
 		}
-
 	}
 
 
@@ -276,7 +276,6 @@ public class SyntaxFilters implements SyntaxConstants {
 	 */
 	@Override
 	public String toString() {
-
 		StringBuilder retVal = new StringBuilder();
 
 		for (String style : filters.keySet()) {
@@ -287,6 +286,5 @@ public class SyntaxFilters implements SyntaxConstants {
 		retVal = new StringBuilder(retVal.substring(0, retVal.length() - 1));
 		return retVal.toString();
 	}
-
 
 }

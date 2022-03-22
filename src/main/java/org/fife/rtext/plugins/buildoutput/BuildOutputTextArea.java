@@ -9,51 +9,29 @@
  */
 package org.fife.rtext.plugins.buildoutput;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import javax.swing.text.TextAction;
-import javax.swing.text.Utilities;
-
 import org.fife.io.ProcessRunner;
 import org.fife.io.ProcessRunnerOutputListener;
-import org.fife.ui.utils.OS;
-import org.fife.ui.options.OptionsDialog;
 import org.fife.ui.app.console.AbstractConsoleTextArea;
+import org.fife.ui.options.OptionsDialog;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rtextarea.RTextArea;
+import org.fife.ui.utils.OS;
+import org.fife.ui.utils.UIUtil;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -64,6 +42,27 @@ import org.fife.ui.rtextarea.RTextArea;
  * @version 1.0
  */
 class BuildOutputTextArea extends AbstractConsoleTextArea {
+
+    public static final Color DEFAULT_DARK_FILES_FG = new Color(0x5555ff);
+    public static final Color DEFAULT_DARK_POS_FG = new Color(0x55ffff);
+    public static final Color DEFAULT_DARK_WARNINGS_FG = new Color(0xff55ff);
+    public static final Color DEFAULT_DARK_ERRORS_FG = new Color(0xff5555);
+
+    public static final Color DEFAULT_LIGHT_FILES_FG = Color.BLUE;
+    public static final Color DEFAULT_LIGHT_POS_FG = Color.YELLOW ;
+    public static final Color DEFAULT_LIGHT_WARNINGS_FG = Color.MAGENTA;
+    public static final Color DEFAULT_LIGHT_ERRORS_FG = Color.RED;
+
+    static final String STYLE_FILE = "File";
+    static final String STYLE_FILE_POS = "FilePos";
+    static final String STYLE_WARNINGS = "Warnings";
+    static final String STYLE_ERRORS = "Errors";
+
+    private final List<int[]> filesPositions = new ArrayList<>();
+    private final List<String> filesNames = new ArrayList<>();
+
+    private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+    private static final Cursor HAND_CURSOR = new Cursor(Cursor.HAND_CURSOR);
 
     /**
      * Property change event fired whenever a process is launched or completes.
@@ -97,8 +96,10 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         fixKeyboardShortcuts();
         Listener listener = new Listener();
         addMouseListener(listener);
+        addMouseMotionListener(listener);
         getDocument().addDocumentListener(listener);
-        init();
+
+        resetPwd();
     }
 
 
@@ -141,39 +142,63 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
     void appendImpl(final String text, final String style, final boolean treatAsUserInput) {
         // Ensure the meat of this method is done on the EDT, to prevent concurrency errors.
         if (SwingUtilities.isEventDispatchThread()) {
-
-            Document doc = getDocument();
-            int end = doc.getLength();
-            try {
-                doc.insertString(end, text, getStyle(style));
-            } catch (BadLocationException ble) { // Never happens
-                ble.printStackTrace();
-            }
-            setCaretPosition(doc.getLength());
-            if (!treatAsUserInput) {
-                inputMinOffs = getCaretPosition();
-            }
-
+            appendText(text, style, treatAsUserInput);
             // Don't let the console's text get too long
-            Element root = doc.getDefaultRootElement();
-            int lineCount = root.getElementCount();
-            if (lineCount > MAX_LINE_COUNT) {
-                int toDelete = lineCount - MAX_LINE_COUNT;
-                int endOffs = root.getElement(toDelete - 1).getEndOffset();
-                try {
-                    doc.remove(0, endOffs);
-                    if (!treatAsUserInput) {
-                        inputMinOffs -= endOffs;
-                    }
-                } catch (BadLocationException ble) { // Never happens
-                    ble.printStackTrace();
-                }
-            }
-
+            fixMaxTextLength(treatAsUserInput);
         } else {
             SwingUtilities.invokeLater(() -> appendImpl(text, style, treatAsUserInput));
         }
 
+    }
+
+    private void appendText(String text, String style, boolean treatAsUserInput) {
+        if (!treatAsUserInput) {
+            Document doc = getDocument();
+            int start = doc.getLength();
+            var parser = new OutputLineParser(text, this::insertStyledStr).parse(style);
+            if (parser.getFilePath() != null) {
+                filesPositions.add(new int[] {start, doc.getLength(), parser.getFileLine(), parser.getFileColumn()});
+                filesNames.add(parser.getFilePath());
+            }
+        } else {
+            insertStyledStr(text, style);
+        }
+        if (!treatAsUserInput) {
+            inputMinOffs = getCaretPosition();
+        }
+    }
+
+    private void insertStyledStr(String text, String style) {
+        Document doc = getDocument();
+        int end = doc.getLength();
+//        if (STYLE_FILE.equals(style)) {
+//            filesPositions.add(new int[] {end, end + text.length()-1, 0, 0});
+//        }
+        try {
+            doc.insertString(end, text, getStyle(style));
+        } catch (BadLocationException ble) { // Never happens
+            ble.printStackTrace();
+        }
+        setCaretPosition(doc.getLength());
+    }
+
+
+    private void fixMaxTextLength(boolean treatAsUserInput) {
+        Document doc = getDocument();
+        Element root = doc.getDefaultRootElement();
+        int lineCount = root.getElementCount();
+        if (lineCount > MAX_LINE_COUNT) {
+            int toDelete = lineCount - MAX_LINE_COUNT;
+            int endOffs = root.getElement(toDelete - 1).getEndOffset();
+            try {
+                doc.remove(0, endOffs);
+                if (!treatAsUserInput) {
+                    inputMinOffs -= endOffs;
+                }
+            } catch (BadLocationException ble) { // Never happens
+                ble.printStackTrace();
+            }
+        }
     }
 
 
@@ -378,8 +403,12 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
      * Allows constructors to do stuff before the initial {@link #clear()}
      * call is made.  The default implementation does nothing.
      */
-    void init() {
+    void resetPwd() {
         pwd = new File(System.getProperty("user.home"));
+    }
+
+    public void setPwd(File pwd) {
+        this.pwd = pwd;
     }
 
 
@@ -475,7 +504,6 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
                 doc.setCharacterAttributes(offs, t.length(), attrs, true);
                 offs += t.length();
                 t = t.getNextToken();
-
             }
 
         } catch (Exception e) {
@@ -484,6 +512,29 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
 
     }
 
+    @Override
+    public void restoreDefaultColors() {
+        super.restoreDefaultColors();
+
+        boolean isDark = UIUtil.isDarkLookAndFeel();
+        Style defaultStyle = getStyle(StyleContext.DEFAULT_STYLE);
+
+        Style files = addStyle(STYLE_FILE, defaultStyle);
+        Color filesColor = isDark ? DEFAULT_DARK_FILES_FG : DEFAULT_LIGHT_FILES_FG;
+        StyleConstants.setForeground(files, filesColor);
+
+        Style filePos = addStyle(STYLE_FILE_POS, defaultStyle);
+        Color filePosColor = isDark ? DEFAULT_DARK_POS_FG : DEFAULT_LIGHT_POS_FG;
+        StyleConstants.setForeground(filePos, filePosColor);
+
+        Style warnings = addStyle(STYLE_WARNINGS, defaultStyle);
+        Color warningsColor = isDark ? DEFAULT_DARK_WARNINGS_FG : DEFAULT_LIGHT_WARNINGS_FG;
+        StyleConstants.setForeground(warnings, warningsColor);
+
+        Style errors = addStyle(STYLE_ERRORS, defaultStyle);
+        Color errorsColor = isDark ? DEFAULT_DARK_ERRORS_FG : DEFAULT_LIGHT_ERRORS_FG;
+        StyleConstants.setForeground(errors, errorsColor);
+    }
 
     /**
      * Clears all text from this text area.
@@ -497,6 +548,8 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         @Override
         public void actionPerformed(ActionEvent e) {
             clear();
+            filesPositions.clear();
+            filesNames.clear();
         }
     }
 
@@ -674,11 +727,33 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
     /**
      * Listens for events in this text area.
      */
-    private class Listener extends MouseAdapter implements DocumentListener {
+    private class Listener implements MouseListener, MouseMotionListener, DocumentListener {
+        private boolean handCursor;
+        private String handFilePath;
+        private int fileLine, fileColumn;
 
         @Override
-        public void changedUpdate(DocumentEvent e) {
+        public void mouseMoved(MouseEvent e) {
+            int offset = viewToModel(e.getPoint());
+            for (int i = 0; i < filesPositions.size(); i++) {
+                int[] interval = filesPositions.get(i);
+                if (offset >= interval[0] && offset <= interval[1]) {
+                    setCursor(HAND_CURSOR);
+                    handCursor = true;
+                    handFilePath = filesNames.get(i);
+                    fileLine = interval[2];
+                    fileColumn = interval[3];
+                    return;
+                }
+            }
+            if (handCursor) {
+                setCursor(DEFAULT_CURSOR);
+            }
+            fileLine = -1;
+            fileColumn = 0;
+            handCursor = false;
         }
+
 
         private void handleDocumentEvent() {
             if (plugin.getSyntaxHighlightInput()) {
@@ -690,6 +765,21 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         private void handleMouseEvent(MouseEvent e) {
             if (e.isPopupTrigger()) {
                 showPopupMenu(e);
+            } else if (handFilePath != null) {
+                var app = plugin.getApplication();
+                app.openFile(new File(handFilePath), () -> {
+                    var editor = app.getMainView().getCurrentTextArea();
+                    if (fileLine > 0) {
+                        try {
+                            if (fileColumn <= 0) {
+                                fileColumn++;
+                            }
+                            editor.setCaretPosition(editor.getLineStartOffset(fileLine - 1) + fileColumn - 1);
+                        } catch (BadLocationException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
             }
         }
 
@@ -716,6 +806,22 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         @Override
         public void removeUpdate(DocumentEvent e) {
             handleDocumentEvent();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
         }
 
     }

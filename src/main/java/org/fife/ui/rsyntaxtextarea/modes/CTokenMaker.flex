@@ -223,9 +223,11 @@ LetterOrUnderscore	= ({Letter}|[_])
 Digit				= [0-9]
 HexDigit			= {Digit}|[A-Fa-f]
 OctalDigit			= [0-7]
+BinaryDigit			= ([0-1])
 Exponent			= [eE][+-]?{Digit}+
 
 PreprocessorWord	= define|elif|else|endif|error|if|ifdef|ifndef|include|line|pragma|undef
+IncludeWord         = include
 
 Trigraph				= ("??="|"??("|"??)"|"??/"|"??'"|"??<"|"??>"|"??!"|"??-")
 
@@ -257,9 +259,10 @@ LineCommentBegin	= "//"
 
 NonFloatSuffix		= (([uU][lL]?)|([lL][uU]?))
 IntegerLiteral		= ({Digit}+{Exponent}?{NonFloatSuffix}?)
-HexLiteral		= ("0"[xX]{HexDigit}+{NonFloatSuffix}?)
+HexLiteral		    = ("0"[xX]{HexDigit}+{NonFloatSuffix}?)
+BinaryLiteral		= (0b{BinaryDigit}+)
 FloatLiteral		= ((({Digit}*[\.]{Digit}+)|({Digit}+[\.]{Digit}*)){Exponent}?[fFlL]?)
-ErrorNumberFormat	= (({IntegerLiteral}|{HexLiteral}|{FloatLiteral}){NonSeparator}+)
+ErrorNumberFormat	= (({IntegerLiteral}|{HexLiteral}|{BinaryLiteral}|{FloatLiteral}){NonSeparator}+)
 
 NonSeparator		= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#")
 Identifier		= ({LetterOrUnderscore}({LetterOrUnderscore}|{Digit}|[$])*)
@@ -303,9 +306,15 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"typedef" |
 	"union" |
 	"volatile" |
-	"while"					{ addToken(Token.RESERVED_WORD); }
+	"void" |
+	"while"	|
+	"restrict"	|
+    "return"				{ addToken(Token.RESERVED_WORD); }
 
-	"return"				{ addToken(Token.RESERVED_WORD_2); }
+    "asm" |
+    "ISR" |
+	"true" |
+	"false"				{ addToken(Token.RESERVED_WORD_2); }
 
 	/* Data types. */
 	"char" |
@@ -319,8 +328,16 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"signed" |
 	"size_t" |
 	"unsigned" |
-	"void" |
-	"wchar_t"				{ addToken(Token.DATA_TYPE); }
+	"int8_t" |
+    "uint8_t" |
+    "int16_t" |
+    "uint16_t" |
+    "int32_t" |
+    "uint32_t" |
+    "int64_t" |
+    "uint64_t" |
+	"wchar_t" |
+	"bool"				{ addToken(Token.DATA_TYPE); }
 
 	/* Standard functions */
 	"abort" |
@@ -540,6 +557,9 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Preprocessor directives */
 	"#"{WhiteSpace}*{PreprocessorWord}	{ addToken(Token.PREPROCESSOR); }
 
+    "#"{WhiteSpace}*{IncludeWord}{WhiteSpace}*"<"({Identifier}|"/"|".")*">"	{ addToken(Token.PREPROCESSOR); }
+
+
 	/* String/Character Literals. */
 	{CharLiteral}					{ addToken(Token.LITERAL_CHAR); }
 	{UnclosedCharLiteral}			{ addToken(Token.ERROR_CHAR); /*addNullToken(); return firstToken;*/ }
@@ -600,11 +620,13 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"++" |
 	"--" |
 	"." |
-	","							{ addToken(Token.OPERATOR); }
+	","	|
+	";" { addToken(Token.OPERATOR); }
 
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
+    {BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_BINARY); }
 	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
 	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
 

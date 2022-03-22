@@ -26,8 +26,7 @@ public abstract class TokenMakerFactory {
      * If this system property is set, a custom <code>TokenMakerFactory</code>
      * of the specified class will be used as the default token maker factory.
      */
-    public static final String PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY =
-            "TokenMakerFactory";
+    public static final String PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY = "TokenMakerFactory";
 
     /**
      * The singleton default <code>TokenMakerFactory</code> instance.
@@ -54,8 +53,7 @@ public abstract class TokenMakerFactory {
                 clazz = "org.fife.ui.rsyntaxtextarea.DefaultTokenMakerFactory";
             }
             try {
-                DEFAULT_INSTANCE = (TokenMakerFactory) Class.forName(clazz).
-                        getDeclaredConstructor().newInstance();
+                DEFAULT_INSTANCE = (TokenMakerFactory) Class.forName(clazz).getDeclaredConstructor().newInstance();
             } catch (RuntimeException re) { // FindBugs
                 throw re;
             } catch (Exception e) {
@@ -108,8 +106,7 @@ public abstract class TokenMakerFactory {
      * affected.
      *
      * @param tmf The factory.
-     * @throws IllegalArgumentException If <code>tmf</code> is
-     *                                  <code>null</code>.
+     * @throws IllegalArgumentException If <code>tmf</code> is <code>null</code>.
      * @see #getDefaultInstance()
      */
     public static synchronized void setDefaultInstance(TokenMakerFactory tmf) {

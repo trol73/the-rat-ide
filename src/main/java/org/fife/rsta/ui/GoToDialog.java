@@ -96,9 +96,7 @@ public class GoToDialog extends EscapableDialog {
 
 
     private void init() {
-
-        ComponentOrientation orientation = ComponentOrientation.
-                getOrientation(getLocale());
+        ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
 
         lineNumber = -1;
         maxLineNumberAllowed = 1; // Empty document has 1 line.
@@ -111,8 +109,7 @@ public class GoToDialog extends EscapableDialog {
 
         // Make a panel containing the "Line Number" edit box.
         Box enterLineNumberPane = new Box(BoxLayout.LINE_AXIS);
-        enterLineNumberPane.setBorder(BorderFactory.createEmptyBorder(
-                0, 0, 20, 0));
+        enterLineNumberPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         lineNumberField = new JTextField(16);
         lineNumberField.setText("1");
         AbstractDocument doc = (AbstractDocument) lineNumberField.getDocument();

@@ -9,19 +9,15 @@
  */
 package org.fife.rtext.plugins.buildoutput;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
-import java.awt.Frame;
+import org.fife.rtext.AbstractConsoleTextAreaOptionPanel;
+import org.fife.rtext.RTextUtilities;
+import org.fife.ui.RColorSwatchesButton;
+import org.fife.ui.utils.UIUtil;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.Box;
-import javax.swing.JCheckBox;
-
-import org.fife.rtext.AbstractConsoleTextAreaOptionPanel;
-import org.fife.ui.utils.UIUtil;
 
 
 class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> implements ActionListener {
@@ -32,6 +28,16 @@ class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> 
     private static final String OPTION_PANEL_ID = "BuildOptionPanel";
 
     private JCheckBox highlightInputCB;
+
+    protected JCheckBox cbFiles;
+    protected RColorSwatchesButton filesButton;
+    protected JCheckBox cbPositions;
+    protected RColorSwatchesButton positionsButton;
+    protected JCheckBox cbErrors;
+    protected RColorSwatchesButton errorsButton;
+    protected JCheckBox cbWarnings;
+    protected RColorSwatchesButton warningsButton;
+
 
 
     /**
@@ -70,6 +76,29 @@ class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> 
     }
 
 
+    @Override
+    protected int createExtraColorPickers(JPanel panel) {
+        cbFiles = createColorActivateCB(getPlugin().getString("Color.Files"));
+        filesButton = createColorSwatchesButton();
+        cbPositions = createColorActivateCB(getPlugin().getString("Color.Positions"));
+        positionsButton = createColorSwatchesButton();
+        cbWarnings = createColorActivateCB(getPlugin().getString("Color.Warnings"));
+        warningsButton = createColorSwatchesButton();
+        cbErrors = createColorActivateCB(getPlugin().getString("Color.Errors"));
+        errorsButton = createColorSwatchesButton();
+
+        panel.add(cbFiles);
+        panel.add(filesButton);
+        panel.add(cbPositions);
+        panel.add(positionsButton);
+        panel.add(cbWarnings);
+        panel.add(warningsButton);
+        panel.add(cbErrors);
+        panel.add(errorsButton);
+
+        return 4;
+    }
+
     /**
      * Called when the user toggles various properties in this panel.
      *
@@ -83,6 +112,22 @@ class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> 
         Object source = e.getSource();
 
         if (highlightInputCB == source) {
+            setDirty(true);
+        } else if (cbFiles == source) {
+            boolean selected = cbFiles.isSelected();
+            filesButton.setEnabled(selected);
+            setDirty(true);
+        } else if (cbPositions == source) {
+            boolean selected = cbPositions.isSelected();
+            positionsButton.setEnabled(selected);
+            setDirty(true);
+        } else if (cbWarnings == source) {
+            boolean selected = cbWarnings.isSelected();
+            warningsButton.setEnabled(selected);
+            setDirty(true);
+        } else if (cbErrors == source) {
+            boolean selected = cbErrors.isSelected();
+            errorsButton.setEnabled(selected);
             setDirty(true);
         }
     }
@@ -119,6 +164,15 @@ class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> 
         window.setForeground(BuildOutputTextArea.STYLE_STDERR, c);
         c = cbBackground.isSelected() ? backgroundButton.getColor() : null;
         window.setBackground(BuildOutputTextArea.STYLE_BACKGROUND, c);
+
+        c = cbFiles.isSelected() ? filesButton.getColor() : null;
+        window.setBackground(BuildOutputTextArea.STYLE_FILE, c);
+        c = cbPositions.isSelected() ? positionsButton.getColor() : null;
+        window.setBackground(BuildOutputTextArea.STYLE_FILE_POS, c);
+        c = cbWarnings.isSelected() ? warningsButton.getColor() : null;
+        window.setBackground(BuildOutputTextArea.STYLE_WARNINGS, c);
+        c = cbErrors.isSelected() ? errorsButton.getColor() : null;
+        window.setBackground(BuildOutputTextArea.STYLE_ERRORS, c);
     }
 
 
@@ -136,9 +190,48 @@ class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> 
 
     @Override
     protected boolean notDefaults() {
-        return super.notDefaults() || !highlightInputCB.isSelected();
+        if (super.notDefaults()) {
+            return true;
+        }
+        boolean isDark = RTextUtilities.isDarkLookAndFeel();
+        Color defaultFiles = isDark ? BuildOutputTextArea.DEFAULT_DARK_FILES_FG : BuildOutputTextArea.DEFAULT_LIGHT_FILES_FG;
+        Color defaultPos = isDark ? BuildOutputTextArea.DEFAULT_DARK_POS_FG : BuildOutputTextArea.DEFAULT_LIGHT_POS_FG;
+        Color defaultWarnings = isDark ? BuildOutputTextArea.DEFAULT_DARK_WARNINGS_FG : BuildOutputTextArea.DEFAULT_LIGHT_WARNINGS_FG;
+        Color defaultErrors = isDark ? BuildOutputTextArea.DEFAULT_DARK_ERRORS_FG : BuildOutputTextArea.DEFAULT_LIGHT_ERRORS_FG;
+
+        return !highlightInputCB.isSelected() ||
+                !cbFiles.isSelected() ||
+                !cbPositions.isSelected() ||
+                !cbWarnings.isSelected() ||
+                !cbErrors.isSelected() ||
+                !defaultFiles.equals(filesButton.getColor()) ||
+                !defaultPos.equals(positionsButton.getColor()) ||
+                !defaultWarnings.equals(warningsButton.getColor()) ||
+                !defaultErrors.equals(errorsButton.getColor());
     }
 
+    @Override
+    protected void restoreDefaultsForColorsPanel() {
+        super.restoreDefaultsForColorsPanel();
+
+        cbFiles.setSelected(true);
+        cbPositions.setSelected(true);
+        cbWarnings.setSelected(true);
+        cbErrors.setSelected(true);
+
+        boolean isDark = RTextUtilities.isDarkLookAndFeel();
+        if (isDark) {
+            filesButton.setColor(BuildOutputTextArea.DEFAULT_DARK_FILES_FG);
+            positionsButton.setColor(BuildOutputTextArea.DEFAULT_DARK_POS_FG);
+            warningsButton.setColor(BuildOutputTextArea.DEFAULT_DARK_WARNINGS_FG);
+            errorsButton.setColor(BuildOutputTextArea.DEFAULT_DARK_ERRORS_FG);
+        } else {
+            filesButton.setColor(BuildOutputTextArea.DEFAULT_LIGHT_FILES_FG);
+            positionsButton.setColor(BuildOutputTextArea.DEFAULT_LIGHT_POS_FG);
+            warningsButton.setColor(BuildOutputTextArea.DEFAULT_LIGHT_WARNINGS_FG);
+            errorsButton.setColor(BuildOutputTextArea.DEFAULT_LIGHT_ERRORS_FG);
+        }
+    }
 
     /**
      * Overridden to set all colors to values appropriate for the current Look
@@ -189,12 +282,24 @@ class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> 
         exceptionsButton.setEnabled(window.isStyleUsed(BuildOutputTextArea.STYLE_EXCEPTION));
         cbBackground.setSelected(window.isStyleBackgroundUsed(BuildOutputTextArea.STYLE_BACKGROUND));
         backgroundButton.setEnabled(window.isStyleBackgroundUsed(BuildOutputTextArea.STYLE_BACKGROUND));
+        cbFiles.setSelected(window.isStyleUsed(BuildOutputTextArea.STYLE_FILE));
+        filesButton.setEnabled(window.isStyleUsed(BuildOutputTextArea.STYLE_FILE));
+        cbPositions.setSelected(window.isStyleUsed(BuildOutputTextArea.STYLE_FILE_POS));
+        positionsButton.setEnabled(window.isStyleUsed(BuildOutputTextArea.STYLE_FILE_POS));
+        cbWarnings.setSelected(window.isStyleUsed(BuildOutputTextArea.STYLE_WARNINGS));
+        warningsButton.setEnabled(window.isStyleUsed(BuildOutputTextArea.STYLE_WARNINGS));
+        cbErrors.setSelected(window.isStyleUsed(BuildOutputTextArea.STYLE_ERRORS));
+        errorsButton.setEnabled(window.isStyleUsed(BuildOutputTextArea.STYLE_ERRORS));
 
         stdoutButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_STDOUT));
         stderrButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_STDERR));
         promptButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_PROMPT));
         exceptionsButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_EXCEPTION));
         backgroundButton.setColor(window.getBackground(BuildOutputTextArea.STYLE_BACKGROUND));
+        filesButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_FILE));
+        positionsButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_FILE_POS));
+        warningsButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_WARNINGS));
+        errorsButton.setColor(window.getForeground(BuildOutputTextArea.STYLE_ERRORS));
     }
 
 

@@ -287,36 +287,33 @@ public abstract class Prefs {
      * @see #load(InputStream)
      */
     public void load(Properties props) throws IOException {
-
         Class<?> clazz = getClass();
         Field[] fields = clazz.getFields();
 
         for (Field field : fields) {
-
             try {
-
                 String name = field.getName();
                 String value = props.getProperty(name);
 
-                // Empty values are actually nulls
-                if (value != null && !value.isEmpty()) {
-
-                    Class<?> type = field.getType();
-                    Object obj = loadPropertyImpl(type, name, value, props);
-
-                    // Only replace the default if a value was found
-                    if (obj != null) {
-                        obj = possiblyMakePrimitiveArray(type, obj);
-                        field.set(this, obj);
-                    }
-                }
-
+                loadField(props, field, name, value);
             } catch (IllegalAccessException iae) { // Never happens
                 throw new IOException(iae.getMessage(), iae);
             }
-
         }
+    }
 
+    private void loadField(Properties props, Field field, String name, String value) throws IOException, IllegalAccessException {
+        // Empty values are actually nulls
+        if (value != null && !value.isEmpty()) {
+            Class<?> type = field.getType();
+            Object obj = loadPropertyImpl(type, name, value, props);
+
+            // Only replace the default if a value was found
+            if (obj != null) {
+                obj = possiblyMakePrimitiveArray(type, obj);
+                field.set(this, obj);
+            }
+        }
     }
 
 
@@ -334,9 +331,7 @@ public abstract class Prefs {
      * @return The actual value for the field.
      * @throws IOException If an IO error occurs.
      */
-    private Object loadPropertyImpl(Class<?> type, String name,
-                                    String value, Properties props) throws IOException {
-
+    private Object loadPropertyImpl(Class<?> type, String name, String value, Properties props) throws IOException {
         Object obj = null;
 
         // This short-circuit is needed since this method is recursively

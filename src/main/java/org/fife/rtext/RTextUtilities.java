@@ -176,6 +176,7 @@ public final class RTextUtilities {
      */
     public static void configureFindInFilesDialog(FindInFilesDialog fnfd) {
         fnfd.addInFilesComboBoxFilter("*.asm");
+        fnfd.addInFilesComboBoxFilter("*.art *.arth");
         fnfd.addInFilesComboBoxFilter("*.bat *.cmd");
         fnfd.addInFilesComboBoxFilter("*.c *.cpp *.cxx *.h");
         fnfd.addInFilesComboBoxFilter("*.cs");
@@ -199,8 +200,7 @@ public final class RTextUtilities {
      * @return The panel.
      * @see #createAssistancePanel(JComponent, int)
      */
-    public static JPanel createAssistancePanel(JComponent comp,
-                                               DecorativeIconPanel iconPanel) {
+    public static JPanel createAssistancePanel(JComponent comp, DecorativeIconPanel iconPanel) {
         if (iconPanel == null) {
             iconPanel = new DecorativeIconPanel();
         }

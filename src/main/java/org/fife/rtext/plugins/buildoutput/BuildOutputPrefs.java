@@ -63,6 +63,10 @@ public class BuildOutputPrefs extends Prefs {
      */
     public Color promptFG;
     public Color background;
+    public Color filesFG;
+    public Color posFG;
+    public Color warningsFG;
+    public Color errorsFG;
 
 
     /**
@@ -92,13 +96,20 @@ public class BuildOutputPrefs extends Prefs {
             exceptionFG = BuildOutputTextArea.DEFAULT_DARK_EXCEPTION_FG;
             promptFG = BuildOutputTextArea.DEFAULT_DARK_PROMPT_FG;
             background = BuildOutputTextArea.DEFAULT_DARK_BACKGROUND;
-
+            filesFG = BuildOutputTextArea.DEFAULT_DARK_FILES_FG;
+            posFG = BuildOutputTextArea.DEFAULT_DARK_POS_FG;
+            warningsFG = BuildOutputTextArea.DEFAULT_DARK_WARNINGS_FG;
+            errorsFG = BuildOutputTextArea.DEFAULT_DARK_ERRORS_FG;
         } else {
             stdoutFG = BuildOutputTextArea.DEFAULT_LIGHT_STDOUT_FG;
             stderrFG = BuildOutputTextArea.DEFAULT_LIGHT_STDERR_FG;
             exceptionFG = BuildOutputTextArea.DEFAULT_LIGHT_EXCEPTION_FG;
             promptFG = BuildOutputTextArea.DEFAULT_LIGHT_PROMPT_FG;
             background = BuildOutputTextArea.DEFAULT_LIGHT_BACKGROUND;
+            filesFG = BuildOutputTextArea.DEFAULT_LIGHT_FILES_FG;
+            posFG = BuildOutputTextArea.DEFAULT_LIGHT_POS_FG;
+            warningsFG = BuildOutputTextArea.DEFAULT_LIGHT_WARNINGS_FG;
+            errorsFG = BuildOutputTextArea.DEFAULT_LIGHT_ERRORS_FG;
         }
     }
 

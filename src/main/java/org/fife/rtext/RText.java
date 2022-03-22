@@ -89,8 +89,7 @@ import java.util.Map;
  * @version 3.0.1
  */
 public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
-        implements ActionListener, CaretListener, PropertyChangeListener,
-        RTextActionInfo, FileChooserOwner {
+        implements ActionListener, CaretListener, PropertyChangeListener, RTextActionInfo, FileChooserOwner {
 
     // Constants specifying the current view style.
     public static final int TABBED_VIEW = 0;
@@ -177,6 +176,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     public static final String VERSION_STRING = "5.0.0";
 
+    private File selectedIncludedFileName;
 
     /**
      * Creates an instance of the <code>RText</code> editor.
@@ -197,13 +197,11 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-
         switch (command) {
             case "TileVertically" -> ((RTextMDIView) mainView).tileWindowsVertically();
             case "TileHorizontally" -> ((RTextMDIView) mainView).tileWindowsHorizontally();
             case "Cascade" -> ((RTextMDIView) mainView).cascadeWindows();
         }
-
     }
 
 
@@ -246,7 +244,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         int line = map.getElementIndex(dot);
         int lineStartOffset = map.getElement(line).getStartOffset();
         ((StatusBar) getStatusBar()).setRowAndColumn(line + 1, dot - lineStartOffset + 1);
-
     }
 
 
@@ -1604,14 +1601,22 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         getAction(OPTIONS_ACTION).actionPerformed(new ActionEvent(this, 0, "unused"));
     }
 
-    @Override
-    public void openFile(File file) {
+
+    public void openFile(File file, Runnable doAfter) {
         //gets called when we receive an open event from the finder on OS X
         SwingUtilities.invokeLater(() -> {
             // null encoding means check for Unicode before using
             // system default encoding.
             mainView.openFile(file.getAbsolutePath(), null, true);
+            if (doAfter != null) {
+                doAfter.run();
+            }
         });
+    }
+
+    @Override
+    public void openFile(File file) {
+        openFile(file, null);
     }
 
     private void updateTextAreaIcon(int actionName, String iconName) {
@@ -1652,4 +1657,11 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     }
 
 
+    public void setSelectedIncludedFile(File includeFile) {
+        selectedIncludedFileName = includeFile;
+    }
+
+    public File getSelectedIncludedFile() {
+        return selectedIncludedFileName;
+    }
 }

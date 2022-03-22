@@ -131,7 +131,7 @@ public abstract class AbstractConsoleTextAreaOptionPanel<P extends Plugin<?>> ex
 
 
     /**
-     * Returns a check box used to toggle whether a color in a console uses
+     * Returns a checkbox used to toggle whether a color in a console uses
      * a special color.
      *
      * @param label The label for the check box.
@@ -149,7 +149,7 @@ public abstract class AbstractConsoleTextAreaOptionPanel<P extends Plugin<?>> ex
      *
      * @return The button.
      */
-    private RColorSwatchesButton createColorSwatchesButton() {
+    protected RColorSwatchesButton createColorSwatchesButton() {
         RColorSwatchesButton button = new RColorSwatchesButton();
         button.addPropertyChangeListener(RColorSwatchesButton.COLOR_CHANGED_PROPERTY, this);
         return button;
@@ -203,7 +203,8 @@ public abstract class AbstractConsoleTextAreaOptionPanel<P extends Plugin<?>> ex
             sp.add(cbBackground);
             sp.add(backgroundButton);
         }
-        UIUtil.makeSpringCompactGrid(sp, 5, 2, 0, 0, 5, 5);
+        int extraRows = createExtraColorPickers(sp);
+        UIUtil.makeSpringCompactGrid(sp, 5 + extraRows, 2, 0, 0, 5, 5);
 
         JPanel temp2 = new JPanel(new BorderLayout());
         temp2.add(sp, BorderLayout.LINE_START);
@@ -211,6 +212,10 @@ public abstract class AbstractConsoleTextAreaOptionPanel<P extends Plugin<?>> ex
         temp.add(Box.createVerticalGlue());
 
         return temp;
+    }
+
+    protected int createExtraColorPickers(JPanel panel) {
+        return 0;
     }
 
 

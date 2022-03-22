@@ -87,6 +87,10 @@ public class Plugin extends GUIPlugin<RText> {
         window.setForeground(BuildOutputTextArea.STYLE_PROMPT, prefs.promptFG);
         window.setForeground(BuildOutputTextArea.STYLE_STDERR, prefs.stderrFG);
         window.setForeground(BuildOutputTextArea.STYLE_STDOUT, prefs.stdoutFG);
+        window.setForeground(BuildOutputTextArea.STYLE_FILE, prefs.filesFG);
+        window.setForeground(BuildOutputTextArea.STYLE_FILE_POS, prefs.posFG);
+        window.setForeground(BuildOutputTextArea.STYLE_WARNINGS, prefs.warningsFG);
+        window.setForeground(BuildOutputTextArea.STYLE_ERRORS, prefs.errorsFG);
         window.setBackground(BuildOutputTextArea.STYLE_BACKGROUND, prefs.background);
 
         return window;
@@ -263,6 +267,10 @@ public class Plugin extends GUIPlugin<RText> {
         prefs.stderrFG = window.getForeground(BuildOutputTextArea.STYLE_STDERR);
         prefs.stdoutFG = window.getForeground(BuildOutputTextArea.STYLE_STDOUT);
         prefs.background = window.getBackground(BuildOutputTextArea.STYLE_BACKGROUND);
+        prefs.filesFG = window.getForeground(BuildOutputTextArea.STYLE_FILE);
+        prefs.posFG = window.getForeground(BuildOutputTextArea.STYLE_FILE_POS);
+        prefs.warningsFG = window.getForeground(BuildOutputTextArea.STYLE_WARNINGS);
+        prefs.errorsFG = window.getForeground(BuildOutputTextArea.STYLE_ERRORS);
 
         File prefsFile = getPrefsFile();
         try {

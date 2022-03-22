@@ -6,10 +6,9 @@ import org.fife.rtext.RTextEditorPane;
 import org.fife.rtext.plugins.buildoutput.BuildOutputWindow;
 import org.fife.rtext.plugins.project.model.Project;
 import org.fife.ui.app.AppAction;
-import ru.trolsoft.ide.utils.ProjectBuilder;
+import ru.trolsoft.ide.builder.ProjectBuilder;
 import ru.trolsoft.ide.utils.ProjectUtils;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 
@@ -33,7 +32,9 @@ public class BuildAction extends AppAction<RText>  {
         Project project = ProjectUtils.getProjectForCurrentFile(rtext);
         ProjectBuilder builder = new ProjectBuilder(rtext, project, window);
         rtext.getBuildOutputPlugin().setBuildOutputWindowVisible(true);
-        window.focusInDockableWindowGroup(true);
+        if (!window.isActive()) {
+            window.focusInDockableWindowGroup(true);
+        }
         builder.build(path);
     }
 }

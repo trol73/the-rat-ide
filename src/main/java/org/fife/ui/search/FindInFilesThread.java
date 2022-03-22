@@ -181,8 +181,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 
 				// Display the file we're searching in the status bar.
 				// Note that this method postpones the update to the EDT.
-				dialog.setStatusText(searchingFile + i + "/" + numFiles +
-								": " + fileFullPath);
+				dialog.setStatusText(searchingFile + i + "/" + numFiles + ": " + fileFullPath);
 
 				try {
 					// Use a UnicodeReader to auto-detect whether this
@@ -191,7 +190,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 					// encoding, instead of assuming system default,
 					// somehow.
 					Reader r = new BufferedReader(new UnicodeReader(temp));
-					String style = view.getSyntaxStyleForFile(temp.getName());
+					String style = view.getSyntaxStyleForFile(temp.getPath());
 					textArea.read(r, null);	// Clears all old text.
 					// Important!  Clear undo history, or RSTA's undo manager
 					// will keep all old text (i.e. copies of ALL previous
@@ -202,17 +201,14 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 					}
 					r.close();
 				} catch (IOException ioe) {
-					MatchData data = createErrorMatchData(fileFullPath,
-								"IOException reading file: " + ioe);
+					MatchData data = createErrorMatchData(fileFullPath, "IOException reading file: " + ioe);
 					dialog.addMatchData(data);
 					continue;
 				} catch (OutOfMemoryError oome) {
-					MatchData data = createErrorMatchData(fileFullPath,
-											"OutOfMemoryError");
+					MatchData data = createErrorMatchData(fileFullPath, "OutOfMemoryError");
 					dialog.addMatchData(data);
 					// Bail out.
-					dialog.searchCompleted(
-							System.currentTimeMillis() - startMillis);
+					dialog.searchCompleted(System.currentTimeMillis() - startMillis);
 					return null;
 				}
 

@@ -20,5 +20,6 @@
     <orderEntry type="library" name="xml-apis-1.4.01" level="project" />
     <orderEntry type="library" name="xmlgraphics-commons-2.6" level="project" />
     <orderEntry type="library" name="the-rat" level="project" />
+    <orderEntry type="library" name="jython-standalone-2.7.2" level="project" />
   </component>
 </module>

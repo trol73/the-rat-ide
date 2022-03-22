@@ -18,6 +18,7 @@ import org.fife.rsta.ui.search.SearchListener;
 import org.fife.rtext.SearchManager.SearchingMode;
 import org.fife.rtext.actions.AbstractSearchAction;
 import org.fife.rtext.actions.CapsLockAction;
+import org.fife.rtext.actions.OpenIncludeFileAction;
 import org.fife.rtext.actions.ToggleTextModeAction;
 import org.fife.rtext.plugins.project.model.Project;
 import org.fife.ui.utils.UIUtil;
@@ -30,9 +31,12 @@ import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.ui.search.*;
+import org.python.antlr.ast.Str;
 import ru.trolsoft.ide.config.history.FileList;
 import ru.trolsoft.ide.config.history.FilePositionHistory;
+import ru.trolsoft.ide.syntaxhighlight.AssemblerAvrTokenMaker;
 import ru.trolsoft.ide.syntaxhighlight.AvrRatTokenMaker;
+import ru.trolsoft.ide.syntaxhighlight.CTokenMaker;
 import ru.trolsoft.ide.utils.ProjectUtils;
 
 import javax.imageio.ImageIO;
@@ -53,8 +57,11 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Timer;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 
 /**
@@ -76,8 +83,7 @@ import java.util.*;
  */
 //@SuppressWarnings("checkstyle:VisibilityModifier")
 public abstract class AbstractMainView extends JPanel
-        implements PropertyChangeListener, ActionListener, SearchListener,
-        FindInFilesListener, HyperlinkListener {
+        implements PropertyChangeListener, ActionListener, SearchListener, FindInFilesListener, HyperlinkListener {
 
     public static final int DOCUMENT_SELECT_TOP = JTabbedPane.TOP;
     public static final int DOCUMENT_SELECT_LEFT = JTabbedPane.LEFT;
@@ -190,7 +196,7 @@ public abstract class AbstractMainView extends JPanel
     private Color foldBackground;
     private Color armedFoldBackground;
 
-    private final EventListenerList listenerList = new EventListenerList();;
+    private final EventListenerList listenerList = new EventListenerList();
 
     private Map<String, Boolean> codeFoldingEnabledStates;
 
@@ -204,6 +210,7 @@ public abstract class AbstractMainView extends JPanel
 
     private ToggleTextModeAction toggleTextModeAction;
     private CapsLockAction capsLockAction;
+    private OpenIncludeFileAction openIncludeFileAction;
 
     private final FileList openFileList = new FileList();
     FilePositionHistory filePositionHistory = new FilePositionHistory();
@@ -715,7 +722,7 @@ public abstract class AbstractMainView extends JPanel
      * @throws IOException If an IO error occurs reading the file to load.
      */
     private RTextEditorPane createRTextEditorPane(FileLocation loc, String encoding) throws IOException {
-        String style = getSyntaxStyleForFile(loc.getFileName());
+        String style = getSyntaxStyleForFile(loc.getFileFullPath());
         RTextEditorPane pane = new RTextEditorPane(owner, lineWrapEnabled, textMode, loc, encoding);
 
         // Set some properties.
@@ -799,7 +806,8 @@ public abstract class AbstractMainView extends JPanel
         am.put(RTextAreaEditorKit.rtaToggleTextModeAction, toggleTextModeAction);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_CAPS_LOCK, 0), "OnCapsLock");
         am.put("OnCapsLock", capsLockAction);
-
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.ALT_DOWN_MASK), "OnOpenIncludeFile");
+        am.put("OnOpenIncludeFile", openIncludeFileAction);
         return pane;
     }
 
@@ -1803,8 +1811,19 @@ public abstract class AbstractMainView extends JPanel
      * @return The syntax style to use.
      */
     public String getSyntaxStyleForFile(String fileName) {
-        return syntaxFilters.getSyntaxStyleForFile(fileName,
-                getIgnoreBackupExtensions());
+        var conflictResolver = new Function<List<String>, String>() {
+            @Override
+            public String apply(List<String> variants) {
+                var project = ProjectUtils.getProjectForFile(fileName, owner);
+                if (project != null) {
+                    if (project.getDevice().startsWith("at") && variants.contains(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR)) {
+                        return SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR;
+                    }
+                }
+                return variants.get(0);
+            }
+        };
+        return syntaxFilters.getSyntaxStyleForFile(fileName,getIgnoreBackupExtensions(), conflictResolver);
     }
 
 
@@ -2250,6 +2269,7 @@ public abstract class AbstractMainView extends JPanel
 
         toggleTextModeAction = new ToggleTextModeAction(owner);
         capsLockAction = new CapsLockAction(owner);
+        openIncludeFileAction = new OpenIncludeFileAction(owner);
 
         // Get folding states before creating initial editors.
         codeFoldingEnabledStates = new HashMap<>();
@@ -2260,8 +2280,7 @@ public abstract class AbstractMainView extends JPanel
             }
         }
 
-        SearchingMode searchingMode = prefs.useSearchDialogs ?
-                SearchingMode.DIALOGS : SearchingMode.TOOLBARS;
+        SearchingMode searchingMode = prefs.useSearchDialogs ? SearchingMode.DIALOGS : SearchingMode.TOOLBARS;
         getSearchManager().setSearchingMode(searchingMode);
 
         // Start us out with whatever files they passed in.
@@ -2513,8 +2532,6 @@ public abstract class AbstractMainView extends JPanel
      */
     public boolean openFile(String fileNameAndPath, String charSet, boolean reuse) {
         openFileList.add(fileNameAndPath);
-// add file to open list
-// restore file position
         return openFile(FileLocation.create(fileNameAndPath), charSet, reuse);
     }
 
@@ -2900,7 +2917,7 @@ public abstract class AbstractMainView extends JPanel
         // Decide if we need to update the UI for syntax highlighting
         // purposes (i.e., if the user saves a .txt file as a .java or a
         // .c => .cpp, etc.).
-        String newStyle = getSyntaxStyleForFile(loc.getFileName());
+        String newStyle = getSyntaxStyleForFile(loc.getFileFullPath());
         setSyntaxStyle(currentTextArea, newStyle);
         setCodeFoldingEnabledForTextArea(currentTextArea, isCodeFoldingEnabledFor(newStyle));
 
@@ -3297,6 +3314,8 @@ public abstract class AbstractMainView extends JPanel
         statusBar.setDeviceIndicatorValue(device);
         statusBar.setEncoding(editor.getEncoding());
         AvrRatTokenMaker.setDevice(device);
+        CTokenMaker.setDevice(device);
+        AssemblerAvrTokenMaker.setDevice(device);
     }
 
 
@@ -3407,7 +3426,7 @@ public abstract class AbstractMainView extends JPanel
             int docCount = getNumDocuments();
             for (int i = 0; i < docCount; i++) {
                 RTextEditorPane textArea = getRTextEditorPaneAt(i);
-                String style = getSyntaxStyleForFile(textArea.getFileName());
+                String style = getSyntaxStyleForFile(textArea.getFileFullPath());
                 setSyntaxStyle(textArea, style);
             }
         }

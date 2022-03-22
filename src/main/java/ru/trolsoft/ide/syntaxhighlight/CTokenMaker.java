@@ -4,7 +4,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;
 import ru.trolsoft.ide.therat.AvrRatDevicesUtils;
 
-public class AvrRatTokenMaker extends org.fife.ui.rsyntaxtextarea.modes.AvrRatTokenMaker {
+public class CTokenMaker extends org.fife.ui.rsyntaxtextarea.modes.CTokenMaker {
     private static String device;
     private static IdentifierTokenReplacer replacer;
 
@@ -26,7 +26,7 @@ public class AvrRatTokenMaker extends org.fife.ui.rsyntaxtextarea.modes.AvrRatTo
             replacer = null;
             return;
         }
-        AvrRatTokenMaker.device = deviceName;
+        CTokenMaker.device = deviceName;
         var builder = new IdentifierTokenReplacer.Builder();
         for (var port : device.getRegisters()) {
             var portName = port.getName();
@@ -41,7 +41,7 @@ public class AvrRatTokenMaker extends org.fife.ui.rsyntaxtextarea.modes.AvrRatTo
             }
         }
         for (var vector : device.getInterrupts().getVectors()) {
-            builder.add(vector.getName(), Token.INTERRUPT_VECTOR);
+            builder.add(vector.getName() + "_vect", Token.INTERRUPT_VECTOR);
         }
         replacer = builder.build();
     }

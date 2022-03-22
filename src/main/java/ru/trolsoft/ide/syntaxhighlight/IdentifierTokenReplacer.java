@@ -1,8 +1,7 @@
 package ru.trolsoft.ide.syntaxhighlight;
 
-import org.fife.rsta.ac.java.rjc.lexer.TokenTypes;
 import org.fife.ui.rsyntaxtextarea.Token;
-import ru.trolsoft.ide.utils.StringHashUtils;
+import ru.trolsoft.ide.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +20,7 @@ public class IdentifierTokenReplacer {
     }
 
     public int getTokenType(char[] array, int start, int end) {
-        int hash = StringHashUtils.hash(array, start, end);
+        int hash = StringUtils.hash(array, start, end);
         int pos = Arrays.binarySearch(hashes, hash);
         if (pos >= 0) {
             return tokenTypes[pos];
@@ -61,7 +60,7 @@ public class IdentifierTokenReplacer {
 
             Record(String name, int tokenType) {
                 this.name = name;
-                this.hash = StringHashUtils.hash(name);
+                this.hash = StringUtils.hash(name);
                 this.tokenType = tokenType;
             }
         }

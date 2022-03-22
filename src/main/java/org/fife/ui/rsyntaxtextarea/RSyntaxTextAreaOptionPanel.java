@@ -90,11 +90,12 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
 //    private static final String UNKNOWN_PROPERTY = "RSTAOpts.unknown";
 
     private static final String[] SAMPLES = {
-            "previewAvrRat.txt", "previewJava.txt", "previewPerl.txt", "previewXml.txt"
+            "previewAvrRat.txt", "previewC.txt", "previewJava.txt", "previewPerl.txt", "previewXml.txt"
     };
 
     private static final String[] SAMPLE_STYLES = {
             SyntaxConstants.SYNTAX_STYLE_AVR_RAT,
+            SyntaxConstants.SYNTAX_STYLE_C,
             SyntaxConstants.SYNTAX_STYLE_JAVA,
             SyntaxConstants.SYNTAX_STYLE_PERL,
             SyntaxConstants.SYNTAX_STYLE_XML
@@ -200,6 +201,9 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
         syntaxListModel.addElement(msg.getString("Style.Register"));
         syntaxListModel.addElement(msg.getString("Style.CpuInstruction"));
         syntaxListModel.addElement(msg.getString("Style.IoPort"));
+        syntaxListModel.addElement(msg.getString("Style.IoPortBit"));
+        syntaxListModel.addElement(msg.getString("Style.InterruptVector"));
+        syntaxListModel.addElement(msg.getString("Style.Label"));
         syntaxListModel.addElement(msg.getString("Style.MarkupTag.Delimiter"));
         syntaxListModel.addElement(msg.getString("Style.MarkupTag.TagName"));
         syntaxListModel.addElement(msg.getString("Style.MarkupTag.Attribute"));
@@ -271,7 +275,7 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
         Box horizBox = createHorizontalBox();
         horizBox.add(new JLabel(msg.getString("SampleTextLabel")));
         horizBox.add(Box.createHorizontalStrut(5));
-        final String[] samples = {"AVR Rat", "Java", "Perl", "XML"};
+        final String[] samples = {"AVR Rat", "C", "Java", "Perl", "XML"};
         sampleCombo = new JComboBox<>(samples);
         sampleCombo.setEditable(false);
         sampleCombo.addActionListener(this);
@@ -821,8 +825,6 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
         }
 
         isSettingStyle = false;
-
     }
-
 
 }
