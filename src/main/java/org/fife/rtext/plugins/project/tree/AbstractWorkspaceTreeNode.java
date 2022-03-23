@@ -68,12 +68,9 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
      */
     void addOpenInActions(List<PopupContent> actions) {
         WorkspaceTree tree = plugin.getTree();
-        PopupContent.PopupSubMenu openInMenu = new PopupContent.PopupSubMenu(
-                Messages.getString("Action.OpenIn"));
-        openInMenu.add(new Actions.SystemOpenAction(tree,
-                Actions.SystemOpenAction.OpenMethod.EDIT));
-        openInMenu.add(new Actions.SystemOpenAction(tree,
-                Actions.SystemOpenAction.OpenMethod.OPEN));
+        PopupContent.PopupSubMenu openInMenu = new PopupContent.PopupSubMenu(Messages.getString("Action.OpenIn"));
+        openInMenu.add(new Actions.SystemOpenAction(tree, Actions.SystemOpenAction.OpenMethod.EDIT));
+        openInMenu.add(new Actions.SystemOpenAction(tree, Actions.SystemOpenAction.OpenMethod.OPEN));
         actions.add(openInMenu);
         actions.add(null);
     }
@@ -167,8 +164,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
      * returns <code>false</code>, since for most entities this operation
      * does not make sense.
      *
-     * @param toTop Whether to move it all the way to the top, as opposed to
-     *              just up one.
+     * @param toTop Whether to move it all the way to the top, as opposed to just up one.
      * @return Whether the entity was moved up.
      * @see #moveProjectEntityDown(boolean)
      */
@@ -192,8 +188,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
         private final MutableTreeNode node;
 
         AddFileAction(ProjectEntryParent parent, MutableTreeNode node) {
-            super("Action.NewFiles",
-                    plugin.getApplication().getIconGroup().getIcon("add_file"));
+            super("Action.NewFiles", plugin.getApplication().getIconGroup().getIcon("add_file"));
             this.parent = parent;
             this.node = node;
         }
@@ -207,8 +202,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
                 for (File file : toAdd) {
                     ProjectEntry entry = new FileProjectEntry(parent, file);
                     parent.addEntry(entry);
-                    FileProjectEntryTreeNode childNode =
-                            new FileProjectEntryTreeNode(plugin, entry);
+                    FileProjectEntryTreeNode childNode = new FileProjectEntryTreeNode(plugin, entry);
                     plugin.insertTreeNodeInto(childNode, node);
                 }
             }
@@ -226,8 +220,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
         private final MutableTreeNode node;
 
         AddFolderAction(ProjectEntryParent parent, MutableTreeNode node) {
-            super("Action.AddFolder",
-                    plugin.getApplication().getIconGroup().getIcon("add_folder"));
+            super("Action.AddFolder", plugin.getApplication().getIconGroup().getIcon("add_folder"));
             this.parent = parent;
             this.node = node;
         }
@@ -259,19 +252,16 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
         private final ProjectEntryParent parent;
         private final MutableTreeNode node;
 
-        AddLogicalFolderAction(ProjectEntryParent parent,
-                               MutableTreeNode node) {
+        AddLogicalFolderAction(ProjectEntryParent parent, MutableTreeNode node) {
 
-            super("Action.NewLogicalFolder",
-                    plugin.getApplication().getIconGroup().getIcon("add_folder"));
+            super("Action.NewLogicalFolder", plugin.getApplication().getIconGroup().getIcon("add_folder"));
             this.parent = parent;
             this.node = node;
 
             // Add the "logical folder" decoration to our icon.
             Icon icon = (Icon) getValue(SMALL_ICON);
             DecoratableIcon di = new DecoratableIcon(16, icon);
-            URL decorationRes = RText.class.
-                    getResource("/org/fife/rsta/ui/search/lightbulb.png");
+            URL decorationRes = RText.class. getResource("/org/fife/rsta/ui/search/lightbulb.png");
             di.addDecorationIcon(new ImageIcon(decorationRes));
             setIcon(di);
 
@@ -280,16 +270,13 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
         @Override
         public void actionPerformed(ActionEvent e) {
             Frame parent = plugin.getApplication();
-            LogicalFolderNameDialog dialog = new LogicalFolderNameDialog(
-                    parent, null, new LogicalFolderNameChecker());
+            LogicalFolderNameDialog dialog = new LogicalFolderNameDialog(parent, null, new LogicalFolderNameChecker());
             dialog.setVisible(true);
             String name = dialog.getLogicalFolderName();
             if (name != null) {
-                LogicalFolderProjectEntry entry =
-                        new LogicalFolderProjectEntry(this.parent, name);
+                LogicalFolderProjectEntry entry = new LogicalFolderProjectEntry(this.parent, name);
                 this.parent.addEntry(entry);
-                MutableTreeNode child =
-                        new LogicalFolderProjectEntryTreeNode(plugin, entry);
+                MutableTreeNode child = new LogicalFolderProjectEntryTreeNode(plugin, entry);
                 plugin.insertTreeNodeInto(child, this.node);
             }
         }
@@ -305,8 +292,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
 
         CopyFullPathAction() {
             super("Action.CopyFullPath");
-            int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() |
-                    InputEvent.SHIFT_DOWN_MASK;
+            int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
             setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, mods));
         }
 
@@ -349,8 +335,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
 
         FindInFilesFromHereAction() {
             super("Action.FindInFilesFromHere");
-            int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() |
-                    InputEvent.SHIFT_DOWN_MASK;
+            int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
             setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, mods));
         }
 
@@ -388,8 +373,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
 
         MoveToBottomAction() {
             super("Action.MoveToBottom");
-            setEnabled(getParent().getIndex(AbstractWorkspaceTreeNode.this) <
-                    getParent().getChildCount() - 1);
+            setEnabled(getParent().getIndex(AbstractWorkspaceTreeNode.this) < getParent().getChildCount() - 1);
         }
 
         @Override
@@ -454,8 +438,7 @@ public abstract class AbstractWorkspaceTreeNode extends DefaultMutableTreeNode {
             File file = null;
             if (selected instanceof FileTreeNode) {
                 file = ((FileTreeNode) selected).getFile();
-            } else if (selected instanceof FileProjectEntryTreeNode) {
-                FileProjectEntryTreeNode node = (FileProjectEntryTreeNode) selected;
+            } else if (selected instanceof FileProjectEntryTreeNode node) {
                 file = node.getFile();
                 if (!file.isFile()) {
                     tree.promptForRemoval(node);

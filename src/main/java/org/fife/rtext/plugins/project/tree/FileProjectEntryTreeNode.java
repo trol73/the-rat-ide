@@ -108,7 +108,9 @@ public class FileProjectEntryTreeNode extends ProjectEntryTreeNode {
     public String getToolTipText() {
         return Messages.getString("ProjectPlugin.ToolTip.FileProjectEntry",
                 getFile().getAbsolutePath(),
-                Utilities.getFileSizeStringFor(getFile()));
+                Utilities.getFileSizeStringFor(getFile()),
+                Utilities.getLastModifiedString(getFile().lastModified())
+        );
     }
 
 

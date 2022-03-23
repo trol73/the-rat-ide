@@ -1735,7 +1735,6 @@ public class CTokenMaker extends AbstractJFlexCTokenMaker {
 	 *         the syntax highlighted text.
 	 */
 	public Token getTokenList(Segment text, int initialTokenType, int startOffset) {
-
 		resetTokenList();
 		this.offsetShift = -text.offset + startOffset;
 

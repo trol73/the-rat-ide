@@ -9,8 +9,7 @@
  */
 package org.fife.rtext.plugins.project;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +67,9 @@ class ProjectWindow extends DockableWindow {
         add(toolbar, BorderLayout.NORTH);
 
         tree = new WorkspaceTree(plugin, plugin.getWorkspace());
+//        if (UIUtil.isDarkLookAndFeel()) {
+//            tree.setBackground(Color.BLACK);
+//        }
         UIUtil.removeTabbedPaneFocusTraversalKeyBindings(tree);
         setPrimaryComponent(tree);
         DockableWindowScrollPane sp = new DockableWindowScrollPane(tree);
@@ -124,7 +126,7 @@ class ProjectWindow extends DockableWindow {
      */
     void refreshWorkspaceName() {
         workspaceNameLabel.setText(plugin.getWorkspace().getName());
-        // Don't let it hog space in the tool bar.
+        // Don't let it hog space in the toolbar.
         Dimension size = workspaceNameLabel.getMinimumSize();
         if (size != null) {
             size.width = 1;
@@ -232,8 +234,7 @@ class ProjectWindow extends DockableWindow {
             }
 
             // Get the name for the new workspace.
-            RenameDialog dialog = new RenameDialog(rtext, false, "Workspace",
-                    new WorkspaceNameChecker());
+            RenameDialog dialog = new RenameDialog(rtext, false, "Workspace", new WorkspaceNameChecker());
             Icon icon = plugin.getApplication().getIconGroup().getIcon("application_double");
             dialog.setDescription(icon, Messages.getString("NewWorkspaceDialog.Desc"));
             dialog.setTitle(Messages.getString("NewWorkspaceDialog.Title"));

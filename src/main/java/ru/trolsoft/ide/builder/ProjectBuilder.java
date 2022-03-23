@@ -55,24 +55,13 @@ public class ProjectBuilder {
         File pwd = new File(path).getParentFile();
         window.prompt("Compile " + project.getName() + "\n");
         window.execute("make -f " + project.getMainFile(), pwd);
-//        window.execute(new BuildTask() {
-//            @Override
-//            public void run() {
-//                String path = project.getMainFile();
-//                window.prompt("Compile " + path + "\n");
-//                String devPath = AvrRatDevicesUtils.getFolder().getAbsolutePath();
-//                List<String> defines = new ArrayList<>();
-//                PrintStream out = getOutStream();
-//                PrintStream err = getErrStream();
-//                RatKt.compileProject(path, devPath, defines, out, err);
-//                window.prompt("Done.\n");
-//            }
-//        });
     }
 
     private void buildMakeBuilderProject() {
-        // TODO
-
+        String path = project.getMainFile();
+        File pwd = new File(path).getParentFile();
+        window.prompt("Compile " + project.getName() + "\n");
+        window.execute("builder", pwd);
     }
 
 }

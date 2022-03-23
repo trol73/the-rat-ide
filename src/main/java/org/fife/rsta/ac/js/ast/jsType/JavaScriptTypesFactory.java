@@ -348,9 +348,7 @@ public abstract class JavaScriptTypesFactory {
 
 		if (cachedType != null) {
 			Map<String, JSCompletion> completionsForType = cachedType.getMethodFieldCompletions();
-			for (JSCompletion completion : completionsForType.values()) {
-				completions.add(completion);
-			}
+			completions.addAll(completionsForType.values());
 
 			// get any extended classes and recursively populate
 			List<JavaScriptType> extendedClasses = cachedType.getExtendedClasses();

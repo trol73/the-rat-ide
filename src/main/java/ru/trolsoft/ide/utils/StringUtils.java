@@ -1,5 +1,7 @@
 package ru.trolsoft.ide.utils;
 
+import java.io.File;
+
 public class StringUtils {
 
     public static int hash(String s) {
@@ -27,5 +29,21 @@ public class StringUtils {
         } catch (Throwable e) {
             return false;
         }
+    }
+
+    public static String getFileExt(File f) {
+        String name = f.getName();
+        int pos = name.lastIndexOf('.');
+        return pos >= 0 ? name.substring(pos+1) : "";
+    }
+
+    public static String getFileExt(String path) {
+        int pos = path.lastIndexOf('.');
+        return pos >= 0 ? path.substring(pos+1) : "";
+    }
+
+    public static String removeFileExt(String path) {
+        int pos = path.lastIndexOf('.');
+        return pos >= 0 ? path.substring(0, pos) : path;
     }
 }

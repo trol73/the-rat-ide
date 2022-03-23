@@ -12,12 +12,10 @@ package org.fife.rtext;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.fife.ui.rsyntaxtextarea.FileTypeUtil;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.python.antlr.ast.Str;
 
 
 /**

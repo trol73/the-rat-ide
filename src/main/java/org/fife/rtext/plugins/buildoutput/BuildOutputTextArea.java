@@ -43,7 +43,7 @@ import java.util.List;
  */
 class BuildOutputTextArea extends AbstractConsoleTextArea {
 
-    public static final Color DEFAULT_DARK_FILES_FG = new Color(0x5555ff);
+    public static final Color DEFAULT_DARK_FILES_FG = new Color(0x6666ff);
     public static final Color DEFAULT_DARK_POS_FG = new Color(0x55ffff);
     public static final Color DEFAULT_DARK_WARNINGS_FG = new Color(0xff55ff);
     public static final Color DEFAULT_DARK_ERRORS_FG = new Color(0xff5555);

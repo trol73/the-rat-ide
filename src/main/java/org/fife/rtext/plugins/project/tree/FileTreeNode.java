@@ -11,9 +11,7 @@ package org.fife.rtext.plugins.project.tree;
 
 import java.awt.Window;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -31,6 +29,7 @@ import org.fife.ui.utils.UIUtil;
 import org.fife.ui.rtextfilechooser.FileDisplayNames;
 import org.fife.ui.rtextfilechooser.Utilities;
 import org.fife.ui.rtextfilechooser.extras.FileIOExtras;
+import ru.trolsoft.ide.utils.StringUtils;
 
 
 /**
@@ -47,6 +46,34 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
     private FolderFilterInfo filterInfo;
     private Icon icon;
 
+    public static final int FILE_TYPE_DEFAULT = 0;
+    public static final int FILE_TYPE_SOURCE = 1;
+    public static final int FILE_TYPE_MAKEFILE = 2;
+    public static final int FILE_TYPE_OUTPUT = 3;
+
+    private final int fileType;
+
+    private static final Map<Integer, Integer> TYPES_BY_EXT = new HashMap<>();
+
+    static {
+        registerFileType("c", FILE_TYPE_SOURCE);
+        registerFileType("h", FILE_TYPE_SOURCE);
+        registerFileType("cpp", FILE_TYPE_SOURCE);
+        registerFileType("hpp", FILE_TYPE_SOURCE);
+        registerFileType("art", FILE_TYPE_SOURCE);
+        registerFileType("arth", FILE_TYPE_SOURCE);
+        registerFileType("asm", FILE_TYPE_SOURCE);
+        registerFileType("py", FILE_TYPE_SOURCE);
+        registerFileType("go", FILE_TYPE_SOURCE);
+        registerFileType("java", FILE_TYPE_SOURCE);
+        registerFileType("hex", FILE_TYPE_OUTPUT);
+        registerFileType("exe", FILE_TYPE_OUTPUT);
+    }
+
+    private static void registerFileType(String ext, int type) {
+        TYPES_BY_EXT.put(StringUtils.hash(ext), type);
+    }
+
 
     public FileTreeNode(ProjectPlugin plugin, File file) {
         super(plugin);
@@ -56,6 +83,7 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
             filterInfo = new FolderFilterInfo();
         }
         icon = FileSystemView.getFileSystemView().getSystemIcon(file);
+        fileType = detectFileType(file);
     }
 
 
@@ -67,8 +95,8 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
      *              nodes for those not filtered out.
      */
     private void addChildrenFilteredAndSorted(File[] files) {
-        ArrayList<File> dirList = new ArrayList<>();
-        ArrayList<File> fileList = new ArrayList<>();
+        List<File> dirList = new ArrayList<>();
+        List<File> fileList = new ArrayList<>();
 
         // First, separate the directories from regular files so we can
         // sort them individually.  This part could be made more compact,
@@ -76,10 +104,11 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
         for (File file1 : files) {
             boolean isDir = file1.isDirectory();
             if (filterInfo != null && filterInfo.isAllowed(file1, isDir)) {
-                if (isDir)
+                if (isDir) {
                     dirList.add(file1);
-                else
+                } else {
                     fileList.add(file1);
+                }
             }
         }
 
@@ -91,7 +120,6 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
         for (File file : fileList) {
             add(createFileTreeNode(file, false));
         }
-
     }
 
 
@@ -169,7 +197,6 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
         actions.add(new PropertiesAction(true));
 
         return actions;
-
     }
 
 
@@ -185,7 +212,8 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
         if (file.isFile()) {
             return Messages.getString("ProjectPlugin.ToolTip.File",
                     getFile().getAbsolutePath(),
-                    Utilities.getFileSizeStringFor(file));
+                    Utilities.getFileSizeStringFor(file),
+                    Utilities.getLastModifiedString(file.lastModified()));
         } else if (file.isDirectory()) {
             return Messages.getString("ProjectPlugin.ToolTip.Folder",
                     file.getAbsolutePath(),
@@ -199,23 +227,18 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
 
     @Override
     protected void handleDelete() {
-
         File file = getFile();
 
-        String text = Messages.getString("Action.DeleteFile.Confirm",
-                file.getName());
+        String text = Messages.getString("Action.DeleteFile.Confirm", file.getName());
         RText rtext = plugin.getApplication();
         String title = rtext.getString("ConfDialogTitle");
 
-        int rc = JOptionPane.showConfirmDialog(rtext, text, title,
-                JOptionPane.YES_NO_OPTION);
+        int rc = JOptionPane.showConfirmDialog(rtext, text, title, JOptionPane.YES_NO_OPTION);
         if (rc == JOptionPane.YES_OPTION) {
             if (!UIUtil.deleteFile(file)) {
-                text = Messages.getString("ProjectPlugin.Error.DeletingFile",
-                        file.getName());
+                text = Messages.getString("ProjectPlugin.Error.DeletingFile", file.getName());
                 title = rtext.getString("ErrorDialogTitle");
-                JOptionPane.showMessageDialog(rtext, text, title,
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rtext, text, title, JOptionPane.ERROR_MESSAGE);
             }
             plugin.refreshTree(getParent());
         }
@@ -300,8 +323,7 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
         this.filterInfo = info;
         for (int i = 0; i < getChildCount(); i++) {
             TreeNode child = getChildAt(i);
-            if (child instanceof FileTreeNode) { // i.e. not NotYetPopulated...
-                FileTreeNode ftn = (FileTreeNode) child;
+            if (child instanceof FileTreeNode ftn) { // i.e. not NotYetPopulated...
                 ftn.setFilterInfo(filterInfo);
             }
         }
@@ -310,6 +332,23 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
         }
     }
 
+    private static int detectFileType(File file) {
+        String name = file.getName();
+        if ("Makefile".equalsIgnoreCase(name) || "make.builder".equalsIgnoreCase(name)) {
+            return FILE_TYPE_MAKEFILE;
+        }
+        String ext = StringUtils.getFileExt(name);
+        int hash = StringUtils.hash(ext);
+        Integer type = TYPES_BY_EXT.get(hash);
+        if (type != null) {
+            return type;
+        }
+        return FILE_TYPE_DEFAULT;
+    }
+
+    public int getFileType() {
+        return fileType;
+    }
 
     /**
      * Ensures that proposed file names are valid.

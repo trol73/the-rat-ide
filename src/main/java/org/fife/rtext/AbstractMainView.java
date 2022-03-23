@@ -21,7 +21,6 @@ import org.fife.rtext.actions.CapsLockAction;
 import org.fife.rtext.actions.OpenIncludeFileAction;
 import org.fife.rtext.actions.ToggleTextModeAction;
 import org.fife.rtext.plugins.project.model.Project;
-import org.fife.ui.utils.UIUtil;
 import org.fife.ui.autocomplete.Util;
 import org.fife.ui.rsyntaxtextarea.ErrorStrip;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
@@ -31,7 +30,7 @@ import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.ui.search.*;
-import org.python.antlr.ast.Str;
+import org.fife.ui.utils.UIUtil;
 import ru.trolsoft.ide.config.history.FileList;
 import ru.trolsoft.ide.config.history.FilePositionHistory;
 import ru.trolsoft.ide.syntaxhighlight.AssemblerAvrTokenMaker;
@@ -60,7 +59,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Timer;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 
