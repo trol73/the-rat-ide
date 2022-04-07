@@ -4,6 +4,8 @@ import java.io.File;
 
 public class StringUtils {
 
+    private static final String[] STRING_OF_ZERO = {"", "0", "00", "000", "0000", "00000", "000000", "0000000", "00000000", "000000000", "0000000000"};
+
     public static int hash(String s) {
         // s[0]*31^(n-1) + s[1]*31^(n-2) + … + s[n-1]
         int hash = 0;
@@ -29,6 +31,15 @@ public class StringUtils {
         } catch (Throwable e) {
             return false;
         }
+    }
+
+    public static String dwordToHexStr(long val) {
+        String result = Long.toHexString(val);
+        int len = result.length();
+        if (len > 8) {
+            return result;
+        }
+        return STRING_OF_ZERO[8-len] + result;
     }
 
     public static String getFileExt(File f) {

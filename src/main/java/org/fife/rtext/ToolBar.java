@@ -23,81 +23,56 @@ import org.fife.ui.rtextarea.RTextArea;
  */
 class ToolBar extends CustomizableToolBar {
 
-	private JButton newButton;
-	private JButton openButton;
-	private JButton saveButton;
-	private JButton printButton;
-	private JButton cutButton;
-	private JButton copyButton;
-	private JButton pasteButton;
-	private JButton deleteButton;
-	private JButton findButton;
-	private JButton replaceButton;
-	private JButton undoButton;
-	private JButton redoButton;
-
 
 	/**
-	 * Creates the tool bar.
+	 * Creates the toolbar.
 	 *
 	 * @param title The title of this toolbar when it is floating.
 	 * @param rtext The main application that owns this toolbar.
 	 */
 	ToolBar(String title, RText rtext) {
-
 		super(title);
 
-		newButton = createButton(rtext.getAction(RText.NEW_ACTION));
-		add(newButton);
-
-		openButton = createButton(rtext.getAction(RText.OPEN_ACTION));
-		add(openButton);
-
-		saveButton = createButton(rtext.getAction(RText.SAVE_ACTION));
-		add(saveButton);
-
+		addAction(rtext,  RText.NEW_ACTION);
+		addAction(rtext, RText.OPEN_ACTION);
+		addAction(rtext,  RText.SAVE_ACTION);
 		addSeparator();
 
-		printButton = createButton(rtext.getAction(RText.PRINT_ACTION));
-		add(printButton);
-
+		addAction(rtext, RText.PRINT_ACTION);
 		addSeparator();
 
-		cutButton = createButton(RTextArea.getAction(RTextArea.CUT_ACTION));
-		add(cutButton);
-
-		copyButton = createButton(RTextArea.getAction(RTextArea.COPY_ACTION));
-		add(copyButton);
-
-		pasteButton = createButton(RTextArea.getAction(RTextArea.PASTE_ACTION));
-		add(pasteButton);
-
-		deleteButton = createButton(RTextArea.getAction(RTextArea.DELETE_ACTION));
-		add(deleteButton);
-
+		addAction(RTextArea.CUT_ACTION);
+		addAction(RTextArea.COPY_ACTION);
+		addAction(RTextArea.PASTE_ACTION);
+		addAction(RTextArea.DELETE_ACTION);
 		addSeparator();
 
-		findButton = createButton(rtext.getAction(RText.FIND_ACTION));
-		add(findButton);
-
-		replaceButton = createButton(rtext.getAction(RText.REPLACE_ACTION));
-		add(replaceButton);
-
+		addAction(rtext, RText.FIND_ACTION);
+		addAction(rtext, RText.REPLACE_ACTION);
 		addSeparator();
 
-		undoButton = createButton(RTextArea.getAction(RTextArea.UNDO_ACTION));
 		// Necessary to keep button size from changing when undo text changes.
-		undoButton.putClientProperty("hideActionText", Boolean.TRUE);
-		add(undoButton);
+		addAction(RTextArea.UNDO_ACTION).putClientProperty("hideActionText", Boolean.TRUE);
+		addAction(RTextArea.REDO_ACTION).putClientProperty("hideActionText", Boolean.TRUE);
+		addSeparator();
 
-		redoButton = createButton(RTextArea.getAction(RTextArea.REDO_ACTION));
-		// Necessary to keep button size from changing when undo text changes.
-		redoButton.putClientProperty("hideActionText", Boolean.TRUE);
-		add(redoButton);
+		addAction(rtext, RText.BUILD_ACTION);
+		addAction(rtext, RText.UPLOAD_ACTION);
 
 		// Make the toolbar have the right-click customize menu.
 		makeCustomizable();
+	}
 
+	private JButton addAction(RText rtext, String key) {
+		JButton btn = createButton(rtext.getAction(key));
+		add(btn);
+		return btn;
+	}
+
+	private JButton addAction(int action) {
+		JButton btn = createButton(RTextArea.getAction(action));
+		add(btn);
+		return btn;
 	}
 
 }

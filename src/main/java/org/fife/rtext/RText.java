@@ -36,6 +36,8 @@ import org.fife.ui.rtextfilechooser.FileChooserOwner;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
 import org.fife.ui.widgets.CollapsibleSectionPanel;
 import org.fife.util.TranslucencyUtil;
+import ru.trolsoft.ide.plugins.codelisting.CodeListingPlugin;
+import ru.trolsoft.ide.plugins.codelisting.CodeListingWindow;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -547,7 +549,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
             File test = new File(helpPath);
             if (!test.isDirectory())
                 helpPath = contentsPath + "en/";
-            helpDialog = new HelpDialog(this,contentsPath + "HelpDialogContents.xml", helpPath);
+            helpDialog = new HelpDialog(this, contentsPath + "HelpDialogContents.xml", helpPath);
             helpDialog.setBackButtonIcon(getIconGroup().getIcon("back"));
             helpDialog.setForwardButtonIcon(getIconGroup().getIcon("forward"));
         }
@@ -669,7 +671,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      * @return The shortcuts file.
      */
     private static File getShortcutsFile() {
-        return new File(RTextUtilities.getPreferencesDirectory(),"shortcuts.properties");
+        return new File(RTextUtilities.getPreferencesDirectory(), "shortcuts.properties");
     }
 
 
@@ -891,7 +893,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      * Loads and validates the icon groups available to RText.
      */
     private void loadPossibleIconGroups() {
-
         iconGroupMap = new HashMap<>();
         String resourceRoot = "org/fife/rtext/graphics/";
 
@@ -906,7 +907,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         iconGroupMap.put("Eclipse Icons", new RasterImageIconGroup("Eclipse Icons",
                 resourceRoot + "eclipse-icons",
                 null));
-
     }
 
 
@@ -926,7 +926,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     @Override
     protected void preDisplayInit(RTextPrefs prefs, SplashScreen splashScreen) {
-
         long start = System.currentTimeMillis();
 
         // Some stuff down the line may assume this directory exists!
@@ -971,7 +970,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     @Override
     protected void preMenuBarInit(RTextPrefs prefs, SplashScreen splashScreen) {
-
         long start = System.currentTimeMillis();
 
         initRecentFileManager(prefs);
@@ -1072,7 +1070,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         if (Boolean.getBoolean(PROPERTY_PRINT_START_TIMES)) {
             System.err.println("preToolbarInit: " + (System.currentTimeMillis() - start));
         }
-
     }
 
 
@@ -1082,7 +1079,6 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
      */
     @Override
     public void propertyChange(PropertyChangeEvent e) {
-
         String propertyName = e.getPropertyName();
 
         // If the file's path is changing (must be caused by the file being saved(?))...
@@ -1105,16 +1101,13 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
 
     void registerChildWindowListeners(Window w) {
-
         if (!windowListenersInited) {
             windowListenersInited = true;
             if (TranslucencyUtil.get().isTranslucencySupported(false)) {
                 searchWindowOpacityListener = new ChildWindowListener(this);
-                searchWindowOpacityListener.setTranslucencyRule(
-                        searchWindowOpacityRule);
+                searchWindowOpacityListener.setTranslucencyRule(searchWindowOpacityRule);
             }
         }
-
         if (searchWindowOpacityListener != null) {
             w.addWindowFocusListener(searchWindowOpacityListener);
             w.addComponentListener(searchWindowOpacityListener);
@@ -1360,9 +1353,9 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     @Override
     public void setTitle(String title) {
         if (getShowHostName()) {
-            title = "rtext (" + getHostName() + ") - " + title;
+            title = "TrolCodeStudio (" + getHostName() + ") - " + title;
         } else {
-            title = "rtext - " + title;
+            title = "TrolCodeStudio - " + title;
         }
         super.setTitle(title);
     }
@@ -1501,43 +1494,27 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         updateTextAreaIcon(RTextArea.REDO_ACTION, "redo");
         updateTextAreaIcon(RTextArea.SELECT_ALL_ACTION, "selectall");
 
-        // All other icons
-        Icon icon = iconGroup.getIcon("new");
-        getAction(NEW_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("open");
-        getAction(OPEN_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("save");
-        getAction(SAVE_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("saveall");
-        getAction(SAVE_ALL_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("openinnewwindow");
-        getAction(OPEN_NEWWIN_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("saveas");
-        getAction(SAVE_AS_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("options");
-        getAction(OPTIONS_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("help");
-        getAction(HELP_ACTION_KEY).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("about");
-        getAction(ABOUT_ACTION_KEY).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("close");
-        getAction(CLOSE_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("find");
-        getAction(FIND_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("findnext");
-        getAction(FIND_NEXT_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("replace");
-        getAction(REPLACE_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("replacenext");
-        getAction(REPLACE_NEXT_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("print");
-        getAction(PRINT_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("printpreview");
-        getAction(PRINT_PREVIEW_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("closeall");
-        getAction(CLOSE_ALL_ACTION).putValue(Action.SMALL_ICON, icon);
-        icon = iconGroup.getIcon("goto");
-        getAction(GOTO_ACTION).putValue(Action.SMALL_ICON, icon);
+        // All others icons
+        setActionIcon(iconGroup, NEW_ACTION, "new");
+        setActionIcon(iconGroup, OPEN_ACTION, "open");
+        setActionIcon(iconGroup, SAVE_ACTION, "save");
+        setActionIcon(iconGroup, SAVE_ALL_ACTION, "saveall");
+        setActionIcon(iconGroup, OPEN_NEWWIN_ACTION, "openinnewwindow");
+        setActionIcon(iconGroup, SAVE_AS_ACTION, "saveas");
+        setActionIcon(iconGroup, OPTIONS_ACTION, "options");
+        setActionIcon(iconGroup, HELP_ACTION_KEY, "help");
+        setActionIcon(iconGroup, ABOUT_ACTION_KEY, "about");
+        setActionIcon(iconGroup, CLOSE_ACTION, "close");
+        setActionIcon(iconGroup, FIND_ACTION, "find");
+        setActionIcon(iconGroup, FIND_NEXT_ACTION, "findnext");
+        setActionIcon(iconGroup, REPLACE_ACTION, "replace");
+        setActionIcon(iconGroup, REPLACE_NEXT_ACTION, "replacenext");
+        setActionIcon(iconGroup, PRINT_ACTION, "print");
+        setActionIcon(iconGroup, PRINT_PREVIEW_ACTION, "printpreview");
+        setActionIcon(iconGroup, CLOSE_ALL_ACTION, "closeall");
+        setActionIcon(iconGroup, GOTO_ACTION, "goto");
+        setActionIcon(iconGroup, BUILD_ACTION, "build");
+        setActionIcon(iconGroup, UPLOAD_ACTION, "upload");
 
         // Do this because the toolbar has changed it's size.
         if (isDisplayable()) {
@@ -1550,6 +1527,11 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
             helpDialog.setBackButtonIcon(iconGroup.getIcon("back"));
             helpDialog.setForwardButtonIcon(iconGroup.getIcon("forward"));
         }
+    }
+
+    private void setActionIcon(IconGroup iconGroup, String actionKey, String iconName) {
+        Icon icon = iconGroup.getIcon(iconName);
+        getAction(actionKey).putValue(Action.SMALL_ICON, icon);
     }
 
 
@@ -1645,7 +1627,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     public ProjectPlugin getProjectPlugin() {
         for (Plugin<?> p : getPlugins()) {
             if (p instanceof ProjectPlugin) {
-                return ((ProjectPlugin)p);
+                return ((ProjectPlugin) p);
             }
         }
         return null;
@@ -1663,5 +1645,19 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
 
     public File getSelectedIncludedFile() {
         return selectedIncludedFileName;
+    }
+
+    public CodeListingPlugin getCodeListingPlugin() {
+        for (Plugin<?> p : getPlugins()) {
+            if (p instanceof CodeListingPlugin lvp) {
+                return lvp;
+            }
+        }
+        return null;
+    }
+
+    public CodeListingWindow getCodeListingWindow() {
+        var plugin = getCodeListingPlugin();
+        return plugin == null ? null : plugin.getDockableWindow();
     }
 }

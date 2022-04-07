@@ -47,293 +47,275 @@ import javax.swing.plaf.basic.BasicToolBarUI;
  */
 public class CustomizableToolBar extends JToolBar {
 
-	@Serial
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The popup menu for the toolbar.
-	 */
-	private JPopupMenu popupMenu;
+    /**
+     * The popup menu for the toolbar.
+     */
+    private JPopupMenu popupMenu;
 
-	/**
-	 * The menu for adding/removing toolbar buttons.
-	 */
-	private JMenu addRemoveMenu;
+    /**
+     * The menu for adding/removing toolbar buttons.
+     */
+    private JMenu addRemoveMenu;
 
-	/**
-	 * The mouse listener that listens for right-clicks on this toolbar.
-	 */
-	private MouseInputAdapter mia;
+    /**
+     * The mouse listener that listens for right-clicks on this toolbar.
+     */
+    private MouseInputAdapter mia;
 
-	/**
-	 * Whether text labels should be on the buttons, as well as images.
-	 */
-	private boolean showText;
+    /**
+     * Whether text labels should be on the buttons, as well as images.
+     */
+    private boolean showText;
 
-	private static final String MSG = "org.fife.ui.CustomizableToolBar";
-
-
-	/**
-	 * Creates a new toolbar.
-	 */
-	public CustomizableToolBar() {
-	}
+    private static final String MSG = "org.fife.ui.CustomizableToolBar";
 
 
-	/**
-	 * Creates a new toolbar with the specified orientation.
-	 *
-	 * @param orientation The initial orientation (either
-	 *        {@link SwingConstants#VERTICAL} or
-	 *        {@link SwingConstants#HORIZONTAL}).
-	 */
-	public CustomizableToolBar(int orientation) {
-		super(orientation);
-	}
+    /**
+     * Creates a new toolbar with the specified orientation.
+     *
+     * @param orientation The initial orientation (either
+     *                    {@link SwingConstants#VERTICAL} or
+     *                    {@link SwingConstants#HORIZONTAL}).
+     */
+    public CustomizableToolBar(int orientation) {
+        super(orientation);
+    }
 
 
-	/**
-	 * Creates a new toolbar.
-	 *
-	 * @param name The name for the tool bar.
-	 */
-	public CustomizableToolBar(String name) {
-		super(name);
-	}
+    /**
+     * Creates a new toolbar.
+     *
+     * @param name The name for the tool bar.
+     */
+    public CustomizableToolBar(String name) {
+        super(name);
+    }
 
 
-	/**
-	 * Creates a new toolbar.
-	 *
-	 * @param name The name for the tool bar.
-	 * @param orientation The initial orientation (either
-	 *        {@link SwingConstants#VERTICAL} or
-	 *        {@link SwingConstants#HORIZONTAL}).
-	 */
-	public CustomizableToolBar(String name, int orientation) {
-		super(name, orientation);
-	}
+    /**
+     * Creates a new toolbar.
+     *
+     * @param name        The name for the tool bar.
+     * @param orientation The initial orientation (either
+     *                    {@link SwingConstants#VERTICAL} or
+     *                    {@link SwingConstants#HORIZONTAL}).
+     */
+    public CustomizableToolBar(String name, int orientation) {
+        super(name, orientation);
+    }
 
 
-	@Override
-	public void addNotify() {
-		super.addNotify();
-		WebLookAndFeelUtils.fixToolbar(this, true, false);
-	}
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        WebLookAndFeelUtils.fixToolbar(this, true, false);
+    }
 
 
-	/**
-	 * Creates a button to add to this tool bar.
-	 *
-	 * @param a The action for the button.
-	 * @return The button.
-	 */
-	protected JButton createButton(Action a) {
-		JButton b = new JButton(a);
-		b.setToolTipText((String)a.getValue(Action.NAME)); // May be null
-		b.setHorizontalTextPosition(JButton.CENTER);
-		b.setVerticalTextPosition(JButton.BOTTOM);
-		if (showText) {
-			b.setText((String)a.getValue(Action.NAME));
-		}
-		else {
-			b.setText(null);
-		}
-		String desc = (String)a.getValue(Action.SHORT_DESCRIPTION);
-		if (desc!=null) {
-			b.getAccessibleContext().setAccessibleDescription(desc);
-		}
-		return b;
-	}
+    /**
+     * Creates a button to add to this tool bar.
+     *
+     * @param a The action for the button.
+     * @return The button.
+     */
+    protected JButton createButton(Action a) {
+        JButton b = new JButton(a);
+        b.setToolTipText((String) a.getValue(Action.NAME)); // May be null
+        b.setHorizontalTextPosition(JButton.CENTER);
+        b.setVerticalTextPosition(JButton.BOTTOM);
+        if (showText) {
+            b.setText((String) a.getValue(Action.NAME));
+        } else {
+            b.setText(null);
+        }
+        String desc = (String) a.getValue(Action.SHORT_DESCRIPTION);
+        if (desc != null) {
+            b.getAccessibleContext().setAccessibleDescription(desc);
+        }
+        return b;
+    }
 
 
-	/**
-	 * Creates the popup menu.
-	 */
-	private void createPopupMenu() {
+    /**
+     * Creates the popup menu.
+     */
+    private void createPopupMenu() {
+        ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
-		ResourceBundle msg = ResourceBundle.getBundle(MSG);
+        popupMenu = new JPopupMenu();
+        String temp = msg.getString("PopupMenu.LockToolbar.txt");
+        AbstractAction lockAction = new LockAction(temp);
+        JCheckBoxMenuItem lockMenuItem = new JCheckBoxMenuItem(lockAction);
+        lockMenuItem.setMnemonic(KeyEvent.VK_L);
+        popupMenu.add(lockMenuItem);
 
-		popupMenu = new JPopupMenu();
-		String temp = msg.getString("PopupMenu.LockToolbar.txt");
-		AbstractAction lockAction = new LockAction(temp);
-		JCheckBoxMenuItem lockMenuItem = new JCheckBoxMenuItem(lockAction);
-		lockMenuItem.setMnemonic(KeyEvent.VK_L);
-		popupMenu.add(lockMenuItem);
+        popupMenu.addSeparator();
 
-		popupMenu.addSeparator();
-
-		temp = msg.getString("PopupMenu.AddRemoveButtons.txt");
-		addRemoveMenu = new JMenu(temp);
-		addRemoveMenu.setMnemonic(KeyEvent.VK_A);
-		populateAddRemovePopupMenu(msg);
-		popupMenu.add(addRemoveMenu);
-
-	}
+        temp = msg.getString("PopupMenu.AddRemoveButtons.txt");
+        addRemoveMenu = new JMenu(temp);
+        addRemoveMenu.setMnemonic(KeyEvent.VK_A);
+        populateAddRemovePopupMenu(msg);
+        popupMenu.add(addRemoveMenu);
+    }
 
 
-	/**
-	 * Returns whether text labels are to be displayed on buttons, along
-	 * with the images.
-	 *
-	 * @return Whether text labels are shown.
-	 * @see #setShowText(boolean)
-	 */
-	public boolean getShowText() {
-		return showText;
-	}
+    /**
+     * Returns whether text labels are to be displayed on buttons, along with the images.
+     *
+     * @return Whether text labels are shown.
+     * @see #setShowText(boolean)
+     */
+    public boolean getShowText() {
+        return showText;
+    }
 
 
-	/**
-	 * This should be called at the end of the constructor of any toolbar
-	 * that overrides this class.  This is the method that sets up the
-	 * popup menu for the toolbar.  If you don't call this method, then
-	 * a <code>CustomizableToolBar</code> behaves no differently than a
-	 * <code>JToolBar</code>.
-	 */
-	public void makeCustomizable() {
+    /**
+     * This should be called at the end of the constructor of any toolbar
+     * that overrides this class.  This is the method that sets up the
+     * popup menu for the toolbar.  If you don't call this method, then
+     * a <code>CustomizableToolBar</code> behaves no differently than a
+     * <code>JToolBar</code>.
+     */
+    public void makeCustomizable() {
+        // Remove an old mouse listener if makeCustomizable() has been
+        // called before.
+        if (mia != null) {
+            removeMouseListener(mia);
+            for (int i = 0; i < getComponentCount(); i++) {
+                getComponentAtIndex(i).removeMouseListener(mia);
+            }
+        }
 
-		// Remove an old mouse listener if makeCustomizable() has been
-		// called before.
-		if (mia!=null) {
-			removeMouseListener(mia);
-			for (int i=0; i<getComponentCount(); i++) {
-				getComponentAtIndex(i).removeMouseListener(mia);
-			}
-		}
+        // Create the action that listens for right-clicks for customization.
+        mia = new MouseInputAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                maybeShowPopup(e);
+            }
 
-		// Create the action that listens for right-clicks for customization.
-		mia = new MouseInputAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				maybeShowPopup(e);
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				maybeShowPopup(e);
-			}
-			public void maybeShowPopup(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					if (popupMenu==null)
-						createPopupMenu();
-					popupMenu.show(e.getComponent(), e.getX(), e.getY());
-					e.consume();
-				}
-			}
-		};
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                maybeShowPopup(e);
+            }
 
-		// Add the mouse listener to all parts of the toolbar.
-		addMouseListener(mia);	// Add to the toolbar itself.
-		for (int i=0; i<getComponentCount(); i++) {
-			getComponentAtIndex(i).addMouseListener(mia);
-		}
+            public void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    if (popupMenu == null)
+                        createPopupMenu();
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                    e.consume();
+                }
+            }
+        };
 
-	}
+        // Add the mouse listener to all parts of the toolbar.
+        addMouseListener(mia);    // Add to the toolbar itself.
+        for (int i = 0; i < getComponentCount(); i++) {
+            getComponentAtIndex(i).addMouseListener(mia);
+        }
+
+    }
 
 
-	/**
-	 * Populates the "Add/Remove Buttons" popup menu.
-	 *
-	 * @param msg The resource bundle to use for localization.
-	 */
-	protected void populateAddRemovePopupMenu(ResourceBundle msg) {
+    /**
+     * Populates the "Add/Remove Buttons" popup menu.
+     *
+     * @param msg The resource bundle to use for localization.
+     */
+    protected void populateAddRemovePopupMenu(ResourceBundle msg) {
+        JPopupMenu popupMenu = addRemoveMenu.getPopupMenu();
+        popupMenu.removeAll();
 
-		JPopupMenu popupMenu = addRemoveMenu.getPopupMenu();
-		popupMenu.removeAll();
-
-		JCheckBoxMenuItem cbMenuItem;
-
-		Component[] components = getComponents();
-		for (Component component : components) {
-			if (component instanceof JButton) {
-				final JButton button = (JButton)component;
+        Component[] components = getComponents();
+        for (Component component : components) {
+            if (component instanceof final JButton button) {
 				String title = button.getText();
-				if (title == null)
-					title = button.getToolTipText();
-				if (title == null)
-					title = msg.getString("PopupMenu.Unknown.txt");
-				cbMenuItem = new JCheckBoxMenuItem(
-					new AbstractAction(title) {
-						@Serial
-						private static final long serialVersionUID = 1L;
+                if (title == null)
+                    title = button.getToolTipText();
+                if (title == null)
+                    title = msg.getString("PopupMenu.Unknown.txt");
+                JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(
+                        new AbstractAction(title) {
+                            @Serial
+                            private static final long serialVersionUID = 1L;
 
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							button.setVisible(!button.isVisible());
-							repaint();
-						}
-					}
-				);
-				cbMenuItem.setSelected(button.isVisible());
-				popupMenu.add(cbMenuItem);
-			}
-		}
-		popupMenu.addSeparator();
-		String temp = msg.getString("PopupMenu.ResetToolBar.txt");
-		ResetAction resetAction = new ResetAction(temp);
-		popupMenu.add(new JMenuItem(resetAction));
-
-	}
-
-
-	/**
-	 * Toggles whether text labels are displayed on buttons underneath the
-	 * images.
-	 *
-	 * @param show Whether to show text labels.
-	 * @see #getShowText()
-	 */
-	public void setShowText(boolean show) {
-		showText = show;
-		for (int i=0; i<getComponentCount(); i++) {
-			Component c = getComponent(i);
-			if (c instanceof JMenuItem) {
-				JMenuItem mi = (JMenuItem)c;
-				if (mi.getAction()!=null) {
-					String text = show ?
-						((String)mi.getAction().getValue(Action.NAME)) : null;
-					mi.setText(text);
-				}
-			}
-		}
-	}
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                button.setVisible(!button.isVisible());
+                                repaint();
+                            }
+                        }
+                );
+                cbMenuItem.setSelected(button.isVisible());
+                popupMenu.add(cbMenuItem);
+            }
+        }
+        popupMenu.addSeparator();
+        String temp = msg.getString("PopupMenu.ResetToolBar.txt");
+        ResetAction resetAction = new ResetAction(temp);
+        popupMenu.add(new JMenuItem(resetAction));
+    }
 
 
-	@Override
-	public void setUI(ToolBarUI ui) {
-		super.setUI(ui);
-		WebLookAndFeelUtils.fixToolbar(this, false, false);
-	}
+    /**
+     * Toggles whether text labels are displayed on buttons underneath the images.
+     *
+     * @param show Whether to show text labels.
+     * @see #getShowText()
+     */
+    public void setShowText(boolean show) {
+        showText = show;
+        for (int i = 0; i < getComponentCount(); i++) {
+            Component c = getComponent(i);
+            if (c instanceof JMenuItem mi) {
+				if (mi.getAction() != null) {
+                    String text = show ? ((String) mi.getAction().getValue(Action.NAME)) : null;
+                    mi.setText(text);
+                }
+            }
+        }
+    }
 
 
-	/**
-	 * Overridden so the popup menu gets its UI redone too.
-	 */
-	@Override
-	public void updateUI() {
-		super.updateUI();
-		if (popupMenu!=null) {
-			SwingUtilities.updateComponentTreeUI(popupMenu);
-		}
-	}
+    @Override
+    public void setUI(ToolBarUI ui) {
+        super.setUI(ui);
+        WebLookAndFeelUtils.fixToolbar(this, false, false);
+    }
 
 
-	/**
-	 * Locks the current state of the toolbar.
-	 *
-	 * @author Robert Futrell
-	 */
-	private class LockAction extends AbstractAction {
+    /**
+     * Overridden so the popup menu gets its UI redone too.
+     */
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        if (popupMenu != null) {
+            SwingUtilities.updateComponentTreeUI(popupMenu);
+        }
+    }
 
-		@Serial
-		private static final long serialVersionUID = 1L;
 
-		LockAction(String name) {
-			super(name);
-		}
+    /**
+     * Locks the current state of the toolbar.
+     *
+     * @author Robert Futrell
+     */
+    private class LockAction extends AbstractAction {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
+        @Serial
+        private static final long serialVersionUID = 1L;
+
+        LockAction(String name) {
+            super(name);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
 			/* 8.5.2004/pwy: the assumption that getUI returns a BasicToolBarUI
 			is not correct on all platforms. The method used below is more portable.
@@ -346,49 +328,43 @@ public class CustomizableToolBar extends JToolBar {
 			reappear in the application!  Thus, I'm simply going to check for the UI
 			being a subclass of BasicToolBarUI for now... */
 
-			ToolBarUI ui = getUI();
-			if (ui instanceof BasicToolBarUI) {
-				boolean floating = ((BasicToolBarUI)ui).isFloating();
-				if (floating) {
-					((BasicToolBarUI)ui).setFloating(false, new Point(0,0));
-					setFloatable(false);
-				}
-				else
-					setFloatable(!isFloatable());
-			}
-			else { // ???
-				CustomizableToolBar cbt = CustomizableToolBar.this;
-				cbt.setFloatable(!cbt.isFloatable());
-			}
-
-		}
-
-	}
+            ToolBarUI ui = getUI();
+            if (ui instanceof BasicToolBarUI) {
+                boolean floating = ((BasicToolBarUI) ui).isFloating();
+                if (floating) {
+                    ((BasicToolBarUI) ui).setFloating(false, new Point(0, 0));
+                    setFloatable(false);
+                } else
+                    setFloatable(!isFloatable());
+            } else { // ???
+                CustomizableToolBar cbt = CustomizableToolBar.this;
+                cbt.setFloatable(!cbt.isFloatable());
+            }
+        }
+    }
 
 
-	/**
-	 * Resets the toolbar so all buttons are visible.
-	 *
-	 * @author Robert Futrell
-	 */
-	private class ResetAction extends AbstractAction {
+    /**
+     * Resets the toolbar so all buttons are visible.
+     *
+     * @author Robert Futrell
+     */
+    private class ResetAction extends AbstractAction {
+        @Serial
+        private static final long serialVersionUID = 1L;
 
-		@Serial
-		private static final long serialVersionUID = 1L;
+        ResetAction(String name) {
+            super(name);
+        }
 
-		ResetAction(String name) {
-			super(name);
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Component[] c = getComponents();
-			for (Component component : c)
-				if (component instanceof JButton)
-					component.setVisible(true);
-		}
-
-	}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Component[] c = getComponents();
+            for (Component component : c)
+                if (component instanceof JButton)
+                    component.setVisible(true);
+        }
+    }
 
 
 }

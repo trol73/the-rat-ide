@@ -42,7 +42,6 @@ class NewAction extends AppAction<RText> {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		RText owner = getApplication();
 		AbstractMainView mainView = owner.getMainView();
 
@@ -54,10 +53,8 @@ class NewAction extends AppAction<RText> {
 		// Create a new RTextDocument for an empty file with a default name.
 		mainView.addNewEmptyUntitledFile();
 
-		// Now, since the new tab is guaranteed to be a new number from the
-		// old active tab, the stateChanged() callback below will take care
-		// of updating all listeners.
-
+		// Now, since the new tab is guaranteed to be a new number from the old active tab,
+		// the stateChanged() callback below will take care of updating all listeners.
 	}
 
 

@@ -192,7 +192,7 @@ EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
 Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
 IdentifierStart					= ({LetterOrUnderscore}|"$")
-IdentifierPart						= ({IdentifierStart}|{Digit}|("\\"{EscapedSourceCharacter}))
+IdentifierPart						= ({IdentifierStart}|{Digit}|"@"|("\\"{EscapedSourceCharacter}))
 
 PreprocessorWord	= define|undef|include|ifdef|ifndef|if|else|elif|endif|warning|error|message
 
@@ -223,7 +223,9 @@ Separator				= ([\(\)\{\}\[\]])
 Separator2				= ([\;,.])
 
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
-Label				    = (({Letter}|{Digit})+[\:])
+//Label				    = (({Letter}|{Digit})+[\:])
+Label				    = (({Identifier})+[\:])
+
 
 URLGenDelim				= ([:\/\?#\[\]@])
 URLSubDelim				= ([\!\$&'\(\)\*\+,;=])
@@ -232,6 +234,8 @@ URLCharacter			= ({URLGenDelim}|{URLSubDelim}|{URLUnreserved}|[%])
 URLCharacters			= ({URLCharacter}*)
 URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
 URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
+
+Register                = X|Y|Z|r0|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|r13|r14|r15|r16|r17|r18|r19|r20|r21|r22|r23|r24|r25|r26|r27|r28|r29|r30|r31|XH|XL|YH|YL|ZH|ZL
 
 
 /* No string state */
@@ -250,7 +254,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "var"|"vectors"|"while" 		{ addToken(Token.RESERVED_WORD); }
 
       /* Keywords 2 (just an optional set of keywords colored differently) */
-      "high"|"low"|"sizeof" { addToken(Token.RESERVED_WORD_2); }
+      "high"|"low"|"sizeof"|"signed" { addToken(Token.RESERVED_WORD_2); }
 
 
 	/* Assembler instructions */
@@ -268,10 +272,8 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
     "wdr"|"xch"		  { addToken(Token.CPU_INSTRUCTION); }
 
 	/* Registers */
-	"X" |"Y" |"Z" |"r0" |"r1" |"r10" |"r11" |"r12" |"r13" |"r14" |"r15" |"r16" |
-    "r17" |"r18" |"r19" |"r2" |"r2" |"r20" |"r21" |"r22" |"r23" |"r24" | "r25" | "r26" |
-    "r27" |"r28" |"r29" |"r3" |"r30" |"r31" |"r4" |"r5" |"r6" |"r7" |"r8" |"r9" |
-    "xh" |"xl" |"yh" |"yl" |"zh" |"zl"		{ addToken(Token.REGISTER); }
+	{Register}                            { addToken(Token.REGISTER); }
+    {Register}("."{Register})*            { addToken(Token.REGISTER); }
 
       /* Data types */
     "byte"|"word"|"dword"|"ptr"|"ptrprg"     { addToken(Token.DATA_TYPE); }
@@ -284,7 +286,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
 
-    {Label}					{ addToken(Token.LABEL); }
+    {Label}                         { addToken(Token.LABEL); }
 
 	{WhiteSpace}					{ addToken(Token.WHITESPACE); }
 

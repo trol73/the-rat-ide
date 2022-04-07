@@ -9,13 +9,15 @@ import org.fife.ui.app.AppAction;
 import ru.trolsoft.ide.builder.ProjectBuilder;
 import ru.trolsoft.ide.utils.ProjectUtils;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 
-public class BuildAction extends AppAction<RText>  {
+public class BuildAction extends AppAction<RText> {
 
-    public BuildAction(RText app, ResourceBundle msg) {
+    public BuildAction(RText app, ResourceBundle msg, Icon icon) {
         super(app, msg, "BuildAction");
+        setIcon(icon);
     }
 
     @Override
@@ -27,14 +29,14 @@ public class BuildAction extends AppAction<RText>  {
             return;
         }
         String path = editor.getFileFullPath();
-//System.out.println("BUILD " + path);
+
         BuildOutputWindow window = rtext.getBuildOutputWindow();
         Project project = ProjectUtils.getProjectForCurrentFile(rtext);
         ProjectBuilder builder = new ProjectBuilder(rtext, project, window);
         rtext.getBuildOutputPlugin().setBuildOutputWindowVisible(true);
-        if (!window.isActive()) {
+//        if (!window.isActive()) {
             window.focusInDockableWindowGroup(true);
-        }
+//        }
         builder.build(path);
     }
 }

@@ -612,7 +612,6 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #copyAsStyledText()
 	 */
 	public void copyAsStyledText(Theme theme) {
-
 		// It's more performant to call the no-arg overload
 		if (theme == null) {
 			copyAsStyledText();

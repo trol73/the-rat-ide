@@ -10,6 +10,7 @@
 package org.fife.ui.app;
 
 import org.fife.rtext.RText;
+import ru.trolsoft.ide.plugins.codelisting.CodeListingPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -291,6 +292,8 @@ class PluginLoader {
 		app.addPlugin(new org.fife.rtext.plugins.tasks.TasksPlugin(rtext));
 		app.addPlugin(new org.fife.rtext.plugins.tidy.Plugin(rtext));
 		app.addPlugin(new org.fife.rtext.plugins.tools.ToolPlugin(rtext));
+
+		app.addPlugin(new CodeListingPlugin(rtext));
 	}
 
 

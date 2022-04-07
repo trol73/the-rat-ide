@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="fastutil-core-8.5.8">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/fastutil-core-8.5.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/fastutil-core-8.5.8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -286,7 +286,6 @@ setContentPane(cp);
 	 * @param style The syntax style to use when highlighting the text.
 	 */
 	void setText(String resource, String style) {
-
 		textArea.setSyntaxEditingStyle(style);
 
 		ClassLoader cl = getClass().getClassLoader();
@@ -301,7 +300,6 @@ setContentPane(cp);
 			textArea.discardAllEdits();
 
 			refreshSourceTree();
-
 		} catch (RuntimeException re) {
 			throw re; // FindBugs
 		} catch (Exception e) {

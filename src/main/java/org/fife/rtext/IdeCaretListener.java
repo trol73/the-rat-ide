@@ -24,9 +24,17 @@ public class IdeCaretListener implements CaretListener {
 //            textEditor.selectIncludeFile(null);
             return;
         }
+        navigateInCodeListingWindow(line);
 //        checkAssemblerInstruction(str);
 //        checkColorOnCursor(str, col);
         checkIncludeInstruction(str, col);
+    }
+
+    private void navigateInCodeListingWindow(int line) {
+        var window = rText.getCodeListingWindow();
+        if (window != null && window.isShowing()) {
+            window.activateLineFor(textArea, line);
+        }
     }
 
     private String getLineStr(int line) {

@@ -151,6 +151,7 @@ public class RTextMenuBar extends MenuBar<RText>
 	private JMenu savedMacroMenu;
 
 	private JMenuItem buildItem;
+	private JMenuItem codeListingItem;
 	private JMenuItem uploadItem;
 
 
@@ -521,6 +522,10 @@ public class RTextMenuBar extends MenuBar<RText>
 		buildItem = createMenuItem(rtext.getAction(RText.BUILD_ACTION));
 		buildItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, defaultModifier));
 		menu.add(buildItem);
+
+		codeListingItem = createMenuItem(rtext.getAction(RText.CODE_LISTING_ACTION));
+		codeListingItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, defaultModifier));
+		menu.add(codeListingItem);
 
 		uploadItem = createMenuItem(rtext.getAction(RText.UPLOAD_ACTION));
 		uploadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));

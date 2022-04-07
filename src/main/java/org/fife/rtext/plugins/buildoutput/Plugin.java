@@ -1,7 +1,7 @@
 /*
  * 12/17/2010
  *
- * Plugin.java - Embeds a console-line window in RText.
+ * Plugin.java - Builder output window.
  * Copyright (C) 2010 Robert Futrell
  * http://fifesoft.com/rtext
  * Licensed under a modified BSD license.
@@ -118,7 +118,7 @@ public class Plugin extends GUIPlugin<RText> {
 
     @Override
     public String getPluginAuthor() {
-        return "Trolsoft";
+        return "TrolSoft";
     }
 
 
@@ -179,6 +179,12 @@ public class Plugin extends GUIPlugin<RText> {
         RText app = getApplication();
         RTextMenuBar mb = (RTextMenuBar) app.getJMenuBar();
 
+        addMenuAction(app, mb);
+
+        window.clearConsoles(); // Needed to pick up styles
+    }
+
+    private void addMenuAction(RText app, RTextMenuBar mb) {
         // Add an item to the "View" menu to toggle console visibility
         final JMenu menu = mb.getMenuByName(RTextMenuBar.MENU_DOCKED_WINDOWS);
         Action a = app.getAction(VIEW_BUILD_OUTPUT_ACTION);
@@ -187,8 +193,6 @@ public class Plugin extends GUIPlugin<RText> {
         item.setToolTipText(null);
         item.applyComponentOrientation(app.getComponentOrientation());
         menu.add(item);
-
-        window.clearConsoles(); // Needed to pick up styles
     }
 
 

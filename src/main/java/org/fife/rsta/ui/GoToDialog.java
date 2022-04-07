@@ -346,14 +346,13 @@ public class GoToDialog extends EscapableDialog {
         }
 
         @Override
-        public void insertString(FilterBypass fb, int offset, String string,
-                                 AttributeSet attr) throws BadLocationException {
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                throws BadLocationException {
             fb.insertString(offset, fix(string), attr);
         }
 
         @Override
-        public void replace(DocumentFilter.FilterBypass fb, int offset,
-                            int length, String text, AttributeSet attr)
+        public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attr)
                 throws BadLocationException {
             fb.replace(offset, length, fix(text), attr);
         }

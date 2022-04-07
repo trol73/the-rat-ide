@@ -55,14 +55,10 @@ public final class ActionFactory implements RTextActionInfo {
 
 		try {
 			rtext.setIconImages(Arrays.asList(
-				ImageTranscodingUtil.rasterize("appIcon16",
-					cl.getResourceAsStream(darkResource), 16, 16),
-				ImageTranscodingUtil.rasterize("appIcon32",
-					cl.getResourceAsStream(lightResource), 32, 32),
-				ImageTranscodingUtil.rasterize("appIcon48",
-					cl.getResourceAsStream(lightResource), 48, 48),
-				ImageTranscodingUtil.rasterize("appIcon64",
-					cl.getResourceAsStream(lightResource), 64, 64)
+				ImageTranscodingUtil.rasterize("appIcon16", cl.getResourceAsStream(darkResource), 16, 16),
+				ImageTranscodingUtil.rasterize("appIcon32", cl.getResourceAsStream(lightResource), 32, 32),
+				ImageTranscodingUtil.rasterize("appIcon48", cl.getResourceAsStream(lightResource), 48, 48),
+				ImageTranscodingUtil.rasterize("appIcon64", cl.getResourceAsStream(lightResource), 64, 64)
 			));
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -191,16 +187,13 @@ public final class ActionFactory implements RTextActionInfo {
 		rtext.addAction(MOVE_FOCUS_UP_ACTION, new MoveFocusUpAction(rtext, msg));
 		rtext.addAction(MOVE_FOCUS_DOWN_ACTION, new MoveFocusDownAction(rtext, msg));
 
-		a = new ViewSplitAction(rtext, msg, null, "SplitHorizontallyAction",
-								VIEW_SPLIT_HORIZ_ACTION);
+		a = new ViewSplitAction(rtext, msg, null, "SplitHorizontallyAction", VIEW_SPLIT_HORIZ_ACTION);
 		rtext.addAction(VIEW_SPLIT_HORIZ_ACTION, a);
 
-		a = new ViewSplitAction(rtext, msg, null, "SplitNoneAction",
-								VIEW_SPLIT_NONE_ACTION);
+		a = new ViewSplitAction(rtext, msg, null, "SplitNoneAction", VIEW_SPLIT_NONE_ACTION);
 		rtext.addAction(VIEW_SPLIT_NONE_ACTION, a);
 
-		a = new ViewSplitAction(rtext, msg, null, "SplitVerticallyAction",
-								VIEW_SPLIT_VERT_ACTION);
+		a = new ViewSplitAction(rtext, msg, null, "SplitVerticallyAction", VIEW_SPLIT_VERT_ACTION);
 		rtext.addAction(VIEW_SPLIT_VERT_ACTION, a);
 
 		rtext.addAction(NEXT_DOCUMENT_ACTION, new NextDocumentAction(rtext, msg, true));
@@ -208,7 +201,8 @@ public final class ActionFactory implements RTextActionInfo {
 		rtext.addAction(INC_FONT_SIZES_ACTION, new IncreaseFontSizeAction(rtext, msg));
 		rtext.addAction(DEC_FONT_SIZES_ACTION, new DecreaseFontSizeAction(rtext, msg));
 
-		rtext.addAction(BUILD_ACTION, new BuildAction(rtext, msg));
+		rtext.addAction(BUILD_ACTION, new BuildAction(rtext, msg, null));
+		rtext.addAction(CODE_LISTING_ACTION, new ShowCodeListingAction(rtext, msg));
 		rtext.addAction(UPLOAD_ACTION, new UploadAction(rtext, msg));
 	}
 }

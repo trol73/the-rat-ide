@@ -258,8 +258,8 @@ URLCharacters			= ({URLCharacter}*)
 URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
 URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
-
-Label				= (({Letter}|{Digit})+[\:])
+LetterOrUnderscore		= ({Letter}|"_")
+Label				= ({LetterOrUnderscore}({Letter}|"@"|{Digit})+[\:])
 
 Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 

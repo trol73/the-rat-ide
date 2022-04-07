@@ -1,7 +1,7 @@
 /*
  * 01/04/2011
  *
- * ConsolePrefs.java - Preferences for the console plugin.
+ * ConsolePrefs.java - Preferences for the build output plugin.
  * Copyright (C) 2011 Robert Futrell
  * http://fifesoft.com/rtext
  * Licensed under a modified BSD license.

@@ -61,10 +61,12 @@
         <style token="OPERATOR" fg="FFFFCC"/>
         <style token="PREPROCESSOR" fg="00FF00"/>
         <style token="REGISTER" fg="CCCCFF"/>
-        <style token="CPU_INSTRUCTION" fg="99FF99"/>
+        <style token="CPU_INSTRUCTION" fg="00FF00"/>
         <style token="IO_PORT" fg="CC99FF"/>
         <style token="IO_PORT_BIT" fg="AAAAEE"/>
         <style token="INTERRUPT_VECTOR" fg="7799FF"/>
+        <style token="LABEL" fg="FFFF66"/>
+        
 
         <style token="REGEX" fg="AE81FF"/>
         <style token="SEPARATOR" fg="F0F0F0"/>

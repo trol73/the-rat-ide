@@ -30,7 +30,7 @@ public final class FoldParserManager implements SyntaxConstants {
 	/**
 	 * Map from syntax styles to fold parsers.
 	 */
-	private Map<String, FoldParser> foldParserMap;
+	private final Map<String, FoldParser> foldParserMap;
 
 	private static final FoldParserManager INSTANCE = new FoldParserManager();
 
@@ -66,7 +66,6 @@ public final class FoldParserManager implements SyntaxConstants {
 	 * @return The style-to-fold parser mapping.
 	 */
 	private Map<String, FoldParser> createFoldParserMap() {
-
 		Map<String, FoldParser> map = new HashMap<>();
 
 		map.put(SYNTAX_STYLE_ACTIONSCRIPT,		new CurlyFoldParser());
@@ -105,7 +104,6 @@ public final class FoldParserManager implements SyntaxConstants {
 		map.put(SYNTAX_STYLE_YAML,				new YamlFoldParser());
 
 		return map;
-
 	}
 
 

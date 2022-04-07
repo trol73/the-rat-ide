@@ -66,7 +66,6 @@ public class FoldingOnlyOptionsPanel extends OptionsDialogPanel {
      * Constructor.
      */
     FoldingOnlyOptionsPanel(RText app, String nameKey, String language, boolean showIcon) {
-
         this.language = language;
         ResourceBundle msg = Plugin.MSG;
         setName(msg.getString(nameKey));
@@ -83,8 +82,7 @@ public class FoldingOnlyOptionsPanel extends OptionsDialogPanel {
             });
         }
 
-        ComponentOrientation o = ComponentOrientation.
-                getOrientation(getLocale());
+        ComponentOrientation o = ComponentOrientation.getOrientation(getLocale());
 
         setLayout(new BorderLayout());
         Border empty5Border = UIUtil.getEmpty5Border();
@@ -110,7 +108,6 @@ public class FoldingOnlyOptionsPanel extends OptionsDialogPanel {
         cp.add(Box.createVerticalGlue());
 
         applyComponentOrientation(o);
-
     }
 
 
@@ -178,7 +175,6 @@ public class FoldingOnlyOptionsPanel extends OptionsDialogPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
             Object source = e.getSource();
 
             if (enabledCB == source) {
