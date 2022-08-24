@@ -35,6 +35,9 @@ public class ProjectBuilder {
 
     public void build(String activeFilePath) {
         window.clearConsoles();
+        if (project == null) {
+            return;
+        }
         switch (project.getType()) {
             case AVR_RAT -> buildAvrRatProject();
             case BUILDER -> buildMakeBuilderProject();

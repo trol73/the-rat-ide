@@ -85,8 +85,9 @@ public class DockableWindowPanel extends JPanel
      */
     public boolean addDockableWindow(DockableWindow window) {
         int pos = window.getPosition();
-        if (!DockableWindow.isValidPosition(pos))
+        if (!DockableWindow.isValidPosition(pos)) {
             throw new IllegalArgumentException("Invalid position");
+        }
         //window.setPosition(pos);
 
         addDockableWindowToList(window);
@@ -97,41 +98,42 @@ public class DockableWindowPanel extends JPanel
             return true;
         }
 
-        switch (pos) {
-            case FLOATING:
-                if (floatingWindows == null) {
-                    floatingWindows = new FloatingWindow[1];
-                } else {
-                    FloatingWindow[] temp = new FloatingWindow[floatingWindows.length + 1];
-                    System.arraycopy(floatingWindows, 0, temp, 0, floatingWindows.length);
-                    floatingWindows = temp;
-                }
-                int current = floatingWindows.length - 1;
-                floatingWindows[current] = createFloatingWindowFrame(window);
-                Window focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-                floatingWindows[current].setVisible(true);
-                // Keep focus on "main" window.
-                if (focused != null) {
-                    focused.requestFocus();
-                }
-                addListeners(window);
-                return true;
-
-            default: // TOP, LEFT, BOTTOM or RIGHT.
-                for (int p = 0; p < 4; p++) {
-                    if (panelToLocationMap[p] == pos) {
-                        ContentPanel cp = panels[p];
-                        boolean rc = cp.addDockableWindow(window);
-                        if (rc) {
-                            addListeners(window);
-                        }
-                        return rc;
+        // TOP, LEFT, BOTTOM or RIGHT.
+        if (pos == FLOATING) {
+            addFloatingDockable(window);
+            return true;
+        } else {
+            for (int p = 0; p < 4; p++) {
+                if (panelToLocationMap[p] == pos) {
+                    ContentPanel cp = panels[p];
+                    boolean rc = cp.addDockableWindow(window);
+                    if (rc) {
+                        addListeners(window);
                     }
+                    return rc;
                 }
-        } // End of switch (pos).
+            }
+            return false;  // Shouldn't get here, but if we do, it's an error.
+        }
+    }
 
-        // Shouldn't get here, but if we do, it's an error.
-        return false;
+    private void addFloatingDockable(DockableWindow window) {
+        if (floatingWindows == null) {
+            floatingWindows = new FloatingWindow[1];
+        } else {
+            FloatingWindow[] temp = new FloatingWindow[floatingWindows.length + 1];
+            System.arraycopy(floatingWindows, 0, temp, 0, floatingWindows.length);
+            floatingWindows = temp;
+        }
+        int current = floatingWindows.length - 1;
+        floatingWindows[current] = createFloatingWindowFrame(window);
+        Window focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        floatingWindows[current].setVisible(true);
+        // Keep focus on "main" window.
+        if (focused != null) {
+            focused.requestFocus();
+        }
+        addListeners(window);
     }
 
 
@@ -633,7 +635,6 @@ public class DockableWindowPanel extends JPanel
                         comp2 = windowPanel;
                         break;
                 }
-
                 remove(0); // Remove the original contents.
                 splitPane = new JSplitPane(split, true, comp1, comp2) {
                     @Override

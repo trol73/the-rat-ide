@@ -53,15 +53,15 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	protected JCheckBox subfoldersCheckBox;
 
 	protected JButton findButton;
-	private JButton browseButton;
+	private final JButton browseButton;
 
 	private JRadioButton matchingLinesRadioButton;
 
 	protected JCheckBox verboseCheckBox;
 
-	private StatusBar statusBar;
+	private final StatusBar statusBar;
 
-	private ResultsComponent resultsComponent;
+	private final ResultsComponent resultsComponent;
 
 	// This helps us work around the "bug" where JComboBox eats the first
 	// Enter press.
@@ -70,14 +70,14 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	private String lastSkipFoldersString;
 
 	// The listener list for FindInFilesEvents.
-	private EventListenerList eventListenerList;
+	private final EventListenerList eventListenerList;
 
 	private FindInFilesThread workerThread;
-	private FindInFilesDocumentListener docListener;
+	private final FindInFilesDocumentListener docListener;
 
 	// Some strings cached from our resources for efficiency.
-	private String defaultStatusText;
-	private String searchingCompleteString;
+	private final String defaultStatusText;
+	private final String searchingCompleteString;
 
 	static final int DECORATIVE_ICON_WIDTH = 12;
 
@@ -761,13 +761,11 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 */
 	@Override
 	protected FindReplaceButtonsEnableResult handleToggleButtons() {
-
 		FindReplaceButtonsEnableResult er = super.handleToggleButtons();
 		boolean enable = er.getEnable();
 		findButton.setEnabled(enable && isEverythingFilledIn());
 		JTextComponent tc = getTextComponent(findTextCombo);
-		tc.setForeground(enable ?
-					UIManager.getColor("TextField.foreground") : Color.RED);
+		tc.setForeground(enable ? UIManager.getColor("TextField.foreground") : Color.RED);
 
 		String tooltip = er.getError();
 		String status = defaultStatusText;
@@ -780,7 +778,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		setStatusText(status);
 
 		if (tooltip!=null && tooltip.contains("\n")) {
-			tooltip = tooltip.replaceFirst("\\\n", "</b><br><pre>");
+			tooltip = tooltip.replaceFirst("\n", "</b><br><pre>");
 			tooltip = "<html><b>" + tooltip;
 		}
 		tc.setToolTipText(tooltip); // Always set, even if null
@@ -848,7 +846,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @param time The time in milliseconds the search took.
 	 */
 	void searchCompleted(final long time) {
-
 		SwingUtilities.invokeLater(() -> {
 
 			setWorkerThread(null);
@@ -860,31 +857,25 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 			setSearching(false);
 
 			// If searching completed normally (e.g., wasn't terminated).
-			if (time!=-1) {
+			if (time != -1) {
 
 				// Make the status bar indicate that searching completed.
-				String temp = MessageFormat.format(searchingCompleteString,
-					""+(time/1000.0f));
+				String temp = MessageFormat.format(searchingCompleteString,""+(time/1000.0f));
 				setStatusText(temp);
 
 				// Update the results list and notify the user if the
 				// message wasn't found at all.
 				if (getResultsComponent().getRowCount()==0) {
-					String searchString = (String)findTextCombo.
-												getSelectedItem();
+					String searchString = (String)findTextCombo.getSelectedItem();
 					JOptionPane.showMessageDialog(FindInFilesDialog.this,
-						getString2("SearchStringNotFound") +
-												searchString + "'.",
+						getString2("SearchStringNotFound") + searchString + "'.",
 						getString2("InfoDialogTitle"),
 						JOptionPane.INFORMATION_MESSAGE);
 				}
-
 			}
 
 			getResultsComponent().prettyUp();
-
 		});
-
 	}
 
 

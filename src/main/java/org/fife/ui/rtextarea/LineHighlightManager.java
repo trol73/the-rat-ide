@@ -50,16 +50,14 @@ class LineHighlightManager {
 	 *         number.
 	 * @see #removeLineHighlight(Object)
 	 */
-	public Object addLineHighlight(int line, Color color)
-									throws BadLocationException {
+	public Object addLineHighlight(int line, Color color) throws BadLocationException {
 		int offs = textArea.getLineStartOffset(line);
-		LineHighlightInfo lhi = new LineHighlightInfo(
-						textArea.getDocument().createPosition(offs), color);
+		LineHighlightInfo lhi = new LineHighlightInfo(textArea.getDocument().createPosition(offs), color);
 		if (lineHighlights==null) {
 			lineHighlights = new ArrayList<>(1);
 		}
 		int index = Collections.binarySearch(lineHighlights, lhi, comparator);
-		if (index<0) { // Common case
+		if (index < 0) { // Common case
 			index = -(index+1);
 		}
 		lineHighlights.add(index, lhi);
@@ -185,8 +183,8 @@ class LineHighlightManager {
 	 */
 	private static class LineHighlightInfo {
 
-		private Position offs;
-		private Color color;
+		private final Position offs;
+		private final Color color;
 
 		LineHighlightInfo(Position offs, Color c) {
 			this.offs = offs;

@@ -54,10 +54,10 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 
 	protected FindInFilesDialog dialog;
 	protected File directory;
-	private Set<String> folderNamesToSkip;
+	private final Set<String> folderNamesToSkip;
 
-	private String verboseLabelString;
-	private String errorLabelString;
+	private final String verboseLabelString;
+	private final String errorLabelString;
 	protected String verboseNoFiltMatchString;
 	protected String dontSearchSubfoldersString;
 	protected String skipThisFolderString;
@@ -74,7 +74,6 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	 * @param directory The directory in which to search.
 	 */
 	FindInFilesThread(FindInFilesDialog dialog, File directory) {
-
 		this.dialog = dialog;
 		this.directory = directory;
 
@@ -82,23 +81,24 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 		String[] tempFoldersToSkip = dialog.getSkipFolders();
 		if (tempFoldersToSkip != null) {
 			for (String folderName : tempFoldersToSkip) {
-				if (!OS.get().isCaseSensitive()) {
+				if (!isCaseSensitive()) {
 					folderName = folderName.toLowerCase();
 				}
 				folderNamesToSkip.add(folderName);
 			}
 		}
 
-		verboseLabelString = "<html><em>" + dialog.getString2("VerboseLabel") +
-							"</em>";
-		errorLabelString = "<html><em>" + dialog.getString2("ErrorLabel") +
-							"</em>";
+		verboseLabelString = "<html><em>" + dialog.getString2("VerboseLabel") + "</em>";
+		errorLabelString = "<html><em>" + dialog.getString2("ErrorLabel") + "</em>";
 		verboseNoFiltMatchString = dialog.getString2("VerboseNoFiltMatch");
 		dontSearchSubfoldersString = dialog.getString2("SearchSubFoldUnchecked");
 		skipThisFolderString = dialog.getString2("SkipThisFolder");
 		newFilesToExamineString = dialog.getString2("NewFilesToExamine");
 		occurrencesString = dialog.getString2("Occurrences");
+	}
 
+	private static boolean isCaseSensitive() {
+		return OS.get().isCaseSensitive();
 	}
 
 
@@ -109,8 +109,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 
 
 	protected MatchData createVerboseMatchData(String filePath, String msg) {
-		return new MatchData(filePath, NO_LINE_NUMBER,
-					verboseLabelString + msg, MatchData.TYPE_VERBOSE);
+		return new MatchData(filePath, NO_LINE_NUMBER,verboseLabelString + msg, MatchData.TYPE_VERBOSE);
 	}
 
 
@@ -119,14 +118,13 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	 */
 	@Override
 	public Object construct() {
-
 		RText parent = (RText)dialog.getOwner();
 		AbstractMainView view = parent.getMainView();
 
 		// Get the string to search for and filters for the files to search.
 		String searchString = dialog.getSearchString();
 		Pattern[] filterStrings = getFilterStrings();
-		if (filterStrings==null) {
+		if (filterStrings == null) {
 			dialog.searchCompleted("");
 			return null;
 		}
@@ -134,7 +132,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 		// Then, do the search.
 		dialog.clearSearchResults();
 		File[] files = directory.listFiles();
-		List<File> fileList = new ArrayList<>(Arrays.asList(files));
+		List<File> fileList = files == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(files));
 
 		boolean checkSubfolders = dialog.getCheckSubfolders();
 		boolean matchingLines = dialog.getShowMatchingLines();
@@ -154,8 +152,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 
 		// Keep looping while there are more files to search.
 		int numFiles = fileList.size();
-		for (int i=0; i<numFiles; i++) {
-
+		for (int i = 0; i < numFiles; i++) {
 			// If the user canceled the search...
 			if (Thread.currentThread().isInterrupted()) {
 				dialog.searchCompleted(dialog.getString2("SearchTerminated"));
@@ -172,8 +169,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 				// "In files:", skip it.
 				if (isFilteredOut(temp.getName(), filterStrings)) {
 					if (doVerboseOutput) {
-						MatchData data = createVerboseMatchData(
-								fileFullPath, verboseNoFiltMatchString);
+						MatchData data = createVerboseMatchData(fileFullPath, verboseNoFiltMatchString);
 						dialog.addMatchData(data);
 					}
 					continue;
@@ -215,7 +211,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 				String buffer = textArea.getText();
 
 				// If we got some text out of the file...
-				if (buffer!=null) {
+				if (buffer != null) {
 					try {
 						if (useRegex) {
 							doSearchRegex(buffer, searchString, textArea,
@@ -263,15 +259,13 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 				// Add any files in this subdirectory to the master list
 				// of files to search.
 				List<File> moreFilesList = getFilesFromDirectory(temp);
-				int count = moreFilesList==null ? 0 : moreFilesList.size();
+				int count = moreFilesList.size();
 				if (count>0) {
 					fileList.addAll(moreFilesList);
 					numFiles += count;
 				}
 				if (doVerboseOutput) {
-					MatchData data = createVerboseMatchData(
-						fileFullPath, newFilesToExamineString +
-						": " + count);
+					MatchData data = createVerboseMatchData(fileFullPath, newFilesToExamineString + ": " + count);
 					dialog.addMatchData(data);
 				}
 
@@ -310,7 +304,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 		int numMatches = 0;
 
 		// Loop through all matches in the file.
-		while ((i=buffer.indexOf(searchString, i))!=-1) {
+		while ((i=buffer.indexOf(searchString, i)) != -1) {
 
 			// If we found a match...
 			if (!wholeWord || FindDialog.isWholeWord(buffer, i, len)) {
@@ -321,18 +315,14 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 					int lineEnd;
 					line = map.getElementIndex(i);
 					elem = map.getElement(line);
-					lineEnd = line==lineCount-1 ? elem.getEndOffset()-1 :
-											elem.getEndOffset();
+					lineEnd = line == lineCount-1 ? elem.getEndOffset()-1 : elem.getEndOffset();
 					Token t = textArea.getTokenListForLine(line);
 					lineText = getHtml(t, textArea);
-					dialog.addMatchData(new MatchData(fileFullPath,
-									Integer.toString(line+1), lineText));
+					dialog.addMatchData(new MatchData(fileFullPath, Integer.toString(line+1), lineText));
 					// Since a single line may have more than one match,
 					// skip to the next line's start.
 					i = lineEnd/* + 1*/;
-
-				}
-				else {
+				} else {
 					i += len;
 				}
 
@@ -356,7 +346,6 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 			MatchData data = new MatchData(fileFullPath, NO_LINE_NUMBER, text);
 			dialog.addMatchData(data);
 		}
-
 	}
 
 
@@ -409,12 +398,9 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 					String lineStr = oneLine ? Integer.toString(startLine+1) :
 								((startLine+1) + "-" + (endLine+1));
 					if (!oneLine) {
-						text += " <em>" +
-								dialog.getString2("MultiLineMatch") +
-								"</em>";
+						text += " <em>" + dialog.getString2("MultiLineMatch") + "</em>";
 					}
-					MatchData data = new MatchData(
-										fileFullPath, lineStr, text);
+					MatchData data = new MatchData(fileFullPath, lineStr, text);
 					dialog.addMatchData(data);
 
 				} // End of if (matchingLines)
@@ -425,10 +411,9 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 
 		// If we're only interested in the match count, not individual
 		// matches, add an entry for this file.
-		if (!matchingLines && numMatches>0) {
+		if (!matchingLines && numMatches > 0) {
 			String text = MessageFormat.format(occurrencesString, numMatches);
-			MatchData data = new MatchData(fileFullPath,
-							NO_LINE_NUMBER, text);
+			MatchData data = new MatchData(fileFullPath, NO_LINE_NUMBER, text);
 			dialog.addMatchData(data);
 		}
 
@@ -444,7 +429,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	protected static List<File> getFilesFromDirectory(File dir) {
 		// Get the list of files in this directory.
 		File[] moreFiles = dir.listFiles();
-		if (moreFiles==null) {
+		if (moreFiles == null) {
 			// Should never happen (as dirs return empty arrays).
 			return new ArrayList<>(0);
 		}
@@ -455,16 +440,16 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	protected Pattern[] getFilterStrings() {
 
 		// Get the list of regular expressions to apply when deciding
-		// whether or not to look in a file.  If we're on Windows, or OS X,
+		// whether to look in a file.  If we're on Windows, or OS X,
 		// do case-insensitive regexes.
 		String[] tokens = dialog.getInFilesPatterns();
-		if (tokens==null || tokens.length==0) {
+		if (tokens == null || tokens.length==0) {
 			return null;
 		}
 		int tokenCount = tokens.length;
 		Pattern[] filterStrings = new Pattern[tokenCount];
 		int flags = 0;
-		if (!OS.get().isCaseSensitive()) {
+		if (!isCaseSensitive()) {
 			flags = Pattern.CASE_INSENSITIVE;
 		}
 		try {
@@ -490,7 +475,6 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	 * @return The HTML.
 	 */
 	private static String getHtml(Token t, RSyntaxTextArea textArea) {
-
 		// HTML rendering in Swing is very slow, and we've also seen OOME's
 		// from trying render lines that were too long in the Find in Files
 		// table, so we'll limit how much we display.
@@ -501,7 +485,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 		StringBuilder sb = new StringBuilder("<html><nobr><font face=\"" + fontFamily + "\">");
 		boolean firstNonWhitespace = false; // Skip leading whitespace
 
-		while (t!=null && t.isPaintable() && sb.length()<maxLen) {
+		while (t != null && t.isPaintable() && sb.length()<maxLen) {
 			if (firstNonWhitespace || (firstNonWhitespace |= !t.isWhitespace())) {
 				t.appendHTMLRepresentation(sb, textArea, false);
 			}
@@ -549,8 +533,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	 * @param filters The filters for files to search.
 	 * @return Whether the file is filtered out.
 	 */
-	protected static boolean isFilteredOut(String file,
-										   Pattern[] filters) {
+	protected static boolean isFilteredOut(String file, Pattern[] filters) {
 		for (Pattern filter : filters) {
 			if (filter.matcher(file).matches()) {
 				return false;
@@ -568,7 +551,7 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	 */
 	protected boolean shouldSkipFolder(File folder) {
 		String folderName = folder.getName();
-		if (!OS.get().isCaseSensitive()) {
+		if (!isCaseSensitive()) {
 			folderName = folderName.toLowerCase();
 		}
 		return folderNamesToSkip.contains(folderName);

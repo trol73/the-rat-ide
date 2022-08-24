@@ -7,14 +7,12 @@ import org.fife.ui.dockablewindows.DockableWindowConstants;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.utils.UIUtil;
 import org.fife.ui.widgets.RScrollPane;
-import ru.trolsoft.ide.utils.ProjectUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;

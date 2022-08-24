@@ -274,13 +274,11 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @param line The line to highlight.  This is zero-based.
 	 * @param color The color to highlight the line with.
 	 * @return An opaque tag that can be used to remove the highlight later.
-	 * @throws BadLocationException If <code>line</code> is an invalid line
-	 *         number.
+	 * @throws BadLocationException If <code>line</code> is an invalid line number.
 	 * @see #removeLineHighlight(Object)
 	 * @see #removeAllLineHighlights()
 	 */
-	public Object addLineHighlight(int line, Color color)
-										throws BadLocationException {
+	public Object addLineHighlight(int line, Color color) throws BadLocationException {
 		if (lineHighlightManager==null) {
 			lineHighlightManager = new LineHighlightManager(this);
 		}

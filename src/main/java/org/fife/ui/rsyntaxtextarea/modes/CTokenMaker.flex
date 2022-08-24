@@ -298,6 +298,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	"for" |
 	"goto" |
 	"if" |
+	"inline" |
 	"register" |
 	"sizeof" |
 	"static" |

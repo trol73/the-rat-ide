@@ -59,6 +59,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Timer;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 
@@ -1097,6 +1098,16 @@ public abstract class AbstractMainView extends JPanel
      */
     public RTextEditorPane getCurrentTextArea() {
         return currentTextArea;
+    }
+
+    public RTextEditorPane getTextAreaForFile(String fullPath) {
+        for (int i = 0; i < getNumDocuments(); i++) {
+            RTextEditorPane textArea = getRTextEditorPaneAt(i);
+            if (textArea.getFileFullPath().equals(fullPath)) {
+                return textArea;
+            }
+        }
+        return null;
     }
 
 
@@ -2486,7 +2497,7 @@ public abstract class AbstractMainView extends JPanel
     private String detectFileEncoding(FileLocation loc, String charSet) {
         String path = loc.getFileFullPath();
         Project project = ProjectUtils.getProjectForFile(path, owner);
-        if (project != null && !project.getEncoding().isEmpty()) {
+        if (project != null && project.getEncoding() != null && !project.getEncoding().isEmpty()) {
             charSet = project.getEncoding();
         }
         return filePositionHistory.restoreEncoding(path, charSet);
@@ -4384,7 +4395,9 @@ public abstract class AbstractMainView extends JPanel
     }
 
     public void saveState() {
-        openFileList.save(getOpenFilesListConfigPath());
+        int currentEditorIndex = getSelectedIndex();
+        String currentFilePath = currentEditorIndex >= 0 ? getRTextEditorPaneAt(currentEditorIndex).getFileFullPath() : null;
+        openFileList.save(getOpenFilesListConfigPath(), currentFilePath);
         for (int i = 0; i < getNumDocuments(); i++) {
             filePositionHistory.saveTextArea(getRTextEditorPaneAt(i), getRTextScrollPaneAt(i));
         }
@@ -4394,6 +4407,24 @@ public abstract class AbstractMainView extends JPanel
     public void restoreOpenedFiles() {
         openFileList.load(getOpenFilesListConfigPath());
         filePositionHistory.load(getFilesPositionHistoryConfigPath());
-        openFileList.forEach((name) -> openFile(name, null)); // TODO !!!
+        AtomicInteger selectedTabIndex = new AtomicInteger(-1);
+        AtomicInteger counter = new AtomicInteger(0);
+        openFileList.forEach((name) -> {
+            boolean currentEditor = name.startsWith("*");
+            if (currentEditor) {
+                name = name.substring(1);
+            }
+            if (new File(name).exists()) {
+                if (openFile(name, null)) {
+                    if (currentEditor) {
+                        selectedTabIndex.set(counter.get());
+                    }
+                    counter.incrementAndGet();
+                }
+            }
+        }); // TODO !!!
+        if (selectedTabIndex.get() >= 0) {
+            setSelectedIndex(selectedTabIndex.get());
+        }
     }
 }

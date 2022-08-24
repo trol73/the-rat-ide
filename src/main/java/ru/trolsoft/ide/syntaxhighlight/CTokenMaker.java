@@ -17,7 +17,7 @@ public class CTokenMaker extends org.fife.ui.rsyntaxtextarea.modes.CTokenMaker {
     }
 
     public static void setDevice(String deviceName) {
-        if (deviceName == null || deviceName.equalsIgnoreCase(device)) {
+        if (deviceName == null || "<none>".equals(deviceName) || deviceName.equalsIgnoreCase(device)) {
             return;
         }
         var device = AvrRatDevicesUtils.loadDevice(deviceName);

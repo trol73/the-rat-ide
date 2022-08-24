@@ -17,7 +17,7 @@ public class AssemblerAvrTokenMaker extends org.fife.ui.rsyntaxtextarea.modes.As
     }
 
     public static void setDevice(String deviceName) {
-        if (deviceName == null || deviceName.equalsIgnoreCase(device)) {
+        if (deviceName == null || "<none>".equals(deviceName) || deviceName.equalsIgnoreCase(device)) {
             return;
         }
         var device = AvrRatDevicesUtils.loadDevice(deviceName);

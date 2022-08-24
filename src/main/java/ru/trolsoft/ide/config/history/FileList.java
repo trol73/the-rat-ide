@@ -15,7 +15,7 @@ public class FileList {
     private boolean enabled = true;
 
     public void add(String fileName) {
-        if (enabled && !list.contains(fileName)) {
+        if (enabled && !list.contains(fileName) && !list.contains("*" + fileName)) {
             list.add(fileName);
         }
     }
@@ -36,9 +36,15 @@ public class FileList {
         }
     }
 
-    public void save(String path) {
+    public void save(String path, String currentEditedFilePath) {
         try (FileWriter writer = new FileWriter(path)) {
             for (String s : list) {
+                if (s.startsWith("*")) {
+                    s = s.substring(1);
+                }
+                if (s.equals(currentEditedFilePath)) {
+                    s = "*" + s;
+                }
                 writer.write(s);
                 writer.write('\n');
             }

@@ -248,7 +248,6 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs> extend
      * @see #addPlugin(Plugin)
      */
     public boolean removePlugin(Plugin<?> plugin) {
-
         pluginList.remove(plugin);
 
         // If it's a GUI plugin...
@@ -257,9 +256,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs> extend
             return ((MainContentPanel) mainContentPanel).removePlugin(gp);
         }
 
-        throw new IllegalArgumentException(
-                "Only GUIPlugins are currently supported");
-
+        throw new IllegalArgumentException("Only GUIPlugins are currently supported");
     }
 
 
@@ -274,8 +271,9 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs> extend
     public void setContentPane(Container contentPane) {
         if (contentPane != null && !contentPane.equals(actualContentPane)) {
             MainContentPanel mcp = (MainContentPanel) mainContentPanel;
-            if (actualContentPane != null)
+            if (actualContentPane != null) {
                 mcp.removeContentPanel(actualContentPane);
+            }
             mcp.setContentPanel(contentPane);
         }
     }
@@ -356,7 +354,6 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs> extend
             }
             return success;
         }
-
     }
 
 

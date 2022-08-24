@@ -180,8 +180,6 @@ public class BuildOutputWindow extends DockableWindow implements PropertyChangeL
     }
 
 
-
-
     /**
      * Toggles whether user input should be syntax highlighted.
      *
@@ -213,6 +211,7 @@ public class BuildOutputWindow extends DockableWindow implements PropertyChangeL
         textArea.handleSubmit(cmd);
         textArea.resetPwd();
     }
+
 
     public void execute(BuildTask task) {
         textArea.startTask(task);

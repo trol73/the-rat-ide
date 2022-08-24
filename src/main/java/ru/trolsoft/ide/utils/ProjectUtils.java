@@ -3,10 +3,7 @@ package ru.trolsoft.ide.utils;
 import org.fife.rtext.AbstractMainView;
 import org.fife.rtext.RText;
 import org.fife.rtext.RTextEditorPane;
-import org.fife.rtext.plugins.project.model.FolderProjectEntry;
-import org.fife.rtext.plugins.project.model.Project;
-import org.fife.rtext.plugins.project.model.ProjectEntry;
-import org.fife.rtext.plugins.project.model.Workspace;
+import org.fife.rtext.plugins.project.model.*;
 
 import java.io.File;
 import java.util.Iterator;
@@ -47,6 +44,10 @@ public class ProjectUtils {
             ProjectEntry entry = it.next();
             if (entry instanceof FolderProjectEntry e) {
                 if (filePath.startsWith(e.getFile().getAbsolutePath())) {
+                    return true;
+                }
+            } else if (entry instanceof FileProjectEntry e) {
+                if (filePath.startsWith(e.getFile().getParent())) {
                     return true;
                 }
             }

@@ -103,8 +103,8 @@ class DockableWindowGroup extends JPanel {
 
 
     void focusActiveDockableWindow() {
-        DockableWindow dwind = getDockableWindowAt(tabbedPane.getSelectedIndex());
-        dwind.focused();
+        DockableWindow wind = getDockableWindowAt(tabbedPane.getSelectedIndex());
+        wind.focused();
     }
 
 

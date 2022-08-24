@@ -175,7 +175,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
     /**
      * This panel contains <code>actualContentPane</code>.  This panel is here
      * so that the subclass <code>AbstractPluggableGUIApplication</code> can
-     * also place GUI plugins inside of it.
+     * also place GUI plugins inside it.
      */
     protected JPanel mainContentPanel;
 
@@ -228,7 +228,7 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
         // into, and we have no guarantee that the user's JVM defaults to one
         // of these locales.  RText will remember the locale last selected by
         // the user and use it the next time it starts.
-        setLanguage(prefs == null ? "en" : prefs.language);
+        setLanguage(prefs.language);
         Locale locale;
         String language = getLanguage();
         int underscore = language.indexOf('_');
@@ -318,23 +318,18 @@ public abstract class AbstractGUIApplication<P extends AppPrefs> extends JFrame
         // Set location/appearance properties.
         Toolkit.getDefaultToolkit().setDynamicLayout(true);
         pack();
-        if (prefs != null) {
-            if (prefs.location != null) {
-                setLocation(prefs.location);
-            } else {
-                setLocationRelativeTo(null);
-            }
-            if (prefs.size == null || prefs.size.equals(new Dimension(-1, -1)))
-                setExtendedState(MAXIMIZED_BOTH);
-            else
-                setSize(prefs.size);
-            setToolBarVisible(prefs.toolbarVisible);
-            setStatusBarVisible(prefs.statusBarVisible);
+        if (prefs.location != null) {
+            setLocation(prefs.location);
         } else {
-            setToolBarVisible(true);
-            setStatusBarVisible(true);
             setLocationRelativeTo(null);
         }
+        if (prefs.size == null || prefs.size.equals(new Dimension(-1, -1))) {
+            setExtendedState(MAXIMIZED_BOTH);
+        } else {
+            setSize(prefs.size);
+        }
+        setToolBarVisible(prefs.toolbarVisible);
+        setStatusBarVisible(prefs.statusBarVisible);
 
         applyComponentOrientation(o);
         //System.err.println("Everything else: " + (System.currentTimeMillis()-start));

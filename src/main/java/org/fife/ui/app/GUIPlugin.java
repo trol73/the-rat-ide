@@ -33,7 +33,7 @@ public abstract class GUIPlugin<T extends GUIApplication> extends AbstractPlugin
 	/**
 	 * Map of window ID's to dockable windows.
 	 */
-	private final Map<String, DockableWindow> windowMap;
+	private final Map<String, DockableWindow> windowMap =  new HashMap<>();
 
 
 	/**
@@ -43,7 +43,6 @@ public abstract class GUIPlugin<T extends GUIApplication> extends AbstractPlugin
 	 */
 	public GUIPlugin(T app) {
 		super(app);
-		windowMap = new HashMap<>();
 	}
 
 

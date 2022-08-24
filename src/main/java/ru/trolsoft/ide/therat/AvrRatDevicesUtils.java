@@ -28,6 +28,9 @@ public class AvrRatDevicesUtils {
     }
 
     public static AvrDevice loadDevice(String name) {
+        if ("<none>".equals(name)) {
+            return null;
+        }
         if (devicesCache.containsKey(name)) {
             return devicesCache.get(name);
         }

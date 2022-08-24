@@ -188,7 +188,7 @@ public class FindDialog extends AbstractFindReplaceDialog {
     public void setVisible(boolean visible) {
         if (visible) {
 
-            // Select text entered in the UI
+            // Select text entered the UI
             String text = searchListener.getSelectedText();
             if (text != null) {
                 findTextCombo.addItem(text);

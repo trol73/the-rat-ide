@@ -11,6 +11,8 @@ package org.fife.rtext.plugins.buildoutput;
 
 import org.fife.io.ProcessRunner;
 import org.fife.io.ProcessRunnerOutputListener;
+import org.fife.rtext.AbstractMainView;
+import org.fife.rtext.RTextEditorPane;
 import org.fife.ui.app.console.AbstractConsoleTextArea;
 import org.fife.ui.options.OptionsDialog;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -31,7 +33,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -60,6 +64,8 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
 
     private final List<int[]> filesPositions = new ArrayList<>();
     private final List<String> filesNames = new ArrayList<>();
+
+    private final Map<RTextEditorPane, List<Object>> errorLineHighlighters = new HashMap<>();
 
     private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
     private static final Cursor HAND_CURSOR = new Cursor(Cursor.HAND_CURSOR);
@@ -155,10 +161,20 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         if (!treatAsUserInput) {
             Document doc = getDocument();
             int start = doc.getLength();
-            var parser = new OutputLineParser(text, this::insertStyledStr).parse(style);
+            var parser = new OutputLineParser(plugin.getApplication(), text, this::insertStyledStr).parse(style);
             if (parser.getFilePath() != null) {
                 filesPositions.add(new int[] {start, doc.getLength(), parser.getFileLine(), parser.getFileColumn()});
                 filesNames.add(parser.getFilePath());
+                var editor = getMainView().getTextAreaForFile(parser.getFilePath());
+                if (editor != null) {
+                    try {
+                        var hl = editor.addLineHighlight(parser.getFileLine() - 1, Color.RED);
+                        var list = errorLineHighlighters.computeIfAbsent(editor, k -> new ArrayList<>());
+                        list.add(hl);
+                    } catch (BadLocationException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         } else {
             insertStyledStr(text, style);
@@ -166,6 +182,10 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         if (!treatAsUserInput) {
             inputMinOffs = getCaretPosition();
         }
+    }
+
+    private AbstractMainView getMainView() {
+        return plugin.getApplication().getMainView();
     }
 
     private void insertStyledStr(String text, String style) {
@@ -222,6 +242,14 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
      */
     public void clear() {
         setText("");
+        filesPositions.clear();
+        filesNames.clear();
+        for (var editor : errorLineHighlighters.keySet()) {
+            for (var hl : errorLineHighlighters.get(editor)) {
+                editor.removeLineHighlight(hl);
+            }
+        }
+        errorLineHighlighters.clear();
     }
 
 
@@ -333,17 +361,12 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
     }
 
 
-
-
     /**
      * Handles the submit of text entered by the user.
      *
      * @param text The text entered by the user.
      */
     void handleSubmit(String text) {
-        // Check for a built-in command first
-        //String[] input = text.split("\\s+");
-
         // Ensure our directory wasn't deleted out from under us.
         if (!pwd.isDirectory()) {
             append(plugin.getString("Error.CurrentDirectoryDNE", pwd.getAbsolutePath()), STYLE_STDERR);
@@ -367,6 +390,7 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         setEditable(false);
         startProcess(cmd);
     }
+
 
     private void startProcess(String[] cmd) {
         activeProcessThread = new Thread(() -> {
@@ -438,7 +462,6 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
             UIManager.getLookAndFeel().provideErrorFeedback(this);
             ble.printStackTrace();
         }
-
     }
 
 
@@ -509,7 +532,6 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -548,8 +570,6 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         @Override
         public void actionPerformed(ActionEvent e) {
             clear();
-            filesPositions.clear();
-            filesNames.clear();
         }
     }
 
@@ -765,16 +785,20 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         private void handleMouseEvent(MouseEvent e) {
             if (e.isPopupTrigger()) {
                 showPopupMenu(e);
-            } else if (handFilePath != null) {
+            } else if (handFilePath != null && e.getID() == MouseEvent.MOUSE_CLICKED) {
                 var app = plugin.getApplication();
                 app.openFile(new File(handFilePath), () -> {
-                    var editor = app.getMainView().getCurrentTextArea();
+                    var editor = getMainView().getCurrentTextArea();
                     if (fileLine > 0) {
                         try {
                             if (fileColumn <= 0) {
                                 fileColumn++;
                             }
-                            editor.setCaretPosition(editor.getLineStartOffset(fileLine - 1) + fileColumn - 1);
+                            int pos = editor.getLineStartOffset(fileLine - 1) + fileColumn - 1;
+                            SwingUtilities.invokeLater(() -> {
+                                editor.setCaretPosition(pos);
+                                SwingUtilities.invokeLater(() -> editor.setCaretPosition(pos));
+                            });
                         } catch (BadLocationException ex) {
                             ex.printStackTrace();
                         }
@@ -934,6 +958,10 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
                         text = sw.toString();
                     }
                     append(text, STYLE_EXCEPTION);
+                } else if (rc == 0) {
+                    append("Done", STYLE_PROMPT);
+                } else {
+                    append("Exit code: " + rc, STYLE_PROMPT);
                 }
                 // Not really necessary, should allow GC of Process resources
                 activeProcessThread = null;

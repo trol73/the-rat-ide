@@ -1,6 +1,8 @@
 package org.fife.rtext.plugins.buildoutput;
 
 
+import org.fife.rtext.RText;
+import ru.trolsoft.ide.utils.ProjectUtils;
 import ru.trolsoft.ide.utils.StringUtils;
 
 import java.io.File;
@@ -26,9 +28,12 @@ public class OutputLineParser {
     private int fileLine = -1;
     private int fileColumn = -1;
 
-    public OutputLineParser(String text, Handler handler) {
+    private RText rText;
+
+    public OutputLineParser(RText rText, String text, Handler handler) {
         this.text = text;
         this.handler = handler;
+        this.rText = rText;
         this.tokenizer = new StringTokenizer(text, ":", true);
     }
 
@@ -39,6 +44,10 @@ public class OutputLineParser {
             if (isFilePath(part.trim())) {
                 handle(part, BuildOutputTextArea.STYLE_FILE);
                 filePath = part.trim();
+                afterFile = true;
+            } else if (isCurrentProjectSource(part.trim())) {
+                handle(part, BuildOutputTextArea.STYLE_FILE);
+                filePath = filePathWithCurrentProjectFolder(part.trim());
                 afterFile = true;
             } else if (":".equals(part)) {
                 String newStyle = style;
@@ -83,6 +92,27 @@ public class OutputLineParser {
         return this;
     }
 
+    private String filePathWithCurrentProjectFolder(String name) {
+        var project = ProjectUtils.getProjectForCurrentFile(rText);
+        if (project == null) {
+            return null;
+        }
+        var folder = ProjectUtils.projectGetFirstFolder(project);
+        if (folder.isEmpty()) {
+            return null;
+        }
+        var fullPath = folder.get().getAbsolutePath() + File.separatorChar + name;
+        //return new File(fullPath).exists() ? fullPath : null;
+        if (new File(fullPath).exists()) {
+            return fullPath;
+        }
+        fullPath = folder.get().getParent() + File.separatorChar + name;
+        if (new File(fullPath).exists()) {
+            return fullPath;
+        }
+        return null;
+    }
+
     private void handle(String text, String style) {
         if (handler != null) {
             handler.handle(text, style);
@@ -118,5 +148,12 @@ public class OutputLineParser {
         }
         File file = new File(s);
         return file.exists() && file.isFile();
+    }
+
+    private boolean isCurrentProjectSource(String s) {
+        if (s.contains(" ") || !(s.endsWith(".c") || s.endsWith(".cpp"))) {
+             return false;
+        }
+        return true;
     }
 }
