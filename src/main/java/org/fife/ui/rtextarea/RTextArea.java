@@ -110,7 +110,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public static final int REDO_ACTION				= 4;
 	public static final int SELECT_ALL_ACTION		= 5;
 	public static final int UNDO_ACTION				= 6;
-	private static final int MAX_ACTION_CONSTANT	= 6;
+	public static final int DELETE_LINE_ACTION		= 7;
+	private static final int MAX_ACTION_CONSTANT	= 7;
 
 	private static final Color DEFAULT_MARK_ALL_COLOR = new Color(0xffc800);
 
@@ -159,6 +160,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	private static RecordableTextAction undoAction;
 	private static RecordableTextAction redoAction;
 	private static RecordableTextAction selectAllAction;
+
+	private static RecordableTextAction deleteCurrentLineAction;
 
 	private static IconGroup iconGroup;		// Info on icons for actions.
 
@@ -279,7 +282,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #removeAllLineHighlights()
 	 */
 	public Object addLineHighlight(int line, Color color) throws BadLocationException {
-		if (lineHighlightManager==null) {
+		if (lineHighlightManager == null) {
 			lineHighlightManager = new LineHighlightManager(this);
 		}
 		return lineHighlightManager.addLineHighlight(line, color);
@@ -438,13 +441,13 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 */
 	protected JPopupMenu createPopupMenu() {
 		JPopupMenu menu = new JPopupMenu();
-		menu.add(undoMenuItem = createPopupMenuItem(undoAction));
-		menu.add(redoMenuItem = createPopupMenuItem(redoAction));
+		undoMenuItem = menu.add(createPopupMenuItem(undoAction));
+		redoMenuItem = menu.add(createPopupMenuItem(redoAction));
 		menu.addSeparator();
-		menu.add(cutMenuItem = createPopupMenuItem(cutAction));
+		cutMenuItem = menu.add(createPopupMenuItem(cutAction));
 		menu.add(createPopupMenuItem(copyAction));
-		menu.add(pasteMenuItem = createPopupMenuItem(pasteAction));
-		menu.add(deleteMenuItem = createPopupMenuItem(deleteAction));
+		pasteMenuItem = menu.add(createPopupMenuItem(pasteAction));
+		deleteMenuItem = menu.add(createPopupMenuItem(deleteAction));
 		menu.addSeparator();
 		menu.add(createPopupMenuItem(selectAllAction));
 		return menu;
@@ -481,11 +484,13 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		undoAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod));
 		redoAction = new RTextAreaEditorKit.RedoAction();
 		redoAction.setProperties(msg, "Action.Redo");
-		redoAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod));
+		redoAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod | Event.SHIFT_MASK));
 		selectAllAction = new RTextAreaEditorKit.SelectAllAction();
 		selectAllAction.setProperties(msg, "Action.SelectAll");
 		selectAllAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, mod));
-
+		deleteCurrentLineAction = new RTextAreaEditorKit.DeleteLineAction();
+		deleteCurrentLineAction.setProperties(msg, "Action.DeleteLine");
+		deleteCurrentLineAction.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod));
 	}
 
 
@@ -674,6 +679,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 				return selectAllAction;
 			case UNDO_ACTION:
 				return undoAction;
+			case DELETE_LINE_ACTION:
+				return deleteCurrentLineAction;
 		}
 		return null;
 	}
@@ -916,9 +923,9 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	/**
-	 * Returns whether or not a macro is being recorded.
+	 * Returns whether a macro is being recorded.
 	 *
-	 * @return Whether or not a macro is being recorded.
+	 * @return Whether a macro is being recorded.
 	 * @see #beginRecordingMacro()
 	 * @see #endRecordingMacro()
 	 */
@@ -1158,7 +1165,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	 * @see #addLineHighlight(int, Color)
 	 */
 	public void removeLineHighlight(Object tag) {
-		if (lineHighlightManager!=null) {
+		if (lineHighlightManager != null) {
 			lineHighlightManager.removeLineHighlight(tag);
 		}
 	}
@@ -1280,7 +1287,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 
 
 	private static StringBuilder repTabsSB;
-	private static Segment repTabsSeg = new Segment();
+	private static final Segment repTabsSeg = new Segment();
 	/**
 	 * Replaces all instances of the tab character in <code>text</code> with
 	 * the number of spaces equivalent to a tab in this text area.<p>
@@ -1413,6 +1420,8 @@ public class RTextArea extends RTextAreaBase implements Printable {
 			case SELECT_ALL_ACTION:
 				tempAction = selectAllAction;
 				break;
+			case DELETE_LINE_ACTION:
+				tempAction = deleteCurrentLineAction;
 			case UNDO_ACTION:
 			case REDO_ACTION:
 			default:
@@ -1423,7 +1432,6 @@ public class RTextArea extends RTextAreaBase implements Printable {
 		tempAction.putValue(Action.SHORT_DESCRIPTION, name);
 		tempAction.putValue(Action.ACCELERATOR_KEY, accelerator);
 		tempAction.putValue(Action.MNEMONIC_KEY, mnemonic);
-
 	}
 
 
@@ -1563,8 +1571,7 @@ public class RTextArea extends RTextAreaBase implements Printable {
 	public void setMarkAllOnOccurrenceSearches(boolean markAll) {
 		if (markAll != markAllOnOccurrenceSearches) {
 			markAllOnOccurrenceSearches = markAll;
-			firePropertyChange(MARK_ALL_ON_OCCURRENCE_SEARCHES_PROPERTY,
-					!markAll, markAll);
+			firePropertyChange(MARK_ALL_ON_OCCURRENCE_SEARCHES_PROPERTY, !markAll, markAll);
 		}
 	}
 

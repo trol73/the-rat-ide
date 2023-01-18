@@ -23,7 +23,7 @@ package org.fife.ui.autocomplete;
  */
 public class BasicCompletion extends AbstractCompletion {
 
-	private String replacementText;
+	private final String replacementText;
 	private String shortDesc;
 	private String summary;
 
@@ -47,8 +47,7 @@ public class BasicCompletion extends AbstractCompletion {
 	 * @param shortDesc A short description of the completion.  This will be
 	 *        displayed in the completion list.  This may be <code>null</code>.
 	 */
-	public BasicCompletion(CompletionProvider provider, String replacementText,
-							String shortDesc) {
+	public BasicCompletion(CompletionProvider provider, String replacementText, String shortDesc) {
 		this(provider, replacementText, shortDesc, null);
 	}
 

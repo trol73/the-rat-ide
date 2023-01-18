@@ -40,6 +40,7 @@ import ru.trolsoft.ide.utils.ProjectUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.CaretListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -3288,9 +3289,7 @@ public abstract class AbstractMainView extends JPanel
      */
     protected void setCurrentTextArea(RTextEditorPane textArea) {
         currentTextArea = textArea;
-        if (currentTextArea != null) {
-            currentTextArea.addCaretListener(new IdeCaretListener(textArea, owner));
-        }
+        setupCaretListener(textArea);
 
         updateStatusBarOnEditorChange();
 
@@ -3306,6 +3305,18 @@ public abstract class AbstractMainView extends JPanel
 //		currentTextArea.addCaretListener();
 //		currentTextArea.removeCaretListener();
 
+    }
+
+    private void setupCaretListener(RTextEditorPane textArea) {
+        if (currentTextArea != null) {
+            CaretListener[] listeners = currentTextArea.getCaretListeners();
+            for (CaretListener l : listeners) {
+                if (l instanceof IdeCaretListener) {
+                    currentTextArea.removeCaretListener(l);
+                }
+            }
+            currentTextArea.addCaretListener(new IdeCaretListener(textArea, owner));
+        }
     }
 
     private void updateStatusBarOnEditorChange() {

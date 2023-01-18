@@ -40,8 +40,7 @@ public interface Completion extends Comparable<Completion> {
 
 
 	/**
-	 * Compares this completion to another one lexicographically, ignoring
-	 * case.
+	 * Compares this completion to another one lexicographically, ignoring case.
 	 *
 	 * @param other Another completion instance.
 	 * @return How this completion compares to the other one.
@@ -78,8 +77,7 @@ public interface Completion extends Comparable<Completion> {
 	 * a way to implement shorthand, for example, "<code>sysout</code>" mapping
 	 * to "<code>System.out.println(</code>").
 	 *
-	 * @return The text the user has to (start) typing for this completion to
-	 *         be offered.
+	 * @return The text the user has to (start) typing for this completion to be offered.
 	 * @see #getReplacementText()
 	 */
 	String getInputText();
@@ -126,8 +124,7 @@ public interface Completion extends Comparable<Completion> {
 	 * used in a popup "description window."
 	 *
 	 * @return This item's description.  This should be HTML.  It may be
-	 *         <code>null</code> if there is no description for this
-	 *         completion.
+	 *         <code>null</code> if there is no description for this completion.
 	 */
 	String getSummary();
 
@@ -145,8 +142,7 @@ public interface Completion extends Comparable<Completion> {
 	 * calls into
 	 * {@link CompletionProvider#getCompletionsAt(JTextComponent, java.awt.Point)}.
 	 *
-	 * @return The tool tip text for this completion, or <code>null</code> if
-	 *         none.
+	 * @return The tool tip text for this completion, or <code>null</code> if none.
 	 */
 	String getToolTipText();
 

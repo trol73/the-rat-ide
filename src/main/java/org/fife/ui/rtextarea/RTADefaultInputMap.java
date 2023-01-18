@@ -8,6 +8,7 @@
  */
 package org.fife.ui.rtextarea;
 
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -116,7 +117,8 @@ public class RTADefaultInputMap extends InputMap {
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, defaultModifier),		RTextAreaEditorKit.rtaDumbCompleteWordAction);
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,      defaultModifier),			RTextAreaEditorKit.rtaUndoAction);
-		put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,      defaultModifier),			RTextAreaEditorKit.rtaRedoAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,      defaultModifier | Event.SHIFT_MASK),			RTextAreaEditorKit.rtaRedoAction);
+		put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,      defaultModifier),			RTextAreaEditorKit.rtaDeleteLineAction);
 
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		0),							RTextAreaEditorKit.rtaNextBookmarkAction);
 		put(KeyStroke.getKeyStroke(KeyEvent.VK_F2,		shift),						RTextAreaEditorKit.rtaPrevBookmarkAction);

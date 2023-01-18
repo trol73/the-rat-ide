@@ -26,8 +26,7 @@ import javax.swing.text.JTextComponent;
  * @author Robert Futrell
  * @version 1.0
  */
-public abstract class AbstractCompletionProvider
-								extends CompletionProviderBase {
+public abstract class AbstractCompletionProvider extends CompletionProviderBase {
 
 	/**
 	 * The completions this provider is aware of.  Subclasses should ensure
@@ -72,8 +71,7 @@ public abstract class AbstractCompletionProvider
 	/**
 	 * Adds {@link Completion}s to this provider.
 	 *
-	 * @param completions The completions to add.  This cannot be
-	 *        <code>null</code>.
+	 * @param completions The completions to add.  This cannot be <code>null</code>.
 	 * @throws IllegalArgumentException If a completion's provider isn't
 	 *         this {@code CompletionProvider}.
 	 * @see #addCompletion(Completion)
@@ -96,7 +94,7 @@ public abstract class AbstractCompletionProvider
 	 * @see BasicCompletion
 	 */
 	protected void addWordCompletions(String[] words) {
-		int count = words==null ? 0 : words.length;
+		int count = words == null ? 0 : words.length;
 		for (int i=0; i<count; i++) {
 			completions.add(new BasicCompletion(this, words[i]));
 		}
@@ -135,17 +133,15 @@ public abstract class AbstractCompletionProvider
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Completion> getCompletionByInputText(String inputText) {
-
 		// Find any entry that matches this input text (there may be > 1).
 		int end = Collections.binarySearch(completions, inputText, comparator);
-		if (end<0) {
+		if (end < 0) {
 			return null;
 		}
 
 		// There might be multiple entries with the same input text.
 		int start = end;
-		while (start>0 &&
-				comparator.compare(completions.get(start-1), inputText)==0) {
+		while (start > 0 && comparator.compare(completions.get(start-1), inputText) == 0) {
 			start--;
 		}
 		int count = completions.size();
@@ -153,7 +149,6 @@ public abstract class AbstractCompletionProvider
 				comparator.compare(completions.get(end), inputText)==0);
 
 		return completions.subList(start, end); // (inclusive, exclusive)
-
 	}
 
 
@@ -163,44 +158,39 @@ public abstract class AbstractCompletionProvider
 	@Override
 	@SuppressWarnings("unchecked")
 	protected List<Completion> getCompletionsImpl(JTextComponent comp) {
-
 		List<Completion> retVal = new ArrayList<>();
 		String text = getAlreadyEnteredText(comp);
 
-		if (text!=null) {
-
-			int index = Collections.binarySearch(completions, text, comparator);
-			if (index<0) { // No exact match
-				index = -index - 1;
-			}
-			else {
-				// If there are several overloads for the function being
-				// completed, Collections.binarySearch() will return the index
-				// of one of those overloads, but we must return all of them,
-				// so search backward until we find the first one.
-				int pos = index - 1;
-				while (pos>0 &&
-						comparator.compare(completions.get(pos), text)==0) {
-					retVal.add(completions.get(pos));
-					pos--;
-				}
-			}
-
-			while (index<completions.size()) {
-				Completion c = completions.get(index);
-				if (Util.startsWithIgnoreCase(c.getInputText(), text)) {
-					retVal.add(c);
-					index++;
-				}
-				else {
-					break;
-				}
-			}
-
+		if (text == null) {
+			return retVal;
 		}
 
-		return retVal;
+		int index = Collections.binarySearch(completions, text, comparator);
+		if (index<0) { // No exact match
+			index = -index - 1;
+		} else {
+			// If there are several overloads for the function being
+			// completed, Collections.binarySearch() will return the index
+			// of one of those overloads, but we must return all of them,
+			// so search backward until we find the first one.
+			int pos = index - 1;
+			while (pos>0 &&
+					comparator.compare(completions.get(pos), text)==0) {
+				retVal.add(completions.get(pos));
+				pos--;
+			}
+		}
 
+		while (index < completions.size()) {
+			Completion c = completions.get(index);
+			if (Util.startsWithIgnoreCase(c.getInputText(), text)) {
+				retVal.add(c);
+				index++;
+			} else {
+				break;
+			}
+		}
+		return retVal;
 	}
 
 
@@ -231,8 +221,7 @@ public abstract class AbstractCompletionProvider
 	 * against a String lexicographically, ignoring case.
 	 */
 	@SuppressWarnings("rawtypes")
-	public static class CaseInsensitiveComparator implements Comparator,
-														Serializable {
+	public static class CaseInsensitiveComparator implements Comparator, Serializable {
 
 		@Override
 		public int compare(Object o1, Object o2) {

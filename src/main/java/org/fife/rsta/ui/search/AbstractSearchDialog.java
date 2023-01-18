@@ -405,7 +405,6 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 
 
 	private void init() {
-
 		// The user should set a shared instance between all subclass
 		// instances, but to be safe we set individual ones.
 		contextListener = new SearchContextListener();
@@ -438,7 +437,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 
 
 	protected boolean matchesSearchFor(String text) {
-		if (text==null || text.length()==0) {
+		if (text==null || text.isEmpty()) {
 			return false;
 		}
 		String searchFor = findTextCombo.getSelectedString();
@@ -528,7 +527,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * (which should practically be never).
 	 */
 	protected void refreshUIFromContext() {
-		if (this.caseCheckBox==null) {
+		if (this.caseCheckBox == null) {
 			return; // First time through, UI not realized yet
 		}
 		this.caseCheckBox.setSelected(context.getMatchCase());

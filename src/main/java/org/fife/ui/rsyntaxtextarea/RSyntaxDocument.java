@@ -48,8 +48,7 @@ import org.fife.util.DynamicIntArray;
  * @author Robert Futrell
  * @version 1.0
  */
-public class RSyntaxDocument extends RDocument implements Iterable<Token>,
-		SyntaxConstants {
+public class RSyntaxDocument extends RDocument implements Iterable<Token>, SyntaxConstants {
 
 	/**
 	 * Creates a {@link TokenMaker} appropriate for a given programming
@@ -130,7 +129,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 */
 	@Override
 	protected void fireInsertUpdate(DocumentEvent e) {
-
 		cachedTokenList = null;
 
 		/*
@@ -146,12 +144,10 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		int numLines = lineMap.getElementCount();
 		int line = lineMap.getElementIndex(e.getOffset());
 		int previousLine = line - 1;
-		int previousTokenType = (previousLine>-1 ?
-					lastTokensOnLines.get(previousLine) : Token.NULL);
+		int previousTokenType = (previousLine>-1 ? lastTokensOnLines.get(previousLine) : Token.NULL);
 
 		// If entire lines were added...
-		if (added!=null && added.length>0) {
-
+		if (added != null && added.length > 0) {
 			Element[] removed = change.getChildrenRemoved();
 			int numRemoved = removed!=null ? removed.length : 0;
 
@@ -177,15 +173,12 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 		// Otherwise, text was inserted on a single line...
 		else {
-
 			// Update last tokens for lines below until they stop changing.
 			updateLastTokensBelow(line, numLines, previousTokenType);
-
 		} // End of else.
 
 		// Let all listeners know about the insertion.
 		super.fireInsertUpdate(e);
-
 	}
 
 
@@ -205,7 +198,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 */
 	@Override
 	protected void fireRemoveUpdate(DocumentEvent chng) {
-
 		cachedTokenList =  null;
 		Element lineMap = getDefaultRootElement();
 		int numLines = lineMap.getElementCount();
@@ -214,7 +206,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		Element[] removed = change==null ? null : change.getChildrenRemoved();
 
 		// If entire lines were removed...
-		if (removed!=null && removed.length>0) {
+		if (removed != null && removed.length > 0) {
 
 			int line = change.getIndex();	// First line entirely removed.
 			int previousLine = line - 1;	// Line before that.
@@ -239,24 +231,20 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 		// Otherwise, text was removed from just one line...
 		else {
-
 			int line = lineMap.getElementIndex(chng.getOffset());
 			if (line>=lastTokensOnLines.getSize()) {
 				return;	// If we're editing the last line in a document...
 			}
 
 			int previousLine = line - 1;
-			int previousTokenType = (previousLine>-1 ?
-					lastTokensOnLines.get(previousLine) : Token.NULL);
+			int previousTokenType = (previousLine>-1 ? lastTokensOnLines.get(previousLine) : Token.NULL);
 			//System.err.println("previousTokenType for line : " + previousLine + " is " + previousTokenType);
 			// Update last tokens for lines below until they've stopped changing.
 			updateLastTokensBelow(line, numLines, previousTokenType);
-
 		}
 
 		// Let all of our listeners know about the removal.
 		super.fireRemoveUpdate(chng);
-
 	}
 
 
@@ -330,8 +318,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * Returns the text to place at the beginning and end of a
 	 * line to "comment" it in this programming language.
 	 *
-	 * @param languageIndex The language index to get comment information
-	 *        for.
+	 * @param languageIndex The language index to get comment information for.
 	 * @return The start and end strings to add to a line to "comment"
 	 *         it out.  A <code>null</code> value for either means there
 	 *         is no string to add for that part.  A value of
@@ -348,8 +335,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * occurrences" enabled for the current programming language.
 	 *
 	 * @param type The token type.
-	 * @return Whether tokens of this type should have "mark occurrences"
-	 *         enabled.
+	 * @return Whether tokens of this type should have "mark occurrences" enabled.
 	 */
 	boolean getMarkOccurrencesOfTokenType(int type) {
 		return tokenMaker.getMarkOccurrencesOfTokenType(type);
@@ -402,7 +388,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * @return A token list representing the specified line.
 	 */
 	public final Token getTokenListForLine(int line) {
-
 		tokenRetrievalCount++;
 		if (line==lastLine && cachedTokenList!=null) {
 			if (DEBUG_TOKEN_CACHING) {
@@ -426,19 +411,17 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 			ble.printStackTrace();
 			return null;
 		}
-		int initialTokenType = line==0 ? Token.NULL :
-								getLastTokenTypeOnLine(line-1);
+		int initialTokenType = line == 0 ? Token.NULL : getLastTokenTypeOnLine(line-1);
 
 		//return tokenMaker.getTokenList(s, initialTokenType, startOffset);
 		cachedTokenList = tokenMaker.getTokenList(s, initialTokenType, startOffset);
 		return cachedTokenList;
-
 	}
 
 
 	boolean insertBreakSpecialHandling(ActionEvent e) {
 		Action a = tokenMaker.getInsertBreakAction();
-		if (a!=null) {
+		if (a != null) {
 			a.actionPerformed(e);
 			return true;
 		}
@@ -483,9 +466,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * @throws ClassNotFoundException If an unexpected error occurs.
 	 * @throws IOException If an IO error occurs.
 	 */
-	private void readObject(ObjectInputStream in)
-						throws ClassNotFoundException, IOException {
-
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		in.defaultReadObject();
 
 		// Install default TokenMakerFactory.  To support custom TokenMakers,
@@ -498,7 +479,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		int lineCount = getDefaultRootElement().getElementCount();
 		lastTokensOnLines = new DynamicIntArray(lineCount);
 		setSyntaxStyle(syntaxStyle); // Actually install (transient) TokenMaker
-
 	}
 
 
@@ -510,7 +490,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * @param line The line number you want to get.
 	 */
 	private void setSharedSegment(int line) {
-
 		Element map = getDefaultRootElement();
 		//int numLines = map.getElementCount();
 
@@ -525,10 +504,8 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		try {
 			getText(startOffset, endOffset-startOffset, s);
 		} catch (BadLocationException ble) {
-			throw new InternalError("Text range not in document: " +
-								startOffset + "-" + endOffset);
+			throw new InternalError("Text range not in document: " + startOffset + "-" + endOffset);
 		}
-
 	}
 
 
@@ -575,7 +552,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 *        this is <code>null</code>, a default factory is used.
 	 */
 	public void setTokenMakerFactory(TokenMakerFactory tmf) {
-		tokenMakerFactory = tmf!=null ? tmf :
+		tokenMakerFactory = tmf != null ? tmf :
 			TokenMakerFactory.getDefaultInstance();
 	}
 
@@ -593,7 +570,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * @return The last line that needs repainting.
 	 */
 	private int updateLastTokensBelow(int line, int numLines, int previousTokenType) {
-
 		int firstLine = line;
 
 		// Loop through all lines past our starting point.  Update even the last
@@ -644,7 +620,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 		}
 
 		return line;
-
 	}
 
 
@@ -656,7 +631,6 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 	 * This is called internally whenever the syntax style changes.
 	 */
 	private void updateSyntaxHighlightingInformation() {
-
 		// Reinitialize the "last token on each line" array.  Note that since
 		// the actual text in the document isn't changing, the number of lines
 		// is the same.

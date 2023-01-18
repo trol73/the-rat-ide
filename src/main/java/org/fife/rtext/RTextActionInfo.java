@@ -76,6 +76,7 @@ public interface RTextActionInfo {
 	String BUILD_ACTION             = "buildAction";
 	String CODE_LISTING_ACTION      = "codeListingAction";
 	String UPLOAD_ACTION            = "uploadAction";
+	String SWITCH_SOURCE_HEADER_ACTION = "switchSourceHeaderAction";
 
 	String[] ACTION_NAMES = {
 		NEW_ACTION,
@@ -128,6 +129,7 @@ public interface RTextActionInfo {
 		VIEW_SPLIT_VERT_ACTION,
 		BUILD_ACTION,
 		CODE_LISTING_ACTION,
-		UPLOAD_ACTION
+		UPLOAD_ACTION,
+		SWITCH_SOURCE_HEADER_ACTION
 	};
 }

@@ -507,7 +507,7 @@ public class RTextAreaUI extends BasicTextAreaUI {
 	 */
 	protected void paintLineHighlights(Graphics g) {
 		LineHighlightManager lhm = textArea.getLineHighlightManager();
-		if (lhm!=null) {
+		if (lhm != null) {
 			lhm.paintLineHighlights(g);
 		}
 	}

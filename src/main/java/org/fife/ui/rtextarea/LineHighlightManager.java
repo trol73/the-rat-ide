@@ -25,9 +25,9 @@ import javax.swing.text.Position;
  */
 class LineHighlightManager {
 
-	private RTextArea textArea;
+	private final RTextArea textArea;
 	private List<LineHighlightInfo> lineHighlights;
-	private LineHighlightInfoComparator comparator;
+	private final LineHighlightInfoComparator comparator;
 
 	/**
 	 * Constructor.
@@ -107,14 +107,13 @@ class LineHighlightManager {
 				for (int i=0; i<count; i++) {
 					LineHighlightInfo lhi = lineHighlights.get(i);
 					int offs = lhi.getOffset();
-					if (offs>=0 && offs<=docLen) {
+					if (offs >= 0 && offs <= docLen) {
 						int y = textArea.yForLineContaining(offs);
-						if (y>vr.y-lineHeight) {
-							if (y<vr.y+vr.height) {
+						if (y > vr.y-lineHeight) {
+							if (y < vr.y+vr.height) {
 								g.setColor(lhi.getColor());
-								g.fillRect(0,y, textArea.getWidth(),lineHeight);
-							}
-							else {
+								g.fillRect(0, y, textArea.getWidth(), lineHeight);
+							} else {
 								break; // Out of visible rect
 							}
 						}

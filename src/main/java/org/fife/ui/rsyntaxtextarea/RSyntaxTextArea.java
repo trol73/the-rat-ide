@@ -589,12 +589,10 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	protected void configurePopupMenu(JPopupMenu popupMenu) {
-
 		super.configurePopupMenu(popupMenu);
 
 		// They may have overridden createPopupMenu()...
-		if (popupMenu!=null && popupMenu.getComponentCount()>0 &&
-				foldingMenu!=null) {
+		if (popupMenu != null && popupMenu.getComponentCount() > 0 && foldingMenu != null) {
 			foldingMenu.setEnabled(foldManager.
 						isCodeFoldingSupportedAndEnabled());
 		}
@@ -636,7 +634,6 @@ private boolean fractionalFontMetricsEnabled;
 	 * @see #copyAsStyledText(Theme)
 	 */
 	public void copyAsStyledText() {
-
 		int selStart = getSelectionStart();
 		int selEnd = getSelectionEnd();
 		if (selStart==selEnd) {
@@ -2029,7 +2026,6 @@ private boolean fractionalFontMetricsEnabled;
 
 		setRightHandSideCorrection(0);
 		setShowMatchedBracketPopup(true);
-
 	}
 
 
@@ -2121,7 +2117,6 @@ private boolean fractionalFontMetricsEnabled;
 	 */
 	@Override
 	protected void paintComponent(Graphics g) {
-
 		// A call to refreshFontMetrics() used to be in addNotify(), but
 		// unfortunately we cannot always get the graphics context there.  If
 		// the parent frame/dialog is LAF-decorated, there is a chance that the

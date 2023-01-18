@@ -101,7 +101,7 @@ public class SearchContext implements Cloneable, Serializable {
 		this.matchCase = matchCase;
 		markAll = true;
 		forward = true;
-		wrap = false;
+		wrap = true;
 	}
 
 

@@ -29,8 +29,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
  */
 public class LanguageSupportFactory implements PropertyChangeListener {
 
-	private static final LanguageSupportFactory INSTANCE =
-										new LanguageSupportFactory();
+	private static final LanguageSupportFactory INSTANCE = new LanguageSupportFactory();
 
 	/**
 	 * Maps styles to class-names-for-language-supports; this way we can lazily
@@ -48,8 +47,7 @@ public class LanguageSupportFactory implements PropertyChangeListener {
 	 * Client property set on RSyntaxTextAreas that points to the current
 	 * language support for that text area.
 	 */
-	private static final String LANGUAGE_SUPPORT_PROPERTY =
-									"org.fife.rsta.ac.LanguageSupport";
+	private static final String LANGUAGE_SUPPORT_PROPERTY = "org.fife.rsta.ac.LanguageSupport";
 
 
 	/**
@@ -78,7 +76,6 @@ public class LanguageSupportFactory implements PropertyChangeListener {
 	 * Creates the mapping of syntax styles to language supports.
 	 */
 	private void createSupportMap() {
-
 		styleToSupport = new HashMap<>();
 		styleToSupportClass = new HashMap<>();
 
@@ -138,9 +135,9 @@ public class LanguageSupportFactory implements PropertyChangeListener {
 
 		LanguageSupport support = styleToSupport.get(style);
 
-		if (support==null) {
+		if (support == null) {
 			String supportClazz = styleToSupportClass.get(style);
-			if (supportClazz!=null) {
+			if (supportClazz != null) {
 				try {
 					Class<?> clazz = Class.forName(supportClazz);
 					support = (LanguageSupport)clazz.newInstance();
@@ -156,7 +153,6 @@ public class LanguageSupportFactory implements PropertyChangeListener {
 		}
 
 		return support;
-
 	}
 
 
@@ -169,7 +165,7 @@ public class LanguageSupportFactory implements PropertyChangeListener {
 	private void installSupport(RSyntaxTextArea textArea) {
 		String style = textArea.getSyntaxEditingStyle();
 		LanguageSupport support = getSupportFor(style);
-		if (support!=null) {
+		if (support != null) {
 			support.install(textArea);
 		}
 		textArea.putClientProperty(LANGUAGE_SUPPORT_PROPERTY, support);
@@ -184,7 +180,6 @@ public class LanguageSupportFactory implements PropertyChangeListener {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-
 		RSyntaxTextArea source = (RSyntaxTextArea)e.getSource();
 		String name = e.getPropertyName();
 		if (RSyntaxTextArea.SYNTAX_STYLE_PROPERTY.equals(name)) {
@@ -205,8 +200,7 @@ public class LanguageSupportFactory implements PropertyChangeListener {
 	 */
 	public void register(RSyntaxTextArea textArea) {
 		installSupport(textArea);
-		textArea.addPropertyChangeListener(
-				RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, this);
+		textArea.addPropertyChangeListener(RSyntaxTextArea.SYNTAX_STYLE_PROPERTY, this);
 	}
 
 

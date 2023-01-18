@@ -876,13 +876,11 @@ public class RTextAreaEditorKit extends DefaultEditorKit {
 	public static class DeleteLineAction extends RecordableTextAction {
 
 		public DeleteLineAction() {
-			super(RTextAreaEditorKit.rtaDeleteLineAction, null, null, null,
-						null);
+			super(RTextAreaEditorKit.rtaDeleteLineAction, null, null, null,null);
 		}
 
 		@Override
 		public void actionPerformedImpl(ActionEvent e, RTextArea textArea) {
-
 			if (!textArea.isEditable() || !textArea.isEnabled()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 				return;
@@ -2375,7 +2373,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 	 */
 	public static class ScrollAction extends RecordableTextAction {
 
-		private int delta;
+		private final int delta;
 
 		public ScrollAction(String name, int delta) {
 			super(name);
@@ -2445,7 +2443,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 	 */
 	public static class SelectLineAction extends RecordableTextAction {
 
-		private Action end;
+		private final Action end;
 
 		public SelectLineAction() {
 			super(selectLineAction);
@@ -2747,7 +2745,7 @@ searchOffs = Math.max(lastWordStart - 1, 0);
 	public static class VerticalPageAction extends RecordableTextAction {
 
 		private boolean select;
-		private int direction;
+		private final int direction;
 
 		public VerticalPageAction(String name, int direction, boolean select) {
 			super(name);

@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 public abstract class BuildTask {
-    abstract public void run() throws Exception;
+    public abstract void run() throws Exception;
 
     private ProcessRunnerOutputListener listener;
     private boolean finished = false;

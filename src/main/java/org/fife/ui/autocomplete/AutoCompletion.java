@@ -155,8 +155,7 @@ public class AutoCompletion {
 	private KeyStroke trigger;
 
 	/**
-	 * The previous key in the text component's <code>InputMap</code> for the
-	 * trigger key.
+	 * The previous key in the text component's <code>InputMap</code> for the trigger key.
 	 */
 	private Object oldTriggerKey;
 
@@ -182,35 +181,35 @@ public class AutoCompletion {
 	 * Listens for events in the parent window that affect the visibility of the
 	 * popup windows.
 	 */
-	private ParentWindowListener parentWindowListener;
+	private final ParentWindowListener parentWindowListener;
 
 	/**
 	 * Listens for events from the text component that affect the visibility of
 	 * the popup windows.
 	 */
-	private TextComponentListener textComponentListener;
+	private final TextComponentListener textComponentListener;
 
 	/**
 	 * Listens for events in the text component that cause the popup windows to
 	 * automatically activate.
 	 */
-	private AutoActivationListener autoActivationListener;
+	private final AutoActivationListener autoActivationListener;
 
 	/**
 	 * Listens for LAF changes so the auto-complete windows automatically update
 	 * themselves accordingly.
 	 */
-	private LookAndFeelChangeListener lafListener;
+	private final LookAndFeelChangeListener lafListener;
 
 	/**
 	 * Listens for events from the popup window.
 	 */
-	private PopupWindowListener popupWindowListener;
+	private final PopupWindowListener popupWindowListener;
 
 	/**
 	 * All listeners registered on this component.
 	 */
-	private EventListenerList listeners;
+	private final EventListenerList listeners;
 
 	/**
 	 * Whether or not the popup should be hidden when user types a space (or any
@@ -260,7 +259,6 @@ public class AutoCompletion {
 	 * @param provider The completion provider. This cannot be <code>null</code>
 	 */
 	public AutoCompletion(CompletionProvider provider) {
-
 		setChoicesWindowSize(350, 200);
 		setDescriptionWindowSize(350, 250);
 
@@ -279,7 +277,6 @@ public class AutoCompletion {
 		lafListener = new LookAndFeelChangeListener();
 		popupWindowListener = new PopupWindowListener();
 		listeners = new EventListenerList();
-
 	}
 
 
@@ -309,22 +306,20 @@ public class AutoCompletion {
 	 * @param type The type of event to fire.
 	 */
 	protected void fireAutoCompletionEvent(AutoCompletionEvent.Type type) {
-
 		// Guaranteed to return a non-null array
 		Object[] listeners = this.listeners.getListenerList();
 		AutoCompletionEvent e = null;
 
 		// Process the listeners last to first, notifying those that are
 		// interested in this event
-		for (int i=listeners.length-2; i>=0; i-=2) {
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
 			if (listeners[i] == AutoCompletionListener.class) {
-				if (e==null) {
+				if (e == null) {
 					e = new AutoCompletionEvent(this, type);
 				}
 				((AutoCompletionListener)listeners[i+1]).autoCompleteUpdate(e);
 			}
 		}
-
 	}
 
 
@@ -380,7 +375,7 @@ public class AutoCompletion {
 	 */
 	public static KeyStroke getDefaultTriggerKey() {
 		// Default to CTRL, even on Mac, since Ctrl+Space activates Spotlight
-		int mask = InputEvent.CTRL_MASK;
+		int mask = InputEvent.CTRL_DOWN_MASK;//InputEvent.CTRL_MASK;
 		return KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, mask);
 	}
 
@@ -576,11 +571,9 @@ public class AutoCompletion {
 	 * @return Whether the popup window was visible.
 	 */
 	protected boolean hidePopupWindow() {
-		if (popupWindow != null) {
-			if (popupWindow.isVisible()) {
-				setPopupVisible(false);
-				return true;
-			}
+		if (popupWindow != null && popupWindow.isVisible()) {
+			setPopupVisible(false);
+			return true;
 		}
 		return false;
 	}
@@ -594,13 +587,11 @@ public class AutoCompletion {
 	 * @return Whether debug should be enabled.
 	 */
 	private static boolean initDebug() {
-		boolean debug;
 		try {
-			debug = Boolean.getBoolean("AutoCompletion.debug");
+			return Boolean.getBoolean("AutoCompletion.debug");
 		} catch (SecurityException se) { // We're in an applet or WebStart.
-			debug = false;
+			return false;
 		}
-		return debug;
 	}
 
 
@@ -623,9 +614,7 @@ public class AutoCompletion {
 	 * @param typedParamListStartChar Whether the parameterized completion start
 	 *        character was typed (typically <code>'('</code>).
 	 */
-	protected void insertCompletion(Completion c,
-			boolean typedParamListStartChar) {
-
+	protected void insertCompletion(Completion c, boolean typedParamListStartChar) {
 		JTextComponent textComp = getTextComponent();
 		String alreadyEntered = c.getAlreadyEntered(textComp);
 		hidePopupWindow();
@@ -634,19 +623,16 @@ public class AutoCompletion {
 		int dot = caret.getDot();
 		int len = alreadyEntered.length();
 		int start = dot - len;
-		String replacement = getReplacementText(c, textComp.getDocument(),
-				start, len);
+		String replacement = getReplacementText(c, textComp.getDocument(), start, len);
 
 		caret.setDot(start);
 		caret.moveDot(dot);
 		textComp.replaceSelection(replacement);
 
-		if (isParameterAssistanceEnabled() &&
-				c instanceof ParameterizedCompletion) {
+		if (isParameterAssistanceEnabled() && c instanceof ParameterizedCompletion) {
 			ParameterizedCompletion pc = (ParameterizedCompletion) c;
 			startParameterizedCompletionAssistance(pc, typedParamListStartChar);
 		}
-
 	}
 
 
@@ -659,7 +645,6 @@ public class AutoCompletion {
 	 * @see #uninstall()
 	 */
 	public void install(JTextComponent c) {
-
 		if (textComponent != null) {
 			uninstall();
 		}
@@ -681,8 +666,7 @@ public class AutoCompletion {
 			oldParenKey = im.get(ks);
 			im.put(ks, PARAM_COMPLETE_KEY);
 			oldParenAction = am.get(PARAM_COMPLETE_KEY);
-			am.put(PARAM_COMPLETE_KEY, new ParameterizedCompletionStartAction(
-					start));
+			am.put(PARAM_COMPLETE_KEY, new ParameterizedCompletionStartAction(start));
 		}
 
 		textComponentListener.addTo(this.textComponent);
@@ -695,7 +679,6 @@ public class AutoCompletion {
 
 		UIManager.addPropertyChangeListener(lafListener);
 		updateUI(); // In case there have been changes since we uninstalled
-
 	}
 
 
@@ -761,8 +744,7 @@ public class AutoCompletion {
 	 * changes. If set to false, caller has to ensure refresh of the popup
 	 * content.
 	 *
-	 * @return Whether the popup should be hidden when the completion provider
-	 *         changes.
+	 * @return Whether the popup should be hidden when the completion provider changes.
 	 * @see #setHideOnCompletionProviderChange(boolean)
 	 */
 	protected boolean isHideOnCompletionProviderChange() {
@@ -815,7 +797,6 @@ public class AutoCompletion {
 	 * @return The current line number of the caret.
 	 */
 	protected int refreshPopupWindow() {
-
 		// A return value of null => don't suggest completions
 		String text = provider.getAlreadyEnteredText(textComponent);
 		if (text == null && !isPopupVisible()) {
@@ -834,8 +815,7 @@ public class AutoCompletion {
 			}
 		}
 
-		final List<Completion> completions = provider
-				.getCompletions(textComponent);
+		final List<Completion> completions = provider.getCompletions(textComponent);
 		int count = completions==null ? 0 : completions.size();
 
 		if (count > 1 || (count == 1 && (isPopupVisible() || textLen == 0)) ||
@@ -847,8 +827,7 @@ public class AutoCompletion {
 				// Completion is usually done for code, which is always done
 				// LTR, so make completion stuff RTL only if text component is
 				// also RTL.
-				popupWindow
-					.applyComponentOrientation(getTextComponentOrientation());
+				popupWindow.applyComponentOrientation(getTextComponentOrientation());
 				if (renderer != null) {
 					popupWindow.setListCellRenderer(renderer);
 				}
@@ -856,8 +835,7 @@ public class AutoCompletion {
 					popupWindow.setSize(preferredChoicesWindowSize);
 				}
 				if (preferredDescWindowSize != null) {
-					popupWindow
-							.setDescriptionWindowSize(preferredDescWindowSize);
+					popupWindow.setDescriptionWindowSize(preferredDescWindowSize);
 				}
 			}
 
@@ -866,8 +844,7 @@ public class AutoCompletion {
 			if (!popupWindow.isVisible()) {
 				Rectangle r;
 				try {
-					r = textComponent.modelToView(textComponent
-							.getCaretPosition());
+					r = textComponent.modelToView(textComponent.getCaretPosition());
 				} catch (BadLocationException ble) {
 					ble.printStackTrace();
 					return -1;
@@ -879,19 +856,15 @@ public class AutoCompletion {
 				popupWindow.setLocationRelativeTo(r);
 				setPopupVisible(true);
 			}
-
 		}
 
 		else if (count == 1) { // !isPopupVisible && autoCompleteSingleChoices
 			SwingUtilities.invokeLater(() -> insertCompletion(completions.get(0)));
-		}
-
-		else {
+		} else {
 			hidePopupWindow();
 		}
 
 		return getLineOfCaret();
-
 	}
 
 
@@ -934,8 +907,7 @@ public class AutoCompletion {
 			if (textComponent != null) {
 				if (autoActivationEnabled) {
 					autoActivationListener.addTo(textComponent);
-				}
-				else {
+				} else {
 					autoActivationListener.removeFrom(textComponent);
 				}
 			}
@@ -972,10 +944,8 @@ public class AutoCompletion {
 	/**
 	 * Sets the completion provider being used.
 	 *
-	 * @param provider The new completion provider. This cannot be
-	 *        <code>null</code>.
-	 * @throws IllegalArgumentException If <code>provider</code> is
-	 *         <code>null</code>.
+	 * @param provider The new completion provider. This cannot be <code>null</code>.
+	 * @throws IllegalArgumentException If <code>provider</code> is <code>null</code>.
 	 */
 	public void setCompletionProvider(CompletionProvider provider) {
 		if (provider == null) {
@@ -1221,7 +1191,6 @@ public class AutoCompletion {
 
 		pcc = new ParameterizedCompletionContext(parentWindow, this, pc);
 		pcc.activate();
-
 	}
 
 
@@ -1232,7 +1201,6 @@ public class AutoCompletion {
 	 * @see #install(JTextComponent)
 	 */
 	public void uninstall() {
-
 		if (textComponent != null) {
 
 			hidePopupWindow(); // Unregisters listeners, actions, etc.
@@ -1263,9 +1231,7 @@ public class AutoCompletion {
 			textComponent = null;
 			popupWindowListener.uninstall(popupWindow);
 			popupWindow = null;
-
 		}
-
 	}
 
 
@@ -1321,7 +1287,7 @@ public class AutoCompletion {
 	private class AutoActivationListener extends FocusAdapter implements
 			DocumentListener, CaretListener, ActionListener, PropertyChangeListener {
 
-		private Timer timer;
+		private final Timer timer;
 		private boolean justInserted;
 
 		AutoActivationListener() {
@@ -1345,8 +1311,7 @@ public class AutoCompletion {
 		public void caretUpdate(CaretEvent e) {
 			if (justInserted) {
 				justInserted = false;
-			}
-			else {
+			} else {
 				timer.stop();
 			}
 		}
@@ -1365,24 +1330,20 @@ public class AutoCompletion {
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			justInserted = false;
-			if (isAutoCompleteEnabled() && isAutoActivationEnabled() &&
-					e.getLength() == 1) {
+			if (isAutoCompleteEnabled() && isAutoActivationEnabled() && e.getLength() == 1) {
 				if (textComponent != null && provider.isAutoActivateOkay(textComponent)) {
 					timer.restart();
 					justInserted = true;
-				}
-				else {
+				} else {
 					timer.stop();
 				}
-			}
-			else {
+			} else {
 				timer.stop();
 			}
 		}
 
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
-
 			String name = e.getPropertyName();
 
 			if (DOCUMENT_CHANGED_PROPERTY.equals(name)) {
@@ -1396,7 +1357,6 @@ public class AutoCompletion {
 					newDoc.addDocumentListener(this);
 				}
 			}
-
 		}
 
 		public void removeFrom(JTextComponent tc) {
@@ -1425,12 +1385,10 @@ public class AutoCompletion {
 		public void actionPerformed(ActionEvent e) {
 			if (isAutoCompleteEnabled()) {
 				refreshPopupWindow();
-			}
-			else if (oldTriggerAction != null) {
+			} else if (oldTriggerAction != null) {
 				oldTriggerAction.actionPerformed(e);
 			}
 		}
-
 	}
 
 	/**
@@ -1446,7 +1404,6 @@ public class AutoCompletion {
 				updateUI();
 			}
 		}
-
 	}
 
 	/**
@@ -1454,7 +1411,7 @@ public class AutoCompletion {
 	 */
 	private class ParameterizedCompletionStartAction extends AbstractAction {
 
-		private String start;
+		private final String start;
 
 		ParameterizedCompletionStartAction(char ch) {
 			this.start = Character.toString(ch);
@@ -1462,7 +1419,6 @@ public class AutoCompletion {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			// Prevents keystrokes from messing up
 			boolean wasVisible = hidePopupWindow();
 
@@ -1486,8 +1442,7 @@ public class AutoCompletion {
 	 * Listens for events in the parent window of the text component with
 	 * auto-completion enabled.
 	 */
-	private class ParentWindowListener extends ComponentAdapter implements
-			WindowFocusListener {
+	private class ParentWindowListener extends ComponentAdapter implements WindowFocusListener {
 
 		public void addTo(Window w) {
 			w.addComponentListener(this);
@@ -1546,7 +1501,7 @@ public class AutoCompletion {
 		}
 
 		public void uninstall(AutoCompletePopupWindow popupWindow) {
-			if (popupWindow!=null) {
+			if (popupWindow != null) {
 				popupWindow.removeComponentListener(this);
 			}
 		}
@@ -1557,8 +1512,7 @@ public class AutoCompletion {
 	/**
 	 * Listens for events from the text component we're installed on.
 	 */
-	private class TextComponentListener extends FocusAdapter implements
-			HierarchyListener {
+	private class TextComponentListener extends FocusAdapter implements HierarchyListener {
 
 		void addTo(JTextComponent tc) {
 			tc.addFocusListener(this);

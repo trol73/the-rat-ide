@@ -39,7 +39,7 @@ public abstract class AbstractLanguageSupport implements LanguageSupport {
 	 * {@link #install(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea)} and
 	 * {@link #uninstall(org.fife.ui.rsyntaxtextarea.RSyntaxTextArea)} methods.
 	 */
-	private Map<RSyntaxTextArea, AutoCompletion> textAreaToAutoCompletion;
+	private final Map<RSyntaxTextArea, AutoCompletion> textAreaToAutoCompletion;
 
 	/**
 	 * Whether auto-completion is enabled for this language.
@@ -211,7 +211,7 @@ public abstract class AbstractLanguageSupport implements LanguageSupport {
 	@Override
 	public void setAutoActivationDelay(int ms) {
 		ms = Math.max(0, ms);
-		if (ms!=autoActivationDelay) {
+		if (ms != autoActivationDelay) {
 			autoActivationDelay = ms;
 			for (AutoCompletion ac : textAreaToAutoCompletion.values()) {
 				ac.setAutoActivationDelay(autoActivationDelay);
@@ -222,7 +222,7 @@ public abstract class AbstractLanguageSupport implements LanguageSupport {
 
 	@Override
 	public void setAutoActivationEnabled(boolean enabled) {
-		if (enabled!=autoActivationEnabled) {
+		if (enabled != autoActivationEnabled) {
 			autoActivationEnabled = enabled;
 			for (AutoCompletion ac : textAreaToAutoCompletion.values()) {
 				ac.setAutoActivationEnabled(enabled);
@@ -244,13 +244,11 @@ public abstract class AbstractLanguageSupport implements LanguageSupport {
 
 	@Override
 	public void setDefaultCompletionCellRenderer(ListCellRenderer<Object> r) {
-		if (r==null) {
+		if (r == null) {
 			r = createDefaultCompletionCellRenderer();
 		}
-		if (r instanceof CompletionCellRenderer &&
-				Util.getUseSubstanceRenderers()) {
-			if (UIManager.getLookAndFeel().getClass().getName().
-					contains(".Substance")) {
+		if (r instanceof CompletionCellRenderer && Util.getUseSubstanceRenderers()) {
+			if (UIManager.getLookAndFeel().getClass().getName().contains(".Substance")) {
 				CompletionCellRenderer ccr = (CompletionCellRenderer)r;
 				delegateToSubstanceRenderer(ccr);
 			}
@@ -292,7 +290,7 @@ public abstract class AbstractLanguageSupport implements LanguageSupport {
 	 */
 	protected void uninstallImpl(RSyntaxTextArea textArea) {
 		AutoCompletion ac = getAutoCompletionFor(textArea);
-		if (ac!=null) {
+		if (ac != null) {
 			ac.uninstall();
 		}
 		textAreaToAutoCompletion.remove(textArea);

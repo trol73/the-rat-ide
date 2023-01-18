@@ -30,6 +30,7 @@ class DefaultTokenMakerFactory extends AbstractTokenMakerFactory implements Synt
 		putMapping(SYNTAX_STYLE_ASSEMBLER_6502,	pkg + "Assembler6502TokenMaker");
 		putMapping(SYNTAX_STYLE_ASSEMBLER_AVR,	pkg + "AssemblerAvrTokenMaker");
 		putMapping(SYNTAX_STYLE_AVR_RAT,	    pkgEx + "AvrRatTokenMaker");
+		putMapping(SYNTAX_STYLE_CHIP_TEST,	    pkg + "ChipTestTokenMaker");
 		putMapping(SYNTAX_STYLE_BBCODE,			pkg + "BBCodeTokenMaker");
 		putMapping(SYNTAX_STYLE_C,				pkgEx + "CTokenMaker");
 		putMapping(SYNTAX_STYLE_CLOJURE,		pkg + "ClojureTokenMaker");

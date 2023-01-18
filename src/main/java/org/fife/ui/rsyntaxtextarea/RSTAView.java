@@ -21,7 +21,6 @@ import javax.swing.text.BadLocationException;
  */
 interface RSTAView {
 
-
 	/**
 	 * Returns the y-coordinate of the specified line.<p>
 	 *
@@ -38,7 +37,6 @@ interface RSTAView {
 	 *         number for this document.
 	 */
 	int yForLine(Rectangle alloc, int line) throws BadLocationException;
-
 
 	/**
 	 * Returns the y-coordinate of the line containing a specified offset.<p>
@@ -57,6 +55,5 @@ interface RSTAView {
 	 */
 	int yForLineContaining(Rectangle alloc, int offs)
 											throws BadLocationException;
-
 
 }

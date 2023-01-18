@@ -61,10 +61,10 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
  */
 public class GoToMemberWindow extends JWindow {
 
-	private RSyntaxTextArea textArea;
-	private JTextField field;
-	private AbstractSourceTree tree;
-	private Listener listener;
+	private final RSyntaxTextArea textArea;
+	private final JTextField field;
+	private final AbstractSourceTree tree;
+	private final Listener listener;
 
 
 	/**
@@ -74,9 +74,7 @@ public class GoToMemberWindow extends JWindow {
 	 * @param textArea The text area.
 	 * @param tree The source tree appropriate for the current language.
 	 */
-	public GoToMemberWindow(Window parent, RSyntaxTextArea textArea,
-							AbstractSourceTree tree) {
-
+	public GoToMemberWindow(Window parent, RSyntaxTextArea textArea, AbstractSourceTree tree) {
 		super(parent);
 		this.textArea = textArea;
 		ComponentOrientation o = parent.getComponentOrientation();
@@ -296,8 +294,7 @@ public class GoToMemberWindow extends JWindow {
 		}
 
 		@Override
-		public void paintBorder(Component c, Graphics g, int x, int y,
-				int w, int h) {
+		public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
 			g.setColor(UIManager.getColor("controlDkShadow"));
 			g.drawLine(x,y+h-1, x+w-1,y+h-1);
 		}

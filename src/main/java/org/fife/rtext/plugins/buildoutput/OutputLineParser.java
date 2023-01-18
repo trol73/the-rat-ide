@@ -28,7 +28,7 @@ public class OutputLineParser {
     private int fileLine = -1;
     private int fileColumn = -1;
 
-    private RText rText;
+    private final RText rText;
 
     public OutputLineParser(RText rText, String text, Handler handler) {
         this.text = text;
@@ -102,7 +102,6 @@ public class OutputLineParser {
             return null;
         }
         var fullPath = folder.get().getAbsolutePath() + File.separatorChar + name;
-        //return new File(fullPath).exists() ? fullPath : null;
         if (new File(fullPath).exists()) {
             return fullPath;
         }
@@ -151,9 +150,15 @@ public class OutputLineParser {
     }
 
     private boolean isCurrentProjectSource(String s) {
-        if (s.contains(" ") || !(s.endsWith(".c") || s.endsWith(".cpp"))) {
-             return false;
-        }
-        return true;
+        return !s.contains(" ") && (s.endsWith(".c") || s.endsWith(".cpp") || s.endsWith(".h"));
     }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public boolean isWarning() {
+        return warning;
+    }
+
 }

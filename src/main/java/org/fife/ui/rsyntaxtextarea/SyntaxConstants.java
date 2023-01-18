@@ -348,4 +348,6 @@ public interface SyntaxConstants {
 
 	String SYNTAX_STYLE_AVR_RAT		= "text/avrrat";
 
+	String SYNTAX_STYLE_CHIP_TEST		= "text/chiptest";
+
 }

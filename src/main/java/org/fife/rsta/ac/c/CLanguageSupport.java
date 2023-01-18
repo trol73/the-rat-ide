@@ -30,7 +30,6 @@ public class CLanguageSupport extends AbstractLanguageSupport {
      */
     private CCompletionProvider provider;
 
-
     /**
      * Constructor.
      */

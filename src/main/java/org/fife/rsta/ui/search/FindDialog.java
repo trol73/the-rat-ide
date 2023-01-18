@@ -187,7 +187,6 @@ public class FindDialog extends AbstractFindReplaceDialog {
     @Override
     public void setVisible(boolean visible) {
         if (visible) {
-
             // Select text entered the UI
             String text = searchListener.getSelectedText();
             if (text != null) {
@@ -203,7 +202,6 @@ public class FindDialog extends AbstractFindReplaceDialog {
         } else {
             super.setVisible(false);
         }
-
     }
 
     /**

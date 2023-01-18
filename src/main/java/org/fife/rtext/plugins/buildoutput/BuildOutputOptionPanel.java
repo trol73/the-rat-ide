@@ -166,13 +166,13 @@ class BuildOutputOptionPanel extends AbstractConsoleTextAreaOptionPanel<Plugin> 
         window.setBackground(BuildOutputTextArea.STYLE_BACKGROUND, c);
 
         c = cbFiles.isSelected() ? filesButton.getColor() : null;
-        window.setBackground(BuildOutputTextArea.STYLE_FILE, c);
+        window.setForeground(BuildOutputTextArea.STYLE_FILE, c);
         c = cbPositions.isSelected() ? positionsButton.getColor() : null;
-        window.setBackground(BuildOutputTextArea.STYLE_FILE_POS, c);
+        window.setForeground(BuildOutputTextArea.STYLE_FILE_POS, c);
         c = cbWarnings.isSelected() ? warningsButton.getColor() : null;
-        window.setBackground(BuildOutputTextArea.STYLE_WARNINGS, c);
+        window.setForeground(BuildOutputTextArea.STYLE_WARNINGS, c);
         c = cbErrors.isSelected() ? errorsButton.getColor() : null;
-        window.setBackground(BuildOutputTextArea.STYLE_ERRORS, c);
+        window.setForeground(BuildOutputTextArea.STYLE_ERRORS, c);
     }
 
 

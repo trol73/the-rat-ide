@@ -99,7 +99,6 @@ public class SourceBrowserPlugin extends GUIPlugin<RText>
      * @param app The RText instance.
      */
     public SourceBrowserPlugin(RText app) {
-
         super(app);
         app.addPropertyChangeListener(RText.ICON_STYLE_PROPERTY, this);
         loadIcons();
@@ -121,7 +120,6 @@ public class SourceBrowserPlugin extends GUIPlugin<RText>
 
         sourceBrowserThread = new SourceBrowserThread(this);
         workingRoot = new SourceTreeNode(msg.getString("Working"));
-
     }
 
 

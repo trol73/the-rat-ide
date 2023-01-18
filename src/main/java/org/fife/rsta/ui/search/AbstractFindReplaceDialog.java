@@ -75,7 +75,7 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 	 *
 	 * @param owner The dialog that owns this search dialog.
 	 */
-	public AbstractFindReplaceDialog(Dialog owner) {
+	protected AbstractFindReplaceDialog(Dialog owner) {
 		super(owner);
 		init();
 	}
@@ -87,7 +87,7 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 	 *
 	 * @param owner The window that owns this search dialog.
 	 */
-	public AbstractFindReplaceDialog(Frame owner) {
+	protected AbstractFindReplaceDialog(Frame owner) {
 		super(owner);
 		init();
 	}
@@ -100,30 +100,19 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		String command = e.getActionCommand();
-
 		if ("UpRadioButtonClicked".equals(command)) {
 			context.setSearchForward(false);
-		}
-
-		else if ("DownRadioButtonClicked".equals(command)) {
+		} else if ("DownRadioButtonClicked".equals(command)) {
 			context.setSearchForward(true);
-		}
-
-		else if ("MarkAll".equals(command)) {
+		} else if ("MarkAll".equals(command)) {
 			boolean checked = markAllCheckBox.isSelected();
 			context.setMarkAll(checked);
-		}
-
-		else if (SearchEvent.Type.FIND.name().equals(command)) {
+		} else if (SearchEvent.Type.FIND.name().equals(command)) {
 			doSearch(context.getSearchForward()); // Keep current direction
-		}
-
-		else {
+		} else {
 			super.actionPerformed(e);
 		}
-
 	}
 
 
@@ -142,7 +131,6 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 
 
 	private void doSearch(boolean forward) {
-
 		// Add the item to the combo box's list, if it isn't already there.
 		JTextComponent tc = UIUtil.getTextComponent(findTextCombo);
 		findTextCombo.addItem(tc.getText());
@@ -175,7 +163,6 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 	 *        shortcut to "search backwards" no matter what.
 	 */
 	protected void fireSearchEvent(SearchEvent.Type type, SearchContext context) {
-
 		if (context == null) {
 			context = this.context;
 		}
@@ -267,23 +254,17 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 			boolean newValue = (Boolean) e.getNewValue();
 			JRadioButton button = newValue ? downButton : upButton;
 			button.setSelected(true);
-		}
-
-		else if (SearchContext.PROPERTY_MARK_ALL.equals(prop)) {
+		} else if (SearchContext.PROPERTY_MARK_ALL.equals(prop)) {
 			boolean newValue = (Boolean) e.getNewValue();
 			markAllCheckBox.setSelected(newValue);
-		}
-
-		else {
+		} else {
 			super.handleSearchContextPropertyChanged(e);
 		}
-
 	}
 
 
 	@Override
 	protected FindReplaceButtonsEnableResult handleToggleButtons() {
-
 		FindReplaceButtonsEnableResult er = super.handleToggleButtons();
 		boolean enable = er.getEnable();
 
@@ -300,12 +281,10 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 		tc.setToolTipText(tooltip); // Always set, even if null
 
 		return er;
-
 	}
 
 
 	private void init() {
-
 		listenerList = new EventListenerList();
 
 		// Make a panel containing the "search up/down" radio buttons.
@@ -358,7 +337,6 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 		findNextButton.setEnabled(false);	// Initially, nothing to look for.
 
 		installKeyboardActions();
-
 	}
 
 
@@ -366,10 +344,8 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 	 * Adds extra keyboard actions for Find and Replace dialogs.
 	 */
 	private void installKeyboardActions() {
-
 		JRootPane rootPane = getRootPane();
-		InputMap im = rootPane.getInputMap(
-				JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		InputMap im = rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		ActionMap am = rootPane.getActionMap();
 
 		int modifier = getToolkit().getMenuShortcutKeyMask();
@@ -406,7 +382,7 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 	 */
 	@Override
 	protected void refreshUIFromContext() {
-		if (this.markAllCheckBox==null) {
+		if (this.markAllCheckBox == null) {
 			return; // First time through, UI not realized yet
 		}
 		super.refreshUIFromContext();

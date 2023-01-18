@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.text.JTextComponent;
 
+import org.fife.rtext.RTextEditorPane;
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.RSyntaxUtilities;
@@ -138,8 +139,7 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
      */
     @Override
     public List<Completion> getCompletionsAt(JTextComponent tc, Point p) {
-        return defaultProvider == null ? null :
-                defaultProvider.getCompletionsAt(tc, p);
+        return defaultProvider == null ? null : defaultProvider.getCompletionsAt(tc, p);
     }
 
 
@@ -245,12 +245,16 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
         Token curToken = RSyntaxUtilities.getTokenAtOffset(t, dot);
 
         if (curToken == null) { // At end of the line
-
             int type = doc.getLastTokenTypeOnLine(line);
             if (type == Token.NULL) {
                 Token temp = t.getLastPaintableToken();
                 if (temp == null) {
                     return getDefaultCompletionProvider();
+                }
+                RTextEditorPane editor = comp instanceof RTextEditorPane ? (RTextEditorPane) comp : null;
+                CompletionProvider cp = getCompletionProvider(editor, t, temp);
+                if (cp != null) {
+                    return cp;
                 }
                 type = temp.getType();
             }
@@ -287,7 +291,11 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
         };
 
         // In a token type we can't auto-complete from.
+    }
 
+    protected CompletionProvider getCompletionProvider(RTextEditorPane editor, Token firstLineToken,
+                                                       Token lastPaintedToken) {
+        return null;
     }
 
 
@@ -347,7 +355,6 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
     public void setDocCommentCompletionProvider(CompletionProvider provider) {
         this.docCommentCompletionProvider = provider;
     }
-
 
     /**
      * Calling this method will result in an

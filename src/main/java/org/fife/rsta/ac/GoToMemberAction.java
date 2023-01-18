@@ -43,7 +43,7 @@ public class GoToMemberAction extends TextAction {
 	/**
 	 * The outline tree class appropriate for the current language.
 	 */
-	private Class<?> outlineTreeClass;
+	private final Class<?> outlineTreeClass;
 
 
 	/**
@@ -61,7 +61,7 @@ public class GoToMemberAction extends TextAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		AbstractSourceTree tree = createTree();
-		if (tree==null) {
+		if (tree == null) {
 			UIManager.getLookAndFeel().provideErrorFeedback(null);
 			return;
 		}
@@ -104,8 +104,7 @@ public class GoToMemberAction extends TextAction {
 	 * @param gtmw The window to center.
 	 * @param textArea The parent text area to center it in.
 	 */
-	private void setLocationBasedOn(GoToMemberWindow gtmw,
-									RSyntaxTextArea textArea) {
+	private void setLocationBasedOn(GoToMemberWindow gtmw, RSyntaxTextArea textArea) {
 		Rectangle visibleRect = textArea.getVisibleRect();
 		Dimension gtmwPS = gtmw.getPreferredSize();
 		int x = visibleRect.x + (visibleRect.width-gtmwPS.width)/2;

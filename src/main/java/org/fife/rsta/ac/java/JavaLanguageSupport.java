@@ -173,7 +173,6 @@ public class JavaLanguageSupport extends AbstractLanguageSupport {
 	 * @param textArea The text area to install the shortcuts into.
 	 */
 	private void installKeyboardShortcuts(RSyntaxTextArea textArea) {
-
 		InputMap im = textArea.getInputMap();
 		ActionMap am = textArea.getActionMap();
 		int c = textArea.getToolkit().getMenuShortcutKeyMask();

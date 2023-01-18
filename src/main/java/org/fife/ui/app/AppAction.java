@@ -62,7 +62,7 @@ public abstract class AppAction<T extends GUIApplication> extends StandardAction
 	/**
 	 * The application that owns this action.
 	 */
-	private T app;
+	private final T app;
 
 
 	/**

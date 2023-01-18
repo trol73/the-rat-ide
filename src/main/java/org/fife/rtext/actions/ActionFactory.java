@@ -174,6 +174,9 @@ public final class ActionFactory implements RTextActionInfo {
 		a = new GoToAction(rtext, msg, null);
 		rtext.addAction(GOTO_ACTION, a);
 
+		a = new SwitchSourceHeaderAction(rtext, msg, null);
+		rtext.addAction(SWITCH_SOURCE_HEADER_ACTION, a);
+
 		a = new TextAreaOrientationAction(rtext, msg, "LeftToRightAction", null,
 				ComponentOrientation.LEFT_TO_RIGHT);
 		rtext.addAction(LTR_ACTION, a);

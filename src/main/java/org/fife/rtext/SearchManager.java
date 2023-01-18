@@ -137,7 +137,6 @@ public class SearchManager {
      * @see #replaceNext(SearchContext)
      */
     public void findNext(SearchContext context) {
-
         AbstractMainView mainView = rtext.getMainView();
         if (context == null) {
             context = mainView.searchContext;
@@ -154,8 +153,7 @@ public class SearchManager {
                     break;
                 case TOOLBARS:
                     ensureToolbarsCreated();
-                    rtext.getCollapsibleSectionPanel().
-                            showBottomComponent(findToolBar);
+                    rtext.getCollapsibleSectionPanel().showBottomComponent(findToolBar);
                     break;
             }
             return;
@@ -165,7 +163,6 @@ public class SearchManager {
         RTextEditorPane textArea = mainView.getCurrentTextArea();
 
         try {
-
             SearchResult result = SearchEngine.find(textArea, context);
             if (!result.wasFound()) {
                 searchString = RTextUtilities.escapeForHTML(searchString, null);

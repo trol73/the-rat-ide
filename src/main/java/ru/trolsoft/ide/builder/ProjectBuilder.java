@@ -13,6 +13,8 @@ import ru.trolsoft.ide.therat.AvrRatDevicesUtils;
 import ru.trolsoft.ide.utils.StringUtils;
 import ru.trolsoft.therat.RatKt;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class ProjectBuilder {
     private final RText rtext;
     private final Project project;
     private final BuildOutputWindow window;
+
+    private Component focusOwner;
 
     public interface RatListingHandler {
         kotlin.Unit handle(ru.trolsoft.compiler.generator.ListingRec rec);
@@ -34,6 +38,7 @@ public class ProjectBuilder {
     }
 
     public void build(String activeFilePath) {
+        focusOwner = rtext.getFocusOwner();
         window.clearConsoles();
         if (project == null) {
             return;
@@ -44,6 +49,15 @@ public class ProjectBuilder {
             case MAKEFILE -> buildMakeFileProject();
         }
 //        window.execute("cat " + activeFilePath);
+    }
+
+    private void restoreFocus() {
+        SwingUtilities.invokeLater(() -> {
+            if (focusOwner != null) {
+                focusOwner.requestFocus();
+                focusOwner = null;
+            }
+        });
     }
 
     private void buildAvrRatProject() {
@@ -71,6 +85,7 @@ public class ProjectBuilder {
                     listingWindow.initText(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR);
                 }
                 window.prompt("Done.\n");
+                restoreFocus();
             }
         });
     }
@@ -93,6 +108,7 @@ public class ProjectBuilder {
         File pwd = new File(path).getParentFile();
         window.prompt("Compile " + project.getName() + "\n");
         window.execute("make -f " + project.getMainFile(), pwd);
+        restoreFocus();
     }
 
     private void buildMakeBuilderProject() {
@@ -108,6 +124,7 @@ public class ProjectBuilder {
         if (listingVisible) {
             listingWindow.loadRatGccListing(pwd.getAbsolutePath() + "/build/avr-rat.lss");
         }
+        restoreFocus();
     }
 
 }

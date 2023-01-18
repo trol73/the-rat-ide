@@ -35,8 +35,7 @@ import javax.swing.text.View;
  * @author Robert Futrell
  * @version 1.0
  */
-class OutlineHighlightPainter extends
-							DefaultHighlighter.DefaultHighlightPainter {
+class OutlineHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
 
 	/**
 	 * DefaultHighlightPainter doesn't allow changing color, so we must cache
@@ -73,9 +72,7 @@ class OutlineHighlightPainter extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Shape paintLayer(Graphics g, int p0, int p1, Shape viewBounds,
-								JTextComponent c, View view) {
-
+	public Shape paintLayer(Graphics g, int p0, int p1, Shape viewBounds, JTextComponent c, View view) {
 		g.setColor(getColor());
 		p0++; // Workaround for Java Highlight issues.
 
@@ -86,8 +83,7 @@ class OutlineHighlightPainter extends
 		// short-circuit and do only one modelToView() for one offset.
 		if (p0==p1) {
 			try {
-				Shape s = view.modelToView(p0, viewBounds,
-											Position.Bias.Forward);
+				Shape s = view.modelToView(p0, viewBounds, Position.Bias.Forward);
 				Rectangle r = s.getBounds();
 				g.drawLine(r.x, r.y, r.x, r.y+r.height);
 				return r;
@@ -114,8 +110,7 @@ class OutlineHighlightPainter extends
 			// --- determine locations ---
 			Shape shape = view.modelToView(p0, Position.Bias.Forward, p1,
 					Position.Bias.Backward, viewBounds);
-			Rectangle r = (shape instanceof Rectangle) ? (Rectangle) shape :
-					shape.getBounds();
+			Rectangle r = (shape instanceof Rectangle) ? (Rectangle) shape : shape.getBounds();
 			g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
 			return r;
 		} catch (BadLocationException e) { // Never happens
@@ -133,7 +128,7 @@ class OutlineHighlightPainter extends
 	 * @see #getColor()
 	 */
 	public void setColor(Color color) {
-		if (color==null) {
+		if (color == null) {
 			throw new IllegalArgumentException("color cannot be null");
 		}
 		this.color = color;

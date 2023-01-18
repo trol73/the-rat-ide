@@ -84,7 +84,6 @@ public class CTagReader {
 	 * @return <code>true</code> iff the identifier was found.
 	 */
 	private boolean find(TagEntry entry, String name, int options) throws IOException {
-
 		boolean result;
 		searchName = name;
 		searchPartial = (options & TAG_PARTIALMATCH) != 0;
@@ -101,12 +100,10 @@ public class CTagReader {
 		}
 
 		return result;
-
 	}
 
 
 	private boolean findBinary() throws IOException {
-
 		boolean result = false;
 		long lower_limit = 0;
 		long upper_limit = size;
@@ -145,12 +142,10 @@ public class CTagReader {
 		}
 
 		return result;
-
 	}
 
 
 	private boolean findFirstMatchBefore() throws IOException {
-
 		boolean result = false;
 		boolean more_lines;
 		long start = pos;
@@ -167,7 +162,6 @@ public class CTagReader {
 
 
 	private void findFirstNonMatchBefore() {
-
 		boolean more_lines;
 		int comp;
 		long start = pos;
@@ -186,7 +180,6 @@ public class CTagReader {
 
 
 	private boolean findNext(TagEntry entry) throws IOException {
-
 		boolean result;
 		if ((sortMethod == TAG_SORTED && !searchIgnoreCase) ||
 			(sortMethod == TAG_FOLDSORTED  &&  searchIgnoreCase))
@@ -194,15 +187,13 @@ public class CTagReader {
 			result = tagsNext(entry);
 			if (result && nameComparison() != 0)
 				result = false;
-		}
-		else {
+		} else {
 			result = findSequential();
 			if (result &&  entry != null)
 				entry.parseTagLine(line);
 		}
 
 		return result;
-
 	}
 
 	private boolean findSequential() throws IOException {
@@ -221,7 +212,6 @@ public class CTagReader {
 
 
 	private int nameComparison() {
-
 		int result;
 
 		if (searchIgnoreCase) {
@@ -253,7 +243,6 @@ public class CTagReader {
 	 * of the specified key exists, the function will return null.
 	 */
 	private static String readFieldValue(TagEntry entry, String key) {
-
 		if (key.equals("kind"))
 			return entry.kind;
 		else if (key.equals("file"))
@@ -272,7 +261,6 @@ public class CTagReader {
 
 
 	private boolean readNext(TagEntry entry) throws IOException {
-
 		boolean result;
 		if (!initialized)
 			result = false;
@@ -285,7 +273,6 @@ public class CTagReader {
 		}
 
 		return result;
-
 	}
 
 

@@ -47,7 +47,7 @@ import java.util.Map;
  */
 class BuildOutputTextArea extends AbstractConsoleTextArea {
 
-    public static final Color DEFAULT_DARK_FILES_FG = new Color(0x6666ff);
+    public static final Color DEFAULT_DARK_FILES_FG = new Color(0x8888ff);
     public static final Color DEFAULT_DARK_POS_FG = new Color(0x55ffff);
     public static final Color DEFAULT_DARK_WARNINGS_FG = new Color(0xff55ff);
     public static final Color DEFAULT_DARK_ERRORS_FG = new Color(0xff5555);
@@ -61,6 +61,9 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
     static final String STYLE_FILE_POS = "FilePos";
     static final String STYLE_WARNINGS = "Warnings";
     static final String STYLE_ERRORS = "Errors";
+
+    private static final Color COLOR_ERROR_LINE_HIGHLIGHT = new Color(0xaaff0000, true);
+    private static final Color COLOR_WARNING_LINE_HIGHLIGHT = new Color(0xaaffff00, true);
 
     private final List<int[]> filesPositions = new ArrayList<>();
     private final List<String> filesNames = new ArrayList<>();
@@ -168,7 +171,8 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
                 var editor = getMainView().getTextAreaForFile(parser.getFilePath());
                 if (editor != null) {
                     try {
-                        var hl = editor.addLineHighlight(parser.getFileLine() - 1, Color.RED);
+                        Color higlightColor = parser.isError() ? COLOR_ERROR_LINE_HIGHLIGHT : COLOR_WARNING_LINE_HIGHLIGHT;
+                        var hl = editor.addLineHighlight(parser.getFileLine() - 1, higlightColor);
                         var list = errorLineHighlighters.computeIfAbsent(editor, k -> new ArrayList<>());
                         list.add(hl);
                     } catch (BadLocationException e) {

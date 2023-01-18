@@ -13,16 +13,21 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.print.PageFormat;
 import java.io.IOException;
 import javax.swing.*;
 
 import org.fife.print.RPrintUtilities;
 import org.fife.rtext.plugins.filesystemtree.FileSystemTreePlugin;
+import org.fife.rtext.plugins.project.model.Project;
 import org.fife.rtext.plugins.project.model.Workspace;
 import org.fife.ui.rsyntaxtextarea.FileLocation;
 import org.fife.ui.rsyntaxtextarea.TextEditorPane;
 import org.fife.ui.rtextarea.RTATextTransferHandler;
+import ru.trolsoft.ide.utils.ProjectUtils;
 
 
 /**
@@ -115,5 +120,9 @@ public class RTextEditorPane extends TextEditorPane {
         if (workspace != null && getFileFullPath().equals(workspace.getFileFullPath())) {
             rtext.getProjectPlugin().reloadWorkspace();
         }
+    }
+
+    public Project getProject() {
+        return ProjectUtils.getProjectForCurrentFile(rtext);
     }
 }

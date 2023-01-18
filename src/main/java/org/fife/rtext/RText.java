@@ -1515,6 +1515,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         setActionIcon(iconGroup, GOTO_ACTION, "goto");
         setActionIcon(iconGroup, BUILD_ACTION, "build");
         setActionIcon(iconGroup, UPLOAD_ACTION, "upload");
+        setActionIcon(iconGroup, SWITCH_SOURCE_HEADER_ACTION, "switchsourceheader");
 
         // Do this because the toolbar has changed it's size.
         if (isDisplayable()) {

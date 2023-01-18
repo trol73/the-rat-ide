@@ -119,6 +119,7 @@ public class RTextMenuBar extends MenuBar<RText>
 	private JMenuItem copyAsStyledTextEclipseItem;
 	private JMenuItem pasteItem;
 	private JMenuItem deleteItem;
+	private JMenuItem deleteLineItem;
 	private JMenuItem findItem;
 	private JMenuItem findNextItem;
 	private JMenuItem replaceItem;
@@ -150,10 +151,11 @@ public class RTextMenuBar extends MenuBar<RText>
 	private RecentFilesMenu recentFilesMenu;
 	private JMenu savedMacroMenu;
 
+
 	private JMenuItem buildItem;
 	private JMenuItem codeListingItem;
 	private JMenuItem uploadItem;
-
+	private JMenuItem switchSourceHeaderItem;
 
 	/**
 	 * Creates an instance of the menu bar.
@@ -265,6 +267,8 @@ public class RTextMenuBar extends MenuBar<RText>
 
 		deleteItem = createMenuItem(RTextArea.getAction(RTextArea.DELETE_ACTION));
 		menu.add(deleteItem);
+		deleteLineItem = createMenuItem(RTextArea.getAction(RTextArea.DELETE_LINE_ACTION));
+		menu.add(deleteLineItem);
 
 		menu.addSeparator();
 
@@ -402,6 +406,10 @@ public class RTextMenuBar extends MenuBar<RText>
 		fileMenu.add(printPreviewItem);
 
 		fileMenu.addSeparator();
+
+		switchSourceHeaderItem = createMenuItem(rtext.getAction(RText.SWITCH_SOURCE_HEADER_ACTION));
+		switchSourceHeaderItem.setAccelerator(KeyStroke.getKeyStroke('.', KeyEvent.META_DOWN_MASK));
+		fileMenu.add(switchSourceHeaderItem);
 
 		recentFilesMenu = new RecentFilesMenu(menuMsg.getString("RecentFiles")) {
 			@Override

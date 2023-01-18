@@ -91,12 +91,10 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @param owner The main window that owns this dialog.
 	 */
 	public FindInFilesDialog(Frame owner) {
-
 		super(owner);
 		this.setTitle(getString2("FindInFilesDialogTitle"));
 
-		ComponentOrientation orientation = ComponentOrientation.
-									getOrientation(getLocale());
+		ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
 
 		// These listeners will be used by all text fields.
 		docListener = new FindInFilesDocumentListener();
@@ -177,8 +175,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		if (orientation.isLeftToRight()) {
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
-		}
-		else {
+		} else {
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,5));
 		}
 		rightPanel.add(rightPanel2, BorderLayout.NORTH);
@@ -220,7 +217,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		temp.setBorder(empty5Border);
 		temp.add(topPanel);
 		temp.add(Box.createVerticalStrut(5));
-		if (extraOptionsPanel!=null) {
+		if (extraOptionsPanel != null) {
 			temp.add(extraOptionsPanel);
 		}
 		contentPane.add(temp, BorderLayout.NORTH);
@@ -231,7 +228,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		applyComponentOrientation(orientation);
 		pack();
 		setLocationRelativeTo(owner);
-
 	}
 
 
@@ -240,7 +236,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		String command = e.getActionCommand();
 
 		// If the user selects the "Find" button...
@@ -376,7 +371,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @return The panel.
 	 */
 	protected Box createDetailsPanel() {
-
 		Box detailPanel = Box.createVerticalBox();
 		detailPanel.setBorder(createTitledBorder(getString2("ReportDetail")));
 		matchingLinesRadioButton = new JRadioButton(getString2("MatchingLines"));
@@ -400,7 +394,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		panel.add(subfoldersCheckBox);
 
 		return panel;
-
 	}
 
 
@@ -430,7 +423,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @return The panel.
 	 */
 	protected JPanel createInputPanel() {
-
 		JPanel inputPanel = new JPanel(new SpringLayout());
 
 		// Make labels to go with the combo boxes/text fields.
@@ -477,7 +469,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 									0,5);	// x-spacing, y-spacing.
 
 		return inputPanel;
-
 	}
 
 
@@ -520,7 +511,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * This function actually performs a search through the given directory.
 	 */
 	private void doFindInFiles() {
-
 		// First, ensure that the directory they selected actually exists.
 		String dirPath = inFolderTextField.getText();
 		final File directory = new File(dirPath);
@@ -564,7 +554,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		// Start searching!
 		setWorkerThread(createWorkerThread(directory));
 		getWorkerThread().start();
-
 	}
 
 
@@ -582,9 +571,8 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length-2; i>=0; i-=2) {
-			if (listeners[i]==FindInFilesListener.class) {
-				((FindInFilesListener)listeners[i+1]).
-									findInFilesFileSelected(e);
+			if (listeners[i] == FindInFilesListener.class) {
+				((FindInFilesListener)listeners[i+1]).findInFilesFileSelected(e);
 			}
 		}
 
@@ -769,7 +757,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 		String tooltip = er.getError();
 		String status = defaultStatusText;
-		if (tooltip!=null) {
+		if (tooltip != null) {
 			status = tooltip;
 			if (status.contains("\n")) {
 				status = status.substring(0, status.indexOf('\n'));
@@ -777,7 +765,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		}
 		setStatusText(status);
 
-		if (tooltip!=null && tooltip.contains("\n")) {
+		if (tooltip != null && tooltip.contains("\n")) {
 			tooltip = tooltip.replaceFirst("\n", "</b><br><pre>");
 			tooltip = "<html><b>" + tooltip;
 		}
@@ -795,7 +783,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @return Whether everything is filled in.
 	 */
 	protected boolean isEverythingFilledIn() {
-		return getWorkerThread()==null &&
+		return getWorkerThread() == null &&
 				getLength(getTextComponent(findTextCombo))>0 &&
 				getLength(getTextComponent(inFilesComboBox))>0 &&
 				getLength(inFolderTextField)>0;
