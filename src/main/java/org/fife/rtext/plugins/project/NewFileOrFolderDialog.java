@@ -10,12 +10,8 @@
  */
 package org.fife.rtext.plugins.project;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import javax.swing.Box;
-import javax.swing.Icon;
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 
 import org.fife.rtext.RText;
 import org.fife.rtext.plugins.project.tree.NameChecker;
@@ -32,10 +28,14 @@ public class NewFileOrFolderDialog extends AbstractEnterFileNameDialog {
 	private JCheckBox openOnCreateCB;
 
 
-	public NewFileOrFolderDialog(RText parent, boolean directory, NameChecker nameChecker) {
+	public NewFileOrFolderDialog(RText parent, boolean directory, NameChecker nameChecker, String type) {
 		super(parent, directory, nameChecker);
-		String key = "NewFileOrFolderDialog.Title." + (directory ? "Folder" : "File");
+		String key = "NewFileOrFolderDialog.Title." + (directory ? "Folder" : "File" + type);
 		setTitle(Messages.getString(key));
+	}
+
+	public NewFileOrFolderDialog(RText parent, boolean directory, NameChecker nameChecker) {
+		this(parent, directory, nameChecker, "");
 	}
 
 
@@ -66,14 +66,12 @@ public class NewFileOrFolderDialog extends AbstractEnterFileNameDialog {
 		}
 
 		JPanel temp = new JPanel(new BorderLayout());
-		openOnCreateCB = new JCheckBox(Messages.
-				getString("NewFileDialog.Label.OpenImmediately"), true);
+		openOnCreateCB = new JCheckBox(Messages.getString("NewFileDialog.Label.OpenImmediately"), true);
 		temp.add(openOnCreateCB, BorderLayout.LINE_START);
 		box.add(temp);
 
 		box.add(Box.createVerticalGlue());
 		return box;
-
 	}
 
 
@@ -92,6 +90,19 @@ public class NewFileOrFolderDialog extends AbstractEnterFileNameDialog {
 	 */
 	public boolean getOpenOnCreate() {
 		return openOnCreateCB.isSelected();
+	}
+
+	public void center() {
+		RText owner = (RText) getOwner();
+		setLocationRelativeTo(owner);
+		SwingUtilities.invokeLater(() ->
+				{
+					if (getLocation().getX() == owner.getLocation().getX()) {
+						center();
+					}
+				}
+
+		);
 	}
 
 

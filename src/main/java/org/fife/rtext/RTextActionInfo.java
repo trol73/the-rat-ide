@@ -76,6 +76,7 @@ public interface RTextActionInfo {
 	String BUILD_ACTION             = "buildAction";
 	String CODE_LISTING_ACTION      = "codeListingAction";
 	String UPLOAD_ACTION            = "uploadAction";
+	String NEW_PROJECT_ACTION            = "newProjectAction";
 	String SWITCH_SOURCE_HEADER_ACTION = "switchSourceHeaderAction";
 
 	String[] ACTION_NAMES = {

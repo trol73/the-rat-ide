@@ -42,7 +42,6 @@ abstract class AbstractEnterFileNameDialog extends EscapableDialog implements Ac
 
     private static Icon errorIcon;
 
-
     /**
      * Constructor.
      *

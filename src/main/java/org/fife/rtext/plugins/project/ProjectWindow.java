@@ -48,7 +48,7 @@ import org.fife.ui.rtextfilechooser.filters.ExtensionFileFilter;
  * @author Robert Futrell
  * @version 1.0
  */
-class ProjectWindow extends DockableWindow {
+public class ProjectWindow extends DockableWindow {
 
     private final ProjectPlugin plugin;
     private JLabel workspaceNameLabel;

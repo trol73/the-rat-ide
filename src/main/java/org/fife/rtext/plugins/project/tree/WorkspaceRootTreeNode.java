@@ -17,11 +17,7 @@ import javax.swing.*;
 import javax.swing.tree.TreePath;
 
 import org.fife.rtext.RText;
-import org.fife.rtext.plugins.project.BaseAction;
-import org.fife.rtext.plugins.project.Messages;
-import org.fife.rtext.plugins.project.PopupContent;
-import org.fife.rtext.plugins.project.ProjectPlugin;
-import org.fife.rtext.plugins.project.RenameDialog;
+import org.fife.rtext.plugins.project.*;
 import org.fife.rtext.plugins.project.model.Project;
 import org.fife.rtext.plugins.project.model.Workspace;
 import org.fife.rtext.plugins.project.tree.checkers.ProjectNameChecker;
@@ -119,33 +115,32 @@ public class WorkspaceRootTreeNode extends AbstractWorkspaceTreeNode {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            RenameDialog dialog = createDialog();
+            NewProjectDialog dialog = createDialog();
             SwingUtilities.invokeLater(() -> {
                 dialog.setVisible(true);
-                String newName = dialog.getFileName();
-                if (newName != null) {
-                    Project project = new Project(workspace, newName);
-                    workspace.addProject(project);
-                    ProjectTreeNode childNode = new ProjectTreeNode(plugin, project);
-                    plugin.insertTreeNodeInto(childNode, WorkspaceRootTreeNode.this);
-                    // Ensure Workspace root node is expanded when first plugin is added.
-                    plugin.getTree().expandPath(new TreePath(getPath()));
-                }
+//                String newName = dialog.getFileName();
+//                if (newName != null) {
+//                    Project project = new Project(workspace, newName);
+//                    workspace.addProject(project);
+//                    ProjectTreeNode childNode = new ProjectTreeNode(plugin, project);
+//                    plugin.insertTreeNodeInto(childNode, WorkspaceRootTreeNode.this);
+//                    // Ensure Workspace root node is expanded when first plugin is added.
+//                    plugin.getTree().expandPath(new TreePath(getPath()));
+//                }
             });
         }
 
-        private RenameDialog createDialog() {
+        private NewProjectDialog createDialog() {
             RText rtext = plugin.getApplication();
-            RenameDialog dialog = new RenameDialog(rtext, false, "Project", new ProjectNameChecker(workspace));
-            Icon icon = plugin.getApplication().getIconGroup().getIcon("application");
-            dialog.setDescription(icon, Messages.getString("NewProjectDialog.Desc"));
-            dialog.setTitle(Messages.getString("NewProjectDialog.Title"));
-            dialog.setFileName(null); // Move focus from desc SelectableLabel to field.
+            NewProjectDialog dialog = new NewProjectDialog(rtext, new ProjectNameChecker(workspace), workspace, WorkspaceRootTreeNode.this);
             dialog.setLocationRelativeTo(rtext);
             return dialog;
         }
 
     }
 
+    public void createNewProject(ActionEvent e) {
+        new NewProjectAction().actionPerformed(e);
+    }
 
 }

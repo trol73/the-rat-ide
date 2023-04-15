@@ -54,11 +54,10 @@ public class FolderProjectEntry extends AbstractProjectEntry {
 
 	@Override
 	public final boolean equals(Object o) {
-		if (o==this) {
+		if (o == this) {
 			return true;
 		}
-		return o instanceof FolderProjectEntry &&
-				compareTo((FolderProjectEntry)o)==0;
+		return o instanceof FolderProjectEntry && compareTo((FolderProjectEntry)o)==0;
 	}
 
 

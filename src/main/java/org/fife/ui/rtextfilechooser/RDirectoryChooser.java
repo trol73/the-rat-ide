@@ -75,7 +75,7 @@ public class RDirectoryChooser extends EscapableDialog {
 	 * @param parent The dialog that owns this directory chooser.
 	 */
 	public RDirectoryChooser(Dialog parent) {
-		this(parent, null);
+		this(parent, null, true);
 	}
 
 
@@ -85,7 +85,7 @@ public class RDirectoryChooser extends EscapableDialog {
 	 * @param parent The window that owns this directory chooser.
 	 */
 	public RDirectoryChooser(Frame parent) {
-		this(parent, null);
+		this(parent, null, true);
 	}
 
 
@@ -96,9 +96,9 @@ public class RDirectoryChooser extends EscapableDialog {
 	 * @param title The title for this directory chooser.  If
 	 *        <code>null</code>, a default title will be used.
 	 */
-	public RDirectoryChooser(Dialog parent, String title) {
+	public RDirectoryChooser(Dialog parent, String title, boolean showHidden) {
 		super(parent);
-		init(parent, title);
+		init(parent, title, showHidden);
 	}
 
 
@@ -109,9 +109,9 @@ public class RDirectoryChooser extends EscapableDialog {
 	 * @param title The title for this directory chooser.
 	 *        If <code>null</code>, a default title will be used.
 	 */
-	public RDirectoryChooser(Frame parent, String title) {
+	public RDirectoryChooser(Frame parent, String title, boolean showHidden) {
 		super(parent);
-		init(parent, title);
+		init(parent, title, showHidden);
 	}
 
 
@@ -143,16 +143,14 @@ public class RDirectoryChooser extends EscapableDialog {
 	 * @param parent The window that owns this directory chooser.
 	 * @param title The title for this directory chooser.
 	 */
-	private void init(Window parent, String title) {
+	private void init(Window parent, String title, boolean showHidden) {
 
-		ComponentOrientation orientation = ComponentOrientation.
-									getOrientation(getLocale());
+		ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
 
 		Listener listener = new Listener();
 
 		// Get our localized messages.
-		ResourceBundle msg = ResourceBundle.getBundle(
-						"org.fife.ui.rtextfilechooser.DirectoryChooser");
+		ResourceBundle msg = ResourceBundle.getBundle("org.fife.ui.rtextfilechooser.DirectoryChooser");
 
 		// The panel that will contain everything.
 		JPanel contentPane =new ResizableFrameContentPane(new BorderLayout());
@@ -160,14 +158,12 @@ public class RDirectoryChooser extends EscapableDialog {
 
 		// Add a panel with the directory tree.
 		JPanel treePanel = new JPanel(new GridLayout(1,1));
-		directoryTree = new DirectoryTree();
+		directoryTree = new DirectoryTree(showHidden);
 		directoryTree.getSelectionModel().addTreeSelectionListener(listener);
 		directoryTree.addPropertyChangeListener(listener);
 		RScrollPane scrollPane = new RScrollPane(directoryTree);
-		scrollPane.setHorizontalScrollBarPolicy(
-							RScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.setVerticalScrollBarPolicy(
-							RScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(RScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(RScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		treePanel.add(scrollPane);
 		contentPane.add(treePanel);
 
@@ -189,7 +185,6 @@ public class RDirectoryChooser extends EscapableDialog {
 		pack();
 		setModal(true);
 		setLocationRelativeTo(parent);
-
 	}
 
 
@@ -209,8 +204,7 @@ public class RDirectoryChooser extends EscapableDialog {
 	/**
 	 * Listens for all events in this directory chooser.
 	 */
-	private class Listener implements ActionListener, TreeSelectionListener,
-							PropertyChangeListener {
+	private class Listener implements ActionListener, TreeSelectionListener, PropertyChangeListener {
 
 		Listener() {
 		}

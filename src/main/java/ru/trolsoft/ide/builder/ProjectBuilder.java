@@ -80,11 +80,15 @@ public class ProjectBuilder {
                 if (codeListWindow != null) {
                     codeListWindow.clear();
                 }
-                RatKt.compileProject(path, devPath, defines, out, err, listingVisible ? listingHandler(listingWindow) : null);
+                try {
+                    RatKt.compileProject(path, devPath, defines, out, err, listingVisible ? listingHandler(listingWindow) : null);
+                } catch (kotlin.NotImplementedError e) {
+                    throw new RuntimeException("Wrong operation", e);
+                }
                 if (listingVisible) {
                     listingWindow.initText(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR);
                 }
-                window.prompt("Done.\n");
+                //window.prompt("Done.\n");
                 restoreFocus();
             }
         });

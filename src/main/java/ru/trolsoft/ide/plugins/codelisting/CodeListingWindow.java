@@ -94,4 +94,8 @@ public class CodeListingWindow extends DockableWindow implements PropertyChangeL
         } catch (IOException ignore) {
         }
     }
+
+    ListingInfo getListingInfo() {
+        return listingInfo;
+    }
 }

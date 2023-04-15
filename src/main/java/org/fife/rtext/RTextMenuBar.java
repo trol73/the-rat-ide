@@ -157,6 +157,8 @@ public class RTextMenuBar extends MenuBar<RText>
 	private JMenuItem uploadItem;
 	private JMenuItem switchSourceHeaderItem;
 
+	private JMenuItem newProjectItem;
+
 	/**
 	 * Creates an instance of the menu bar.
 	 *
@@ -538,6 +540,10 @@ public class RTextMenuBar extends MenuBar<RText>
 		uploadItem = createMenuItem(rtext.getAction(RText.UPLOAD_ACTION));
 		uploadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
 		menu.add(uploadItem);
+
+		menu.addSeparator();
+		newProjectItem = createMenuItem(rtext.getAction(RText.NEW_PROJECT_ACTION));
+		menu.add(newProjectItem);
 
 		return menu;
 	}

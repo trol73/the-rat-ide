@@ -95,8 +95,7 @@ public class OptionsDialog extends EscapableDialog implements ActionListener, Tr
 
         super(owner);
 
-        ComponentOrientation orientation = ComponentOrientation.
-                getOrientation(getLocale());
+        ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
 
         ResourceBundle msg = ResourceBundle.getBundle("org.fife.ui.UI");
 
@@ -175,7 +174,6 @@ public class OptionsDialog extends EscapableDialog implements ActionListener, Tr
         setModal(true);
         applyComponentOrientation(orientation);
         pack();
-
     }
 
 

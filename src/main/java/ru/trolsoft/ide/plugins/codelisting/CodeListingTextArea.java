@@ -1,20 +1,18 @@
 package ru.trolsoft.ide.plugins.codelisting;
 
 import org.fife.io.UnicodeReader;
-import org.fife.rtext.RText;
-import org.fife.rtext.RTextUtilities;
-import org.fife.rtext.SyntaxFilters;
 import org.fife.rtext.plugins.project.model.Project;
 import org.fife.rtext.plugins.project.model.ProjectType;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextArea;
 import ru.trolsoft.ide.plugins.codelisting.compilers.CodeListFile;
 import ru.trolsoft.ide.plugins.codelisting.compilers.GccCodeListFile;
 import ru.trolsoft.ide.utils.ProjectUtils;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +28,22 @@ public class CodeListingTextArea extends RSyntaxTextArea {
         super();
         this.plugin = plugin;
         setupTheme();
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int viewToModel = viewToModel(e.getPoint());
+                if (viewToModel >= 0) {
+                    try {
+                        int line = getLineOfOffset(viewToModel);
+                        onMouseClicked(line);
+                    } catch (BadLocationException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
     }
+
 
     private void setupTheme() {
         //boolean isDark = RTextUtilities.isDarkLookAndFeel();
@@ -106,4 +119,10 @@ public class CodeListingTextArea extends RSyntaxTextArea {
             return false;
         }
     }
+
+    private void onMouseClicked(int line) {
+        var srcPos = plugin.window.getListingInfo().getSourceLineForListingLine(line);
+        plugin.getApplication().openFile(srcPos.filePath(), srcPos.line(), 1);
+    }
+
 }

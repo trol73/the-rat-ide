@@ -24,7 +24,7 @@ public class CodeListingPlugin extends GUIPlugin<RText> {
     private static final ResourceBundle MSG = ResourceBundle.getBundle(MSG_BUNDLE);
 
     private final Icon icon;
-    private final CodeListingWindow window;
+    final CodeListingWindow window;
 
 
     public CodeListingPlugin(RText app) {

@@ -3,13 +3,21 @@ package ru.trolsoft.ide.plugins.codelisting;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.fife.rtext.RText;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ListingInfo {
+    private record SourcePos(int fileIndex, int line) {}
+
+    public record FileLine(String filePath, int line) {}
     private final RText rtext;
     private final Map<String, IntArrayList> codeListing = new HashMap<>();
     private final StringBuilder text = new StringBuilder();
+
+    private final List<String> sourceFiles = new ArrayList<>();
+    private final List<SourcePos> listingData = new ArrayList<>();
     private int textLine = 0;
 
     public ListingInfo(RText rtext) {
@@ -22,6 +30,8 @@ public class ListingInfo {
             text.delete(0, text.length() - 1);
         }
         textLine = 0;
+        sourceFiles.clear();
+        listingData.clear();
     }
 
     public void add(String sourceFile, int sourceLine, String listData) {
@@ -30,12 +40,14 @@ public class ListingInfo {
         if (fileData == null) {
             fileData = new IntArrayList();
             codeListing.put(sourceFile, fileData);
+            sourceFiles.add(sourceFile);
         }
         while (fileData.size() < sourceLine) {
             fileData.add(-1);
         }
         fileData.set(sourceLine-1, textLine);
         textLine++;
+        listingData.add(new SourcePos(sourceFiles.indexOf(sourceFile), sourceLine));
     }
 
     public String getText() {
@@ -51,5 +63,12 @@ public class ListingInfo {
     }
 
 
+    public FileLine getSourceLineForListingLine(int listingLine) {
+        if (listingLine < listingData.size()) {
+            var rec = listingData.get(listingLine);
+            return new FileLine(sourceFiles.get(rec.fileIndex), rec.line);
+        }
+        return null;
+    }
 
 }

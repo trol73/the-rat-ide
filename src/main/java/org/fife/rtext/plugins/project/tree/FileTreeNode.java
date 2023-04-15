@@ -176,6 +176,12 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
             PopupContent.PopupSubMenu newMenu = new PopupContent.PopupSubMenu(Messages.getString("Action.New"));
             newMenu.add(new NewFileOrFolderAction(this, true));
             newMenu.add(new NewFileOrFolderAction(this, false));
+            newMenu.addSeparator();
+            newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_C));
+            newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_C_HEADER));
+            newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_C_WITH_HEADER));
+            newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_ART));
+            newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_ART_HEADER));
             actions.add(newMenu);
         } else {
             actions.add(new OpenAction());

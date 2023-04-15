@@ -12,6 +12,7 @@ package org.fife.ui.rtextfilechooser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,6 +38,17 @@ import java.util.ArrayList;
  */
 public class DirectoryTree extends FileSystemTree {
 
+	private final boolean showHidden;
+
+
+	public DirectoryTree(boolean showHidden) {
+		super();
+		this.showHidden = showHidden;
+	}
+
+	public DirectoryTree() {
+		this(true);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -57,14 +69,13 @@ public class DirectoryTree extends FileSystemTree {
 	 */
 	@Override
 	protected File[] filterAndSort(File[] files) {
-
-		ArrayList<File> dirList = new ArrayList<>();
+		List<File> dirList = new ArrayList<>();
 
 		// First, separate the directories from regular files so we can
 		// sort them individually.  This part could be made more compact,
 		// but it isn't just for a tad more speed.
 		for (File file : files) {
-			if (file.isDirectory())
+			if (file.isDirectory() && (showHidden || !file.isHidden()))
 				dirList.add(file);
 		}
 
@@ -72,7 +83,6 @@ public class DirectoryTree extends FileSystemTree {
 
 		File[] fileArray = new File[dirList.size()];
 		return dirList.toArray(fileArray);
-
 	}
 
 

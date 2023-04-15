@@ -119,6 +119,12 @@ public class FolderProjectEntryTreeNode extends FileProjectEntryTreeNode impleme
         PopupContent.PopupSubMenu newMenu = new PopupContent.PopupSubMenu(Messages.getString("Action.New"));
         newMenu.add(new NewFileOrFolderAction(this, true));
         newMenu.add(new NewFileOrFolderAction(this, false));
+        newMenu.addSeparator();
+        newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_C));
+        newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_C_HEADER));
+        newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_C_WITH_HEADER));
+        newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_ART));
+        newMenu.add(new NewFileOrFolderAction(this, true, NewFileOrFolderAction.TYPE_ART_HEADER));
         actions.add(0, newMenu);
 
         actions.add(actions.size() - 1, new ConfigureFiltersAction());

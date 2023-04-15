@@ -791,23 +791,24 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
                 showPopupMenu(e);
             } else if (handFilePath != null && e.getID() == MouseEvent.MOUSE_CLICKED) {
                 var app = plugin.getApplication();
-                app.openFile(new File(handFilePath), () -> {
-                    var editor = getMainView().getCurrentTextArea();
-                    if (fileLine > 0) {
-                        try {
-                            if (fileColumn <= 0) {
-                                fileColumn++;
-                            }
-                            int pos = editor.getLineStartOffset(fileLine - 1) + fileColumn - 1;
-                            SwingUtilities.invokeLater(() -> {
-                                editor.setCaretPosition(pos);
-                                SwingUtilities.invokeLater(() -> editor.setCaretPosition(pos));
-                            });
-                        } catch (BadLocationException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                });
+                app.openFile(handFilePath, fileLine, fileColumn);
+//                app.openFile(new File(handFilePath), () -> {
+//                    var editor = getMainView().getCurrentTextArea();
+//                    if (fileLine > 0) {
+//                        try {
+//                            if (fileColumn <= 0) {
+//                                fileColumn++;
+//                            }
+//                            int pos = editor.getLineStartOffset(fileLine - 1) + fileColumn - 1;
+//                            SwingUtilities.invokeLater(() -> {
+//                                editor.setCaretPosition(pos);
+//                                SwingUtilities.invokeLater(() -> editor.setCaretPosition(pos));
+//                            });
+//                        } catch (BadLocationException ex) {
+//                            ex.printStackTrace();
+//                        }
+//                    }
+//                });
             }
         }
 

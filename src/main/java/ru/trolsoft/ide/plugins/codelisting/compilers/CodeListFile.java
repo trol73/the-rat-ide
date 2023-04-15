@@ -11,5 +11,5 @@ public abstract class CodeListFile {
         this.project = project;
     }
 
-    abstract public File getListFile();
+    public abstract File getListFile();
 }

@@ -64,10 +64,11 @@ public class WorkspaceTree extends JTree implements FileSelector {
     private final DefaultTreeModel model;
     private JPopupMenu popup;
 
+    private final WorkspaceRootTreeNode root;
 
     public WorkspaceTree(ProjectPlugin plugin, Workspace workspace) {
         this.plugin = plugin;
-        WorkspaceRootTreeNode root = new WorkspaceRootTreeNode(plugin, workspace);
+        root = new WorkspaceRootTreeNode(plugin, workspace);
         model = new DefaultTreeModel(root);
         installActions();
         setModel(model);
@@ -198,20 +199,17 @@ public class WorkspaceTree extends JTree implements FileSelector {
     public void fireTreeWillExpand(TreePath e) throws ExpandVetoException {
         super.fireTreeWillExpand(e);
 
-        AbstractWorkspaceTreeNode awtn =
-                (AbstractWorkspaceTreeNode) e.getLastPathComponent();
+        AbstractWorkspaceTreeNode awtn = (AbstractWorkspaceTreeNode) e.getLastPathComponent();
 
         // If the only child is the dummy one, we know we haven't populated
         // this node with true children yet.
-        if (awtn instanceof PhysicalLocationTreeNode pltn) {
-            if (pltn.isNotPopulated()) {
-                Cursor orig = getCursor();
-                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                try {
-                    refreshChildren(pltn);
-                } finally {
-                    setCursor(orig);
-                }
+        if (awtn instanceof PhysicalLocationTreeNode pltn && pltn.isNotPopulated()) {
+            Cursor orig = getCursor();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            try {
+                refreshChildren(pltn);
+            } finally {
+                setCursor(orig);
             }
         }
 
@@ -307,8 +305,7 @@ public class WorkspaceTree extends JTree implements FileSelector {
             }
         });
 
-        int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() |
-                InputEvent.SHIFT_DOWN_MASK;
+        int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, mods), "CopyPath");
         am.put("CopyPath", new AbstractAction() {
             @Override
@@ -328,8 +325,7 @@ public class WorkspaceTree extends JTree implements FileSelector {
             }
         });
 
-        mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() |
-                InputEvent.SHIFT_DOWN_MASK;
+        mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, mods), "FindInFilesFH");
         am.put("FindInFilesFH", new AbstractAction() {
             @Override
@@ -421,8 +417,7 @@ public class WorkspaceTree extends JTree implements FileSelector {
                 node.getFile().getAbsolutePath());
         RText rtext = plugin.getApplication();
         String title = rtext.getString("ConfDialogTitle");
-        int rc = JOptionPane.showConfirmDialog(rtext, msg, title,
-                JOptionPane.YES_NO_OPTION);
+        int rc = JOptionPane.showConfirmDialog(rtext, msg, title, JOptionPane.YES_NO_OPTION);
         if (rc == JOptionPane.YES_OPTION) {
             model.removeNodeFromParent(node);
             node.entry.removeFromParent();
@@ -469,6 +464,4 @@ public class WorkspaceTree extends JTree implements FileSelector {
         // so ourselves.
         setCellRenderer(WorkspaceTreeRenderer.create());
     }
-
-
 }

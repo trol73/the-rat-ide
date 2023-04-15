@@ -151,8 +151,7 @@ class GeneralOptionPanel extends OptionsDialogPanel
 
         // A panel for other general stuff.
         Box otherPanel = Box.createVerticalBox();
-        otherPanel.setBorder(new OptionPanelBorder(
-                msg.getString("OptOtherTitle")));
+        otherPanel.setBorder(new OptionPanelBorder(msg.getString("OptOtherTitle")));
         temp = new JPanel();
         temp.setLayout(new BoxLayout(temp, BoxLayout.LINE_AXIS));
         utf8BomCB = new JCheckBox(msg.getString("OptBOMInUtf8Files"));

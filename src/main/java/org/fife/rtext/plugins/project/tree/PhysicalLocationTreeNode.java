@@ -15,8 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.Icon;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.tree.TreeNode;
 
 import org.fife.rtext.RText;
@@ -128,37 +127,47 @@ public interface PhysicalLocationTreeNode extends TreeNode {
 	 * (which must be a directory).
 	 */
 	class NewFileOrFolderAction extends BaseAction {
-
+		static final String TYPE_NONE = "";
+		static final String TYPE_C_WITH_HEADER = "_c_h";
+		static final String TYPE_C = "_c";
+		static final String TYPE_C_HEADER = "_h";
+		static final String TYPE_ART = "_art";
+		static final String TYPE_ART_HEADER = "_arth";
 		private final PhysicalLocationTreeNode node;
 		private final boolean isFile;
+		private final String type;
 
-		NewFileOrFolderAction(PhysicalLocationTreeNode node,
-				boolean isFile) {
-			super(isFile ? "Action.NewFile": "Action.NewFolder");
+		NewFileOrFolderAction(PhysicalLocationTreeNode node, boolean isFile, String type) {
+			super(isFile ? "Action.NewFile" + type: "Action.NewFolder");
 			IconGroup iconGroup = node.getPlugin().getApplication().getIconGroup();
-			setIcon(iconGroup.getIcon(isFile ? "add_file" : "add_folder"));
+			setIcon(iconGroup.getIcon(isFile ? "add_file" + type : "add_folder"));
 			this.node = node;
 			this.isFile = isFile;
+			this.type = type;
+		}
+
+		NewFileOrFolderAction(PhysicalLocationTreeNode node, boolean isFile) {
+			this(node, isFile, TYPE_NONE);
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			File parent = node.getFile();
-			if (parent==null || !parent.isDirectory()) {
+			if (parent == null || !parent.isDirectory()) {
 				UIManager.getLookAndFeel().provideErrorFeedback(null);
 				return;
 			}
 
 			RText rtext = node.getPlugin().getApplication();
 			NameChecker nameChecker = new FileNameChecker(parent, !isFile);
-			NewFileOrFolderDialog dialog = new NewFileOrFolderDialog(rtext,
-					!isFile, nameChecker);
+			NewFileOrFolderDialog dialog = new NewFileOrFolderDialog(rtext, !isFile, nameChecker, type);
 			dialog.setFileName(null); // Force focus on the text field
+			dialog.center();
 			dialog.setVisible(true);
 
+
 			String newName = dialog.getFileName();
-			if (newName!=null) {
+			if (newName != null) {
 				boolean success = createFileOrFolderImpl(newName);
 				if (!success) {
 					UIManager.getLookAndFeel().provideErrorFeedback(rtext);
@@ -173,6 +182,45 @@ public interface PhysicalLocationTreeNode extends TreeNode {
 		}
 
 		private File createFileObject(String name) {
+			switch (type) {
+				case TYPE_C -> {
+					if (!name.endsWith(".c")) {
+						name += ".c";
+					}
+					return new File(node.getFile(), name);
+				}
+				case TYPE_C_HEADER-> {
+					if (!name.endsWith(".h")) {
+						name += ".h";
+					}
+					return new File(node.getFile(), name);
+				}
+				case TYPE_C_WITH_HEADER -> {
+					if (name.endsWith(".h") || name.endsWith(".c")) {
+						name = name.substring(0, name.length()-2);
+					}
+					try {
+						if (!new File(node.getFile(), name + ".h").createNewFile()) {
+							return null;
+						}
+					} catch (IOException e) {
+						return null;
+					}
+					return new File(node.getFile(), name + ".c");
+				}
+				case TYPE_ART -> {
+					if (!name.endsWith(".art")) {
+						name += ".art";
+					}
+					return new File(node.getFile(), name);
+				}
+				case TYPE_ART_HEADER -> {
+					if (!name.endsWith(".arth")) {
+						name += ".arth";
+					}
+					return new File(node.getFile(), name);
+				}
+			}
 			return new File(node.getFile(), name);
 		}
 

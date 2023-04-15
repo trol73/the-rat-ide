@@ -33,12 +33,12 @@ import ru.trolsoft.ide.dialogs.ProjectSettingsDialog;
  * @author Robert Futrell
  * @version 1.0
  */
-class ProjectTreeNode extends AbstractWorkspaceTreeNode {
+public class ProjectTreeNode extends AbstractWorkspaceTreeNode {
 
     private final Project project;
 
 
-    ProjectTreeNode(ProjectPlugin plugin, Project project) {
+    public ProjectTreeNode(ProjectPlugin plugin, Project project) {
         super(plugin);
         this.project = project;
     }

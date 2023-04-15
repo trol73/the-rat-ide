@@ -43,6 +43,7 @@ import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -1588,11 +1589,28 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     public void openFile(File file, Runnable doAfter) {
         //gets called when we receive an open event from the finder on OS X
         SwingUtilities.invokeLater(() -> {
-            // null encoding means check for Unicode before using
-            // system default encoding.
+            // null encoding means check for Unicode before using system default encoding.
             mainView.openFile(file.getAbsolutePath(), null, true);
             if (doAfter != null) {
                 doAfter.run();
+            }
+        });
+    }
+
+    public void openFile(String filePath, int line, int column) {
+        openFile(new File(filePath), () -> {
+            var editor = getMainView().getCurrentTextArea();
+            if (line > 0) {
+                try {
+                    var col = column <= 0 ? 1 : column;
+                    int pos = editor.getLineStartOffset(line - 1) + col - 1;
+                    SwingUtilities.invokeLater(() -> {
+                        editor.setCaretPosition(pos);
+                        SwingUtilities.invokeLater(() -> editor.setCaretPosition(pos));
+                    });
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
