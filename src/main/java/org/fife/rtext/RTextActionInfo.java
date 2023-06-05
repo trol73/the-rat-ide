@@ -78,6 +78,9 @@ public interface RTextActionInfo {
 	String UPLOAD_ACTION            = "uploadAction";
 	String NEW_PROJECT_ACTION            = "newProjectAction";
 	String SWITCH_SOURCE_HEADER_ACTION = "switchSourceHeaderAction";
+	String SHOW_FUNCTION_SIZE_ACTION = "showFunctionSizeAction";
+	String SHOW_FILE_MAP_ACTION = "showFileMapAction";
+	String SHOW_GCC_LISTING_ACTION = "showGccListingAction";
 
 	String[] ACTION_NAMES = {
 		NEW_ACTION,

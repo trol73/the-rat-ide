@@ -11,8 +11,7 @@
 package org.fife.rtext.plugins.project.tree;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import javax.swing.*;
@@ -199,14 +198,23 @@ public interface PhysicalLocationTreeNode extends TreeNode {
 					if (name.endsWith(".h") || name.endsWith(".c")) {
 						name = name.substring(0, name.length()-2);
 					}
+					String macroName = "_" + name.toUpperCase() + "_H_";
 					try {
-						if (!new File(node.getFile(), name + ".h").createNewFile()) {
+						File hFile = new File(node.getFile(), name + ".h");
+						if (!hFile.createNewFile()) {
 							return null;
 						}
+						writeFile(hFile, "#ifndef " + macroName + "\n" +
+								"#define " + macroName + "\n" +
+								"\n\n\n" +
+								"#endif // " + macroName + "\n"
+						);
 					} catch (IOException e) {
 						return null;
 					}
-					return new File(node.getFile(), name + ".c");
+					File cFile = new File(node.getFile(), name + ".c");
+					writeFile(cFile, "#include \"" + name + ".h\"\n");
+					return cFile;
 				}
 				case TYPE_ART -> {
 					if (!name.endsWith(".art")) {
@@ -242,5 +250,12 @@ public interface PhysicalLocationTreeNode extends TreeNode {
 
 	}
 
+	private static void writeFile(File file, String content) {
+		try (Writer writer = new FileWriter(file)) {
+			writer.write(content);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

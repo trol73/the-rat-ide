@@ -47,7 +47,6 @@ class PrintAction extends AppAction<RText> {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		RText owner = getApplication();
 		RTextEditorPane textArea = owner.getMainView().getCurrentTextArea();
 

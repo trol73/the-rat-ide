@@ -55,12 +55,12 @@ public class StatusBar extends org.fife.ui.StatusBar implements PropertyChangeLi
 
     private boolean rowColumnIndicatorVisible;
 
-    private StatusBarPanel overwritePanel;
-    private StatusBarPanel capsLockPanel;
-    private StatusBarPanel readOnlyPanel;
-    private StatusBarPanel selectionLengthPanel;
-    private StatusBarPanel devicePanel;
-    private StatusBarPanel encodingPanel;
+    private final StatusBarPanel overwritePanel;
+    private final StatusBarPanel capsLockPanel;
+    private final StatusBarPanel readOnlyPanel;
+    private final StatusBarPanel selectionLengthPanel;
+    private final StatusBarPanel devicePanel;
+    private final StatusBarPanel encodingPanel;
 
     private final String fileSaveSuccessfulText;
     private final String openedFileText;

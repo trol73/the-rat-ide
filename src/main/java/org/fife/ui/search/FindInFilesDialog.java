@@ -929,7 +929,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 */
 	@Override
 	public void setVisible(boolean visible) {
-
 		refreshUIFromContext();
 		super.setVisible(visible);
 

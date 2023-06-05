@@ -156,8 +156,10 @@ public class RTextMenuBar extends MenuBar<RText>
 	private JMenuItem codeListingItem;
 	private JMenuItem uploadItem;
 	private JMenuItem switchSourceHeaderItem;
-
+	private JMenuItem showFunctionSizeItem;
+	private JMenuItem showFileMapItem;
 	private JMenuItem newProjectItem;
+	private JMenuItem showGccListingItem;
 
 	/**
 	 * Creates an instance of the menu bar.
@@ -412,6 +414,20 @@ public class RTextMenuBar extends MenuBar<RText>
 		switchSourceHeaderItem = createMenuItem(rtext.getAction(RText.SWITCH_SOURCE_HEADER_ACTION));
 		switchSourceHeaderItem.setAccelerator(KeyStroke.getKeyStroke('.', KeyEvent.META_DOWN_MASK));
 		fileMenu.add(switchSourceHeaderItem);
+
+		showFunctionSizeItem = createMenuItem(rtext.getAction(RText.SHOW_FUNCTION_SIZE_ACTION));
+		showFunctionSizeItem.setAccelerator(KeyStroke.getKeyStroke(']', KeyEvent.META_DOWN_MASK));
+		fileMenu.add(showFunctionSizeItem);
+
+		showFileMapItem = createMenuItem(rtext.getAction(RText.SHOW_FILE_MAP_ACTION));
+		showFileMapItem.setAccelerator(KeyStroke.getKeyStroke('T', KeyEvent.META_DOWN_MASK));
+		fileMenu.add(showFileMapItem);
+
+		showGccListingItem = createMenuItem(rtext.getAction(RText.SHOW_GCC_LISTING_ACTION));
+		showGccListingItem.setAccelerator(KeyStroke.getKeyStroke(']', KeyEvent.META_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK));
+		fileMenu.add(showGccListingItem);
+
+		fileMenu.addSeparator();
 
 		recentFilesMenu = new RecentFilesMenu(menuMsg.getString("RecentFiles")) {
 			@Override

@@ -386,7 +386,7 @@ public final class FileTypeUtil implements SyntaxConstants {
 		initFiltersImpl(map, SYNTAX_STYLE_AVR_RAT, "*.art", "*.arth");
 		initFiltersImpl(map, SYNTAX_STYLE_CHIP_TEST, "*.ic");
 		initFiltersImpl(map, SYNTAX_STYLE_ACTIONSCRIPT, "*.as", "*.asc");
-		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_AVR, "*.asm", "*.s");
+		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_AVR, "*.asm", "*.s", "*.lss");
 		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_6502, "*.asm", "*.s");
 		initFiltersImpl(map, SYNTAX_STYLE_ASSEMBLER_X86, "*.asm", "*.s");
 		initFiltersImpl(map, SYNTAX_STYLE_BBCODE, "*.bbc");

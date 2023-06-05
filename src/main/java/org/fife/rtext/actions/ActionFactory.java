@@ -177,6 +177,15 @@ public final class ActionFactory implements RTextActionInfo {
 		a = new SwitchSourceHeaderAction(rtext, msg, null);
 		rtext.addAction(SWITCH_SOURCE_HEADER_ACTION, a);
 
+		a = new ShowGccListingAction(rtext, msg, null);
+		rtext.addAction(SHOW_GCC_LISTING_ACTION, a);
+
+		a = new ShowFunctionSizeAction(rtext, msg, null);
+		rtext.addAction(SHOW_FUNCTION_SIZE_ACTION, a);
+
+		a = new ShowFileMapAction(rtext, msg, null);
+		rtext.addAction(SHOW_FILE_MAP_ACTION, a);
+
 		a = new TextAreaOrientationAction(rtext, msg, "LeftToRightAction", null,
 				ComponentOrientation.LEFT_TO_RIGHT);
 		rtext.addAction(LTR_ACTION, a);
