@@ -366,7 +366,9 @@ public class NewProjectDialog extends AbstractEnterFileNameDialog implements Doc
         project.setType(template.type);
         project.setDevice(getDevice());
         project.setEncoding(Objects.requireNonNull(cbDefaultEncoding.getSelectedItem()).toString());
-        project.setMainFile(Objects.requireNonNull(template.mainFile.getAbsolutePath()));
+        if (template.mainFile != null) {
+            project.setMainFile(Objects.requireNonNull(template.mainFile.getAbsolutePath()));
+        }
 
         ProjectPlugin plugin = rtext.getProjectPlugin();
         workspace.addProject(project);

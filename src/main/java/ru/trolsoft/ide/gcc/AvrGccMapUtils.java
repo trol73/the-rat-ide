@@ -34,12 +34,16 @@ public class AvrGccMapUtils {
     }
 
     public static List<FunctionRec> loadMapForObjectFile(String mapFile, String objFile) {
+        if (objFile == null) {
+            return null;
+        }
         var result = new ArrayList<FunctionRec>();
         try (
             FileReader fr = new FileReader(mapFile);
             BufferedReader reader = new BufferedReader(fr)
         ) {
             String name = null;
+            boolean isCurrentObjFileBlock = false;
             while (true) {
                 String line = reader.readLine();
                 if (line == null) {
@@ -50,11 +54,14 @@ public class AvrGccMapUtils {
                     name = null;
                     continue;
                 }
+                if (line.startsWith(".text")) {
+                    isCurrentObjFileBlock = line.endsWith(objFile);
+                }
                 if (line.startsWith(".text.")) {
-                    name = line.substring(".text.".length());
+                    name = line.substring(".text.".length()).trim();
                     continue;
                 }
-                if (name == null) {
+                if (name == null && !isCurrentObjFileBlock) {
                     continue;
                 }
                 if (line.startsWith("0x00") && line.endsWith(objFile)) {
@@ -65,6 +72,15 @@ public class AvrGccMapUtils {
                             name,
                             Integer.parseInt(offsetStr.substring(2), 16),
                             Integer.parseInt(lengthStr.substring(2), 16)
+                    ));
+                } else if (line.startsWith("0x00") && isCurrentObjFileBlock) {
+                    var st = new StringTokenizer(line, " ", false);
+                    String offsetStr = st.nextToken();
+                    String procName = st.nextToken();
+                    result.add(new FunctionRec(
+                            procName,
+                            Integer.parseInt(offsetStr.substring(2), 16),
+                            -1
                     ));
                 }
             }
@@ -155,7 +171,7 @@ public class AvrGccMapUtils {
 
     public static void showGccListing(RTextEditorPane editor, RText rtext) {
         List<FunctionRec> mapData = getMapDataForSourceFile(editor, rtext);
-        if (mapData == null) {
+        if (mapData == null || mapData.isEmpty()) {
             return;
         }
         String text = getLineStr(editor, editor.getLine());

@@ -469,6 +469,13 @@ public class RTextMenuBar extends MenuBar<RText>
 
 		menu.addSeparator();
 
+		menu.add(createMenuItem(rtext.getAction(RText.AVR_ASSEMBLER_PAGE_ACTION)));
+		menu.add(createMenuItem(rtext.getAction(RText.AVR_GCC_PAGE_ACTION)));
+		menu.add(createMenuItem(rtext.getAction(RText.AVR_RAT_PAGE_ACTION)));
+
+		menu.addSeparator();
+
+
 		aboutItem = createMenuItem(rtext.getAction(RText.ABOUT_ACTION_KEY));
 		menu.add(aboutItem);
 

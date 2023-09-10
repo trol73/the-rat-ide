@@ -206,10 +206,14 @@ public class BuildOutputWindow extends DockableWindow implements PropertyChangeL
 //        }
     }
 
-    public void execute(String cmd, File pwd) {
+    public void execute(String cmd, File pwd, Runnable onFinish) {
         textArea.setPwd(pwd);
-        textArea.handleSubmit(cmd);
+        textArea.handleSubmit(cmd, onFinish);
         textArea.resetPwd();
+    }
+
+    public void execute(String cmd, File pwd) {
+        execute(cmd, pwd, null);
     }
 
 

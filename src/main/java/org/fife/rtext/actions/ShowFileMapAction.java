@@ -22,7 +22,10 @@ public class ShowFileMapAction extends AppAction<RText> {
         RText rtext = getApplication();
         AbstractMainView mainView = getApplication().getMainView();
         RTextEditorPane editor = mainView.getCurrentTextArea();
-        AvrGccMapUtils.printMapForSource(editor, rtext);
+        String path = editor.getFileFullPath();
+        if (path.endsWith(".c") || path.endsWith(".cpp") ) {
+            AvrGccMapUtils.printMapForSource(editor, rtext);
+        }
     }
 
 }

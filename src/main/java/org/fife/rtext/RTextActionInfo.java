@@ -48,6 +48,9 @@ public interface RTextActionInfo {
 	String OPTIONS_ACTION			  = "optionsAction";
 	String HOME_PAGE_ACTION			  = "homePageAction";
 	String UPDATES_ACTION			  = "checkForUpdatesAction";
+	String AVR_ASSEMBLER_PAGE_ACTION = "avrAssemblerPageAction";
+	String AVR_GCC_PAGE_ACTION = "avrGccPageAction";
+	String AVR_RAT_PAGE_ACTION = "avrRatPageAction";
 	String INC_FONT_SIZES_ACTION	  = "incFontSizesAction";
 	String DEC_FONT_SIZES_ACTION	  = "decFontSizesAction";
 

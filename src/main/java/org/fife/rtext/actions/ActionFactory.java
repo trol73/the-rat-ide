@@ -138,6 +138,15 @@ public final class ActionFactory implements RTextActionInfo {
 		a = new CheckForUpdatesAction(rtext, msg, null);
 		rtext.addAction(UPDATES_ACTION, a);
 
+		a = new AvrAssemblerPageAction(rtext, msg, null);
+		rtext.addAction(AVR_ASSEMBLER_PAGE_ACTION, a);
+
+		a = new AvrGccPageAction(rtext, msg, null);
+		rtext.addAction(AVR_GCC_PAGE_ACTION, a);
+
+		a = new AvrRatPageAction(rtext, msg, null);
+		rtext.addAction(AVR_RAT_PAGE_ACTION, a);
+
 		a = new CloseAction(rtext, msg, null);
 		rtext.addAction(CLOSE_ACTION, a);
 

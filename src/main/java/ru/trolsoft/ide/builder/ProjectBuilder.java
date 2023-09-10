@@ -124,10 +124,13 @@ public class ProjectBuilder {
         String path = project.getMainFile();
         File pwd = new File(path).getParentFile();
         window.prompt("Compile " + project.getName() + "\n");
-        window.execute("builder", pwd);
-        if (listingVisible) {
-            listingWindow.loadRatGccListing(pwd.getAbsolutePath() + "/build/avr-rat.lss");
-        }
+        window.execute("builder", pwd, () -> {
+            if (listingVisible) {
+                listingWindow.loadRatGccListing(pwd.getAbsolutePath() + "/build/avr-rat.lss");
+                var textArea = rtext.getMainView().getCurrentTextArea();
+                listingWindow.activateLineFor(textArea, textArea.getLine());
+            }
+        });
         restoreFocus();
     }
 

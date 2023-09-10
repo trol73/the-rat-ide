@@ -11,6 +11,7 @@ import ru.trolsoft.ide.utils.ProjectUtils;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -60,7 +61,8 @@ public class CodeListingTextArea extends RSyntaxTextArea {
         setCaretColor(theme.caretColor);
         setSelectionColor(theme.selectionBG);
         setUseSelectedTextColor(theme.useSelectionFG);
-        setCurrentLineHighlightColor(theme.currentLineHighlight);
+        //setCurrentLineHighlightColor(theme.currentLineHighlight);
+        setCurrentLineHighlightColor(new Color(0x5555ff));
         setMatchedBracketBGColor(theme.matchedBracketBG);
         setMatchedBracketBorderColor(theme.matchedBracketFG);
         setMarginLineColor(theme.marginLineColor);
@@ -122,7 +124,9 @@ public class CodeListingTextArea extends RSyntaxTextArea {
 
     private void onMouseClicked(int line) {
         var srcPos = plugin.window.getListingInfo().getSourceLineForListingLine(line);
-        plugin.getApplication().openFile(srcPos.filePath(), srcPos.line(), 1);
+        if (srcPos != null) {
+            plugin.getApplication().openFile(srcPos.filePath(), srcPos.line(), 1);
+        }
     }
 
 }

@@ -83,6 +83,7 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
 
     private File pwd;
     private transient Thread activeProcessThread;
+    private transient Runnable finishHandler;
 
 
     /**
@@ -370,7 +371,7 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
      *
      * @param text The text entered by the user.
      */
-    void handleSubmit(String text) {
+    void handleSubmit(String text, Runnable onFinish) {
         // Ensure our directory wasn't deleted out from under us.
         if (!pwd.isDirectory()) {
             append(plugin.getString("Error.CurrentDirectoryDNE", pwd.getAbsolutePath()), STYLE_STDERR);
@@ -392,7 +393,12 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
         final String[] cmd = cmdList.toArray(new String[0]);
 
         setEditable(false);
+        finishHandler = onFinish;
         startProcess(cmd);
+    }
+
+    void handleSubmit(String text) {
+        handleSubmit(text, null);
     }
 
 
@@ -402,6 +408,10 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
             pr.setDirectory(pwd);
             pr.setOutputListener(new ProcessOutputListener());
             pr.run();
+            if (finishHandler != null) {
+                SwingUtilities.invokeLater(finishHandler);
+                finishHandler = null;
+            }
         });
         firePropertyChange(PROPERTY_PROCESS_RUNNING, false, true);
         activeProcessThread.start();

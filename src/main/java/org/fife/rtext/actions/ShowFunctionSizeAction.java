@@ -21,7 +21,10 @@ public class ShowFunctionSizeAction extends AppAction<RText>  {
         RText rtext = getApplication();
         AbstractMainView mainView = getApplication().getMainView();
         RTextEditorPane editor = mainView.getCurrentTextArea();
-        AvrGccMapUtils.showFunctionSize(editor, rtext);
+        String path = editor.getFileFullPath();
+        if (path.endsWith(".c") || path.endsWith(".cpp") ) {
+            AvrGccMapUtils.showFunctionSize(editor, rtext);
+        }
     }
 
 

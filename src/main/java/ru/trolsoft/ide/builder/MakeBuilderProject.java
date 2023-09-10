@@ -41,14 +41,21 @@ public class MakeBuilderProject {
         }
         String rootPath = new File(project.getMainFile()).getParent();
         String filePath = srcPath.substring(rootPath.length());
-        if (srcPath.startsWith(rootPath) && srcPath.endsWith(".c")) {
+        if (srcPath.startsWith(rootPath) && isSourceFile(srcPath)) {
             if (filePath.startsWith("/src/")) {
                 filePath = rootPath + "/build" + filePath.substring(4);
-                filePath = filePath.substring(0, filePath.length()-2) + ".o";
+                int lastDot = filePath.lastIndexOf('.');
+                if (lastDot >= 0) {
+                    filePath = filePath.substring(0, lastDot) + ".o";
+                }
             }
             return filePath;
         }
         return null;
+    }
+
+    private static boolean isSourceFile(String path) {
+        return path.endsWith(".c") || path.endsWith(".art");
     }
 
     public static String getMapFilePath(Project project) {
