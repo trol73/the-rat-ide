@@ -1,0 +1,94 @@
+#define DEVICE "86RK"
+
+var byte_E008: byte absolute 0xE008
+
+proc start() {
+	JMP	proc_F836
+}
+
+proc proc_F803() {
+	JMP	proc_FE63
+}
+
+
+proc proc_F836() {
+	A = 0x8A
+	byte_8003 = A
+	SP = 0x76CF
+	CALL	proc_FACE
+	HL = 0x7600
+	DE = 0x765F
+	C = 0
+	CALL	proc_F9ED
+	HL = 0x76CF
+	word_761C = HL
+	HL = 0xFF5A
+	CALL	proc_F922
+	CALL	proc_FACE
+	HL = 0x75FF
+	word_7631 = HL
+	HL = 0x1D2A
+	word_762F = HL
+	A = 0xC3
+	byte_7626 = A
+@proc_F86C:
+	SP = 0x76CF
+	HL = 0xFF66
+	CALL	proc_F922
+	byte_8002 = A
+	A--
+	byte_A002 = A
+	CALL	proc_F8EE
+	HL = 0xF86C
+	PUSH	HL
+	HL = 0x7633
+	A = M
+	CPI	0x58
+	JZ	proc_FFD3
+	CPI	0x55
+	JZ	lbl_F000
+	PUSH	PSW
+	CALL	proc_F92C
+	HL = word_762B
+	C = L
+	B = H
+	HL = word_7629
+	XCHG
+	HL = word_7627
+	POP	PSW
+	CPI	0x44
+	JZ	proc_F9C5
+	CPI	0x43
+	JZ	proc_F9D7
+	CPI	0x46
+	JZ	proc_F9ED
+	CPI	0x53
+	JZ	proc_F9F4
+	CPI	0x54
+	JZ	proc_F9FF
+	CPI	0x4D
+	JZ	proc_FA26
+	CPI	0x47
+	JZ	proc_FA3F
+	CPI	0x49
+	JZ	proc_FA86
+	CPI	0x4F
+	JZ	proc_FB2D
+	CPI	0x4C
+	JZ	proc_FA08
+	CPI	0x52
+	JZ	proc_FA68
+	JMP	lbl_F000
+}
+
+proc proc_F8DC() {
+	A = 0x33
+	CMP	L
+	JZ	proc_F8F1
+	PUSH	HL
+	HL = 0xFF9E
+	CALL	proc_F922
+	POP	HL
+	HL--
+	JMP	proc_F8F3
+}
