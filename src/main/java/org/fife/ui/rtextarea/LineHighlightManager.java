@@ -53,7 +53,7 @@ class LineHighlightManager {
 	public Object addLineHighlight(int line, Color color) throws BadLocationException {
 		int offs = textArea.getLineStartOffset(line);
 		LineHighlightInfo lhi = new LineHighlightInfo(textArea.getDocument().createPosition(offs), color);
-		if (lineHighlights==null) {
+		if (lineHighlights == null) {
 			lineHighlights = new ArrayList<>(1);
 		}
 		int index = Collections.binarySearch(lineHighlights, lhi, comparator);

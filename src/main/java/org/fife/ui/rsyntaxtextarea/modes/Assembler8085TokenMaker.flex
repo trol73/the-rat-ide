@@ -57,7 +57,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 %%
 
 %public
-%class AssemblerAvrTokenMaker
+%class Assembler8085TokenMaker
 %extends AbstractJFlexTokenMaker
 %unicode
 %ignorecase
@@ -71,7 +71,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Constructor.  We must have this here as JFLex does not generate a
 	 * no parameter constructor.
 	 */
-	public AssemblerAvrTokenMaker() {
+	public Assembler8085TokenMaker() {
 		super();
 	}
 
@@ -316,167 +316,33 @@ Operator				= ("+"|"-"|"*"|"/"|"%"|"^"|"|"|"&"|"~"|"!"|"="|"<"|">")
 
 
 	/* Registers */
-	"SREG" |
 	"STACK" |
 	"SP" |
-	"EIND" |
-	"RAMPX" |
-	"RAMPY" |
-	"RAMPZ" |
-	"RAMPD" |
-	"R0" |
-	"R1" |
-	"R2" |
-	"R3" |
-	"R4" |
-	"R5" |
-	"R6" |
-	"R7" |
-	"R8" |
-	"R9" |
-	"R10" |
-	"R11" |
-	"R12" |
-	"R13" |
-	"R14" |
-	"R15" |
-	"R16" |
-	"R17" |
-	"R18" |
-	"R19" |
-	"R20" |
-	"R21" |
-	"R22" |
-	"R23" |
-	"R24" |
-	"R25" |
-	"R26" |
-	"R27" |
-	"R28" |
-	"R29" |
-	"R30" |
-	"R31" |
-	"R32"	{ addToken(Token.REGISTER); }
+	"A" |
+	"B" |
+	"C" |
+	"D" |
+	"E" |
+	"H" |
+	"L" |
+	"M" |
+	"BC" |
+	"DE" |
+	"HL" |
+	"SP" |
+	"PSW"	{ addToken(Token.REGISTER); }
 
 	/* Instructions. */
-	"ADD" |
-	"ADC" |
-	"SUB" |
-	"SUBI" |
-	"SBC" |
-	"SBCI" |
-	"AND" |
-	"ANDI" |
-	"OR" |
-	"ORI" |
-	"EOR" |
-	"COM" |
-	"NEG" |
-	"SBR" |
-	"CBR" |
-	"INC" |
-	"DEC" |
-	"TST" |
-	"CLR" |
-	"SER" |
-	"RJMP" |
-	"RCALL" |
-	"RET" |
-	"RETI" |
-	"CPSE" |
-	"CP" |
-	"CPC" |
-	"CPI" |
-	"SBRC" |
-	"SBRS" |
-	"SBIC" |
-	"SBIS" |
-	"BRBS" |
-	"BRBC" |
-	"BREQ" |
-	"BRNE" |
-	"BRCS" |
-	"BRCC" |
-	"BRSH" |
-	"BRLO" |
-	"BRMI" |
-	"BRPL" |
-	"BRGE" |
-	"BRLT" |
-	"BRHS" |
-	"BRHC" |
-	"BRTS" |
-	"BRTC" |
-	"BRVS" |
-	"BRVC" |
-	"BRIE" |
-	"BRID" |
-	"LD" |
-	"ST" |
-	"MOV" |
-	"LDI" |
-	"IN" |
-	"OUT" |
-	"LPM" |
-	"SBI" |
-	"CBI" |
-	"LSL" |
-	"LSR" |
-	"ROL" |
-	"ROR" |
-	"ASR" |
-	"SWAP" |
-	"BSET" |
-	"BCLR" |
-	"BST" |
-	"BLD" |
-	"SEC" |
-	"CLC" |
-	"SEN" |
-	"CLN" |
-	"SEZ" |
-	"CLZ" |
-	"SEI" |
-	"CLI" |
-	"SES" |
-	"CLS" |
-	"SEV" |
-	"CLV" |
-	"SET" |
-	"CLT" |
-	"SEH" |
-	"CLH" |
-	"NOP" |
-	"SLEEP" |
-	"WDR" |
-	"ADIW" |
-	"SBIW" |
-	"IJMP" |
-	"ICALL" |
-	"LDD" |
-	"LDS" |
-	"STD" |
-	"STS" |
-	"PUSH" |
-	"POP" |
-	"JMP" |
-	"CALL" |
-	"MUL" |
-	"MULS" |
-	"MULSU" |
-	"FMUL" |
-	"FMULS" |
-	"FMULSU" |
-	"MOVW" |
-	"SPM" |
-	"BREAK" |
-	"EIJMP" |
-	"EICALL" |
-	"DES" |
-	"XCH" |
-	"LAS" |
-	"LAC" |
-	"LAT" 		{ addToken(Token.CPU_INSTRUCTION); }
+    "CALL"|"CC"|"CM"|"CNC"|"CNZ"|"CP"|"CPE"|"CPO"|"CZ"|"JC"|"JM"|"JMP"|"JNC"|"JNZ"|"JP"|"JPE"|"JPO"|
+    "JZ"|"LDA"|"LHLD"|"SHLD"|"STA"|"CMA"|"CMC"|"DAA"|"DI"|"EI"|"HLT"|"NOP"|"PCHL"|"RAL"|"RAR"|"RC"|
+    "RET"|"RIM"|"RLC"|"RM"|"RNC"|"RNZ"|"RP"|"RPE"|"RPO"|"RRC"|"RZ"|"SIM"|"SPHL"|"STC"|"XCHG"|"XTHL"|
+    "MOV"|"ADC"|"ADD"|"ANA"|"CMP"|"DCR"|"INR"|"ORA"|"SBB"|"SUB"|"XRA"|"ACI"|"ADI"|"ANI"|"CPI"|"LXI"|
+    "MVI"|"ORI"|"SBI"|"SUI"|"XRI"|"IN"|"OUT"|"DAD"|"DCX"|"INX"|"POP"|"PUSH"|"LDAX"|"STAX"|"RST" |
+    "call"|"cc"|"cm"|"cnc"|"cnz"|"cp"|"cpe"|"cpo"|"cz"|"jc"|"jm"|"jmp"|"jnc"|"jnz"|"jp"|"jpe"|"jpo"|
+    "jz"|"lda"|"lhld"|"shld"|"sta"|"cma"|"cmc"|"daa"|"di"|"ei"|"hlt"|"nop"|"pchl"|"ral"|"rar"|"rc"|
+    "ret"|"rim"|"rlc"|"rm"|"rnc"|"rnz"|"rp"|"rpe"|"rpo"|"rrc"|"rz"|"sim"|"sphl"|"stc"|"xchg"|"xthl"|
+    "mov"|"adc"|"add"|"ana"|"cmp"|"dcr"|"inr"|"ora"|"sbb"|"sub"|"xra"|"aci"|"adi"|"ani"|"cpi"|"lxi"|
+    "mvi"|"ori"|"sbi"|"sui"|"xri"|"in"|"out"|"dad"|"dcx"|"inx"|"pop"|"push"|"ldax"|"stax"|"rst"	  { addToken(Token.CPU_INSTRUCTION); }
 }
 
 <YYINITIAL> {

@@ -15,7 +15,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 %%
 
 %public
-%class ChipTestTokenMaker
+%class I8085RatTokenMaker
 %extends AbstractJFlexCTokenMaker
 %unicode
 /* Case sensitive */
@@ -29,7 +29,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * Constructor.  This must be here because JFlex does not generate a
 	 * no-parameter constructor.
 	 */
-	public ChipTestTokenMaker() {
+	public I8085RatTokenMaker() {
 	}
 
 
@@ -89,7 +89,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 * {@inheritDoc}
 	 */
 	public String[] getLineCommentStartAndEnd(int languageIndex) {
-		return new String[] { "#", null };
+		return new String[] { ";", null };
 	}
 
 
@@ -180,40 +180,39 @@ import org.fife.ui.rsyntaxtextarea.*;
 %}
 
 Letter							= [A-Za-z]
-LetterOrUnderscore	                    = ({Letter}|"_")
-LetterOrTilda	                         = ({Letter}|"~")
+LetterOrUnderscore				= ({Letter}|"_")
 NonzeroDigit						= [1-9]
 Digit							= ("0"|{NonzeroDigit})
 HexDigit							= ({Digit}|[A-Fa-f])
-//OctalDigit						= ([0-7])
+OctalDigit						= ([0-7])
 BinaryDigit						= ([0-1])
-//AnyCharacterButApostropheOrBackSlash	= ([^\\'])
-//AnyCharacterButQuoteOrBackSlash	     = ([^\\\'\n])
+AnyCharacterButApostropheOrBackSlash	= ([^\\'])
+AnyCharacterButDoubleQuoteOrBackSlash	= ([^\\\"\n])
 EscapedSourceCharacter				= ("u"{HexDigit}{HexDigit}{HexDigit}{HexDigit})
-//Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
+Escape							= ("\\"(([btnfr\"'\\])|([0123]{OctalDigit}?{OctalDigit}?)|({OctalDigit}{OctalDigit}?)|{EscapedSourceCharacter}))
 NonSeparator						= ([^\t\f\r\n\ \(\)\{\}\[\]\;\,\.\=\>\<\!\~\?\:\+\-\*\/\&\|\^\%\"\']|"#"|"\\")
-IdentifierStart					= ({LetterOrTilda})
+IdentifierStart					= ({LetterOrUnderscore}|"$")
 IdentifierPart						= ({IdentifierStart}|{Digit}|"@"|("\\"{EscapedSourceCharacter}))
 
-PreprocessorWord                        = set|test|last_pulse|set_test|pulse_test
+PreprocessorWord	= define|undef|include|ifdef|ifndef|if|else|elif|endif|warning|error|message
 
 LineTerminator				= (\n)
 WhiteSpace				= ([ \t\f]+)
 
-//CharLiteral	= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})[\'])
-//UnclosedCharLiteral			= ([\'][^\'\n]*)
-//ErrorCharLiteral			= ({UnclosedCharLiteral}[\'])
-//StringLiteral				= ([\"]({AnyCharacterButQuoteOrBackSlash}|{Escape})*[\"])
-//UnclosedStringLiteral		= ([\"]([\\].|[^\\\"])*[^\"]?)
-UnclosedStringLiteral		= ([\'][^\']*)
-StringLiteral				= ({UnclosedStringLiteral}[\'])
-//ErrorStringLiteral			= ({UnclosedStringLiteral}[\"])
+CharLiteral	= ([\']({AnyCharacterButApostropheOrBackSlash}|{Escape})[\'])
+UnclosedCharLiteral			= ([\'][^\'\n]*)
+ErrorCharLiteral			= ({UnclosedCharLiteral}[\'])
+StringLiteral				= ([\"]({AnyCharacterButDoubleQuoteOrBackSlash}|{Escape})*[\"])
+UnclosedStringLiteral		= ([\"]([\\].|[^\\\"])*[^\"]?)
+ErrorStringLiteral			= ({UnclosedStringLiteral}[\"])
 
 MLCBegin					= "/*"
 MLCEnd					= "*/"
 
 /* No documentation comments */
-LineCommentBegin			= "#"
+LineCommentBegin			= ";"
+CLineCommentBegin			= "//"
+
 
 IntegerLiteral			= ({Digit}+)
 HexLiteral			= (0x{HexDigit}+)
@@ -227,7 +226,7 @@ Separator2				= ([\;,.])
 
 Identifier				= ({IdentifierStart}{IdentifierPart}*)
 //Label				    = (({Letter}|{Digit})+[\:])
-//Label				    = (({Identifier})+[\:])
+Label				    = (({Identifier})+[\:])
 
 
 URLGenDelim				= ([:\/\?#\[\]@])
@@ -238,7 +237,7 @@ URLCharacters			= ({URLCharacter}*)
 URLEndCharacter			= ([\/\$]|{Letter}|{Digit})
 URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
-
+Register                = A|B|C|D|E|H|L|M|BC|DE|HL|SP|PSW
 
 
 /* No string state */
@@ -252,9 +251,35 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 <YYINITIAL> {
 
 	/* Keywords */
-    "POWER:"|"IN:"|"OUT:"|"VOID:"|"SET:"|"TEST:"|"PULSE:"|"CONFIG:"|"TEST-Z:"|
-    "TEST-OC:"|"EXIT"|"BEFORE:"|"CHIP"|"BUS:"|"DELETE:"| "END" 		{ addToken(Token.RESERVED_WORD); }
+	"as"|"bitmask"|"break"|"continue"|"do"|"else"|"extern"|"goto"|"if"|
+    "inline"|"loop"|"mem"|"port"|"proc"|"return"|"saveregs"|"use"|
+    "var"|"while"|"struct"|"typedef"|"absolute"|"$org"|"$encoding"|"$output"|"$cleanup" 		{ addToken(Token.RESERVED_WORD); }
 
+      /* Keywords 2 (just an optional set of keywords colored differently) */
+      "high"|"low"|"sizeof"|"signed" { addToken(Token.RESERVED_WORD_2); }
+
+
+	/* Assembler instructions */
+    "CALL"|"CC"|"CM"|"CNC"|"CNZ"|"CP"|"CPE"|"CPO"|"CZ"|"JC"|"JM"|"JMP"|"JNC"|"JNZ"|"JP"|"JPE"|"JPO"|
+    "JZ"|"LDA"|"LHLD"|"SHLD"|"STA"|"CMA"|"CMC"|"DAA"|"DI"|"EI"|"HLT"|"NOP"|"PCHL"|"RAL"|"RAR"|"RC"|
+    "RET"|"RIM"|"RLC"|"RM"|"RNC"|"RNZ"|"RP"|"RPE"|"RPO"|"RRC"|"RZ"|"SIM"|"SPHL"|"STC"|"XCHG"|"XTHL"|
+    "MOV"|"ADC"|"ADD"|"ANA"|"CMP"|"DCR"|"INR"|"ORA"|"SBB"|"SUB"|"XRA"|"ACI"|"ADI"|"ANI"|"CPI"|"LXI"|
+    "MVI"|"ORI"|"SBI"|"SUI"|"XRI"|"IN"|"OUT"|"DAD"|"DCX"|"INX"|"POP"|"PUSH"|"LDAX"|"STAX"|"RST" |
+	
+    "call"|"cc"|"cm"|"cnc"|"cnz"|"cp"|"cpe"|"cpo"|"cz"|"jc"|"jm"|"jmp"|"jnc"|"jnz"|"jp"|"jpe"|"jpo"|
+    "jz"|"lda"|"lhld"|"shld"|"sta"|"cma"|"cmc"|"daa"|"di"|"ei"|"hlt"|"nop"|"pchl"|"ral"|"rar"|"rc"|
+    "ret"|"rim"|"rlc"|"rm"|"rnc"|"rnz"|"rp"|"rpe"|"rpo"|"rrc"|"rz"|"sim"|"sphl"|"stc"|"xchg"|"xthl"|
+    "mov"|"adc"|"add"|"ana"|"cmp"|"dcr"|"inr"|"ora"|"sbb"|"sub"|"xra"|"aci"|"adi"|"ani"|"cpi"|"lxi"|
+    "mvi"|"ori"|"sbi"|"sui"|"xri"|"in"|"out"|"dad"|"dcx"|"inx"|"pop"|"push"|"ldax"|"stax"|"rst"	  { addToken(Token.CPU_INSTRUCTION); }
+
+	/* Registers */
+	{Register}                            { addToken(Token.REGISTER); }
+    {Register}("."{Register})*            { addToken(Token.REGISTER); }
+
+      /* Data types */
+    "byte"|"word"|"dword"|"qword"|"ptr"     { addToken(Token.DATA_TYPE); }
+	/* Functions */
+	/* No functions */
 
 	
 
@@ -262,40 +287,43 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 
 	{Identifier}					{ addToken(Token.IDENTIFIER); }
 
-//     {Label}                         { addToken(Token.LABEL); }
+    {Label}                         { addToken(Token.LABEL); }
 
 	{WhiteSpace}					{ addToken(Token.WHITESPACE); }
 
     /* Preprocessor directives */
-    "$"{PreprocessorWord}	{ addToken(Token.PREPROCESSOR); }
+    "#"{WhiteSpace}*{PreprocessorWord}	{ addToken(Token.PREPROCESSOR); }
 
 
 	/* String/Character literals. */
-//	{CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
-//     {UnclosedCharLiteral}		{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
-//     {ErrorCharLiteral}			{ addToken(Token.ERROR_CHAR); }
-     {StringLiteral}			{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-     {UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
-     //{ErrorStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); }
+	{CharLiteral}				{ addToken(Token.LITERAL_CHAR); }
+{UnclosedCharLiteral}		{ addToken(Token.ERROR_CHAR); addNullToken(); return firstToken; }
+{ErrorCharLiteral}			{ addToken(Token.ERROR_CHAR); }
+	{StringLiteral}				{ addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
+{UnclosedStringLiteral}		{ addToken(Token.ERROR_STRING_DOUBLE); addNullToken(); return firstToken; }
+{ErrorStringLiteral}			{ addToken(Token.ERROR_STRING_DOUBLE); }
 
 	/* Comment literals. */
 	{MLCBegin}	{ start = zzMarkedPos-2; yybegin(MLC); }
 	/* No documentation comments */
 	{LineCommentBegin}			{ start = zzMarkedPos-1; yybegin(EOL_COMMENT); }
+	{CLineCommentBegin}			{ start = zzMarkedPos-2; yybegin(EOL_COMMENT); }
 
 	/* Separators. */
 	{Separator}					{ addToken(Token.SEPARATOR); }
 	{Separator2}					{ addToken(Token.IDENTIFIER); }
 
 	/* Operators. */
-	"->" | "=>" | "+" | "-" | ":" | ";" | ".." | "[" | "]" | "@" | "," | "*" 	{ addToken(Token.OPERATOR); }
+	"!" |"%" |"%=" |"&" |"&&" |"*" |"*=" |"+" |"++" |"+=" |"," |"-" |"--" |"-=" |
+    "/" |"/=" |":" |"<" |"<<" |"<<=" |"=" |"==" |">" |">>" |">>=" |"?" |"^" |"|" |
+    "||" |"~"		{ addToken(Token.OPERATOR); }
 
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-	{BinaryLiteral}				{ addToken(Token.LITERAL_NUMBER_BINARY); }
+    {BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_BINARY); }
 	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
-	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
+	{ErrorNumberFormat}			{ addToken(Token.ERROR_NUMBER_FORMAT); }
 
 	/* Ended with a line not in a string or comment. */
 	<<EOF>>						{ addNullToken(); return firstToken; }

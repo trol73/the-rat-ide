@@ -229,7 +229,7 @@ HexDigit			= {Digit}|[A-Fa-f]
 OctalDigit			= [0-7]
 Exponent			= [eE][+-]?{Digit}+
 
-PreprocessorWord	= define|elif|else|endif|error|if|ifdef|ifndef|include|line|pragma|undef
+PreprocessorWord	= define|elif|else|endif|error|if|ifdef|ifndef|include|line|pragma|undef|warning
 
 Trigraph				= ("??="|"??("|"??)"|"??/"|"??'"|"??<"|"??>"|"??!"|"??-")
 
@@ -259,7 +259,8 @@ MLCBegin			= "/*"
 MLCEnd			= "*/"
 LineCommentBegin	= "//"
 
-NonFloatSuffix		= (([uU][lL]?)|([lL][uU]?))
+//NonFloatSuffix		= (([uU][lL]?)|([lL][uU]?))
+NonFloatSuffix		= (([uU][lL]?)|([lL][uU]?)|([uU][lL][lL]?))
 IntegerLiteral		= ({Digit}+{Exponent}?{NonFloatSuffix}?)
 HexLiteral		= ("0"[xX]{HexDigit}+{NonFloatSuffix}?)
 FloatLiteral		= ((({Digit}*[\.]{Digit}+)|({Digit}+[\.]{Digit}*)){Exponent}?[fFlL]?)

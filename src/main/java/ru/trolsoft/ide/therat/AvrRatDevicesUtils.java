@@ -15,12 +15,16 @@ public class AvrRatDevicesUtils {
 
     private static final WeakHashMap<String, AvrDevice> devicesCache = new WeakHashMap<>();
 
-    public static File getFolder() {
+    public static File getDevFolder() {
         return new File(RatKt.getRootPath() + "../devices/avr");
     }
 
+    public static File getEncodingsFolder() {
+        return new File(RatKt.getRootPath() + "../encodings");
+    }
+
     public static List<String> getAllDevices() {
-        File[] files = getFolder().listFiles();
+        File[] files = getDevFolder().listFiles();
         if (files == null) {
             return new ArrayList<>();
         }
@@ -28,13 +32,13 @@ public class AvrRatDevicesUtils {
     }
 
     public static AvrDevice loadDevice(String name) {
-        if ("<none>".equals(name)) {
+        if ("<none>".equals(name) || name.isEmpty()) {
             return null;
         }
         if (devicesCache.containsKey(name)) {
             return devicesCache.get(name);
         }
-        String path = getFolder().getAbsolutePath() + File.separatorChar + name + ".dev";
+        String path = getDevFolder().getAbsolutePath() + File.separatorChar + name + ".dev";
         AvrDevice device = AvrDevParserKt.parseAvrDeviceDefinitionFile(path, null);
         devicesCache.put(name, device);
         return device;

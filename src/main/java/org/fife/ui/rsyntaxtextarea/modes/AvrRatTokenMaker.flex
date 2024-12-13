@@ -211,6 +211,8 @@ MLCEnd					= "*/"
 
 /* No documentation comments */
 LineCommentBegin			= ";"
+CLineCommentBegin			= "//"
+
 
 IntegerLiteral			= ({Digit}+)
 HexLiteral			= (0x{HexDigit}+)
@@ -251,7 +253,7 @@ Register                = X|Y|Z|r0|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|r13|r1
 	/* Keywords */
 	"as"|"bitmask"|"break"|"continue"|"do"|"else"|"extern"|"goto"|"if"|
     "inline"|"loop"|"mem"|"pin"|"prg"|"proc"|"return"|"saveregs"|"use"|
-    "var"|"vectors"|"while" 		{ addToken(Token.RESERVED_WORD); }
+    "var"|"vectors"|"while"|"struct"|"typedef"|"$org"|"$encoding"|"$output"|"$cleanup" 		{ addToken(Token.RESERVED_WORD); }
 
       /* Keywords 2 (just an optional set of keywords colored differently) */
       "high"|"low"|"sizeof"|"signed" { addToken(Token.RESERVED_WORD_2); }
@@ -276,7 +278,7 @@ Register                = X|Y|Z|r0|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|r13|r1
     {Register}("."{Register})*            { addToken(Token.REGISTER); }
 
       /* Data types */
-    "byte"|"word"|"dword"|"ptr"|"ptrprg"     { addToken(Token.DATA_TYPE); }
+    "byte"|"word"|"dword"|"qword"|"ptr"|"ptrprg"     { addToken(Token.DATA_TYPE); }
 	/* Functions */
 	/* No functions */
 
@@ -306,6 +308,7 @@ Register                = X|Y|Z|r0|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|r13|r1
 	{MLCBegin}	{ start = zzMarkedPos-2; yybegin(MLC); }
 	/* No documentation comments */
 	{LineCommentBegin}			{ start = zzMarkedPos-1; yybegin(EOL_COMMENT); }
+	{CLineCommentBegin}			{ start = zzMarkedPos-2; yybegin(EOL_COMMENT); }
 
 	/* Separators. */
 	{Separator}					{ addToken(Token.SEPARATOR); }

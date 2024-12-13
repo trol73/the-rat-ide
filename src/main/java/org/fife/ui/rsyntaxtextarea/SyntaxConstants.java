@@ -1,4 +1,4 @@
-/*
+ /*
  * 03/08/2004
  *
  * SyntaxConstants.java - Constants used by RSyntaxTextArea and friends.
@@ -51,10 +51,14 @@ public interface SyntaxConstants {
 	String SYNTAX_STYLE_ASSEMBLER_X86	= "text/asmx86";
 
 	/**
-	 * Style for highlighting x86 assembler.
+	 * Style for highlighting 6502 assembler.
 	 */
 	String SYNTAX_STYLE_ASSEMBLER_6502	= "text/asm6502";
 
+	/**
+	 * Style for highlighting 8085 assembler.
+	 */
+	String SYNTAX_STYLE_ASSEMBLER_8085	= "text/asm8085";
 
 	/**
 	 * Style for highlighting BBCode.
@@ -349,5 +353,7 @@ public interface SyntaxConstants {
 	String SYNTAX_STYLE_AVR_RAT		= "text/avrrat";
 
 	String SYNTAX_STYLE_CHIP_TEST		= "text/chiptest";
+
+	String SYNTAX_STYLE_I8085_RAT = "text/i8085rat";
 
 }

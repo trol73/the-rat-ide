@@ -1,7 +1,8 @@
 package org.fife.rtext.plugins.project.model;
 
 public enum ProjectType {
-    AVR_RAT,
+    RAT,
+    I8085_RAT,
     BUILDER,
     MAKEFILE,
     CUSTOM;

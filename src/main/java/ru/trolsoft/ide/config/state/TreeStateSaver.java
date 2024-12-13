@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class TreeStateSaver {
-    abstract protected String pathToStr(TreePath path);
+    protected abstract String pathToStr(TreePath path);
 
     private final String filePath;
 

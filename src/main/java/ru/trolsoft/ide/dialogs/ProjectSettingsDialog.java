@@ -60,7 +60,7 @@ public class ProjectSettingsDialog extends RenameDialog implements ActionListene
 
     @Override
     protected Container createExtraContent() {
-        cbType = new JComboBox<>(new String[] {"AVR Rat", "Builder", "Makefile", "Custom"});
+        cbType = new JComboBox<>(new String[] {"The Rat", "Builder", "Makefile", "Custom"});
         cbType.setActionCommand("Type");
         cbType.addActionListener(this);
 
@@ -109,7 +109,9 @@ public class ProjectSettingsDialog extends RenameDialog implements ActionListene
     }
 
     private void setup() {
-        cbType.setSelectedIndex(project.getType() == null ? 0 : project.getType().ordinal());
+        try {
+            cbType.setSelectedIndex(project.getType() == null ? 0 : project.getType().ordinal());
+        } catch (IllegalArgumentException ignore) {}
         cbDevice.setSelectedItem(project.getDevice());
         cbEncoding.setSelectedItem(project.getEncoding());
         edtMainFile.setText(project.getMainFile());

@@ -173,11 +173,15 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
                 if (editor != null) {
                     try {
                         Color higlightColor = parser.isError() ? COLOR_ERROR_LINE_HIGHLIGHT : COLOR_WARNING_LINE_HIGHLIGHT;
-                        var hl = editor.addLineHighlight(parser.getFileLine() - 1, higlightColor);
-                        var list = errorLineHighlighters.computeIfAbsent(editor, k -> new ArrayList<>());
-                        list.add(hl);
+                        int line = parser.getFileLine() - 1;
+                        if (line >= 0) {
+                            var hl = editor.addLineHighlight(line, higlightColor);
+                            var list = errorLineHighlighters.computeIfAbsent(editor, k -> new ArrayList<>());
+                            list.add(hl);
+                        }
                     } catch (BadLocationException e) {
-                        throw new RuntimeException(e);
+                        System.err.println("START: " +  start);
+                        e.printStackTrace();
                     }
                 }
             }
@@ -188,6 +192,7 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
             inputMinOffs = getCaretPosition();
         }
     }
+
 
     private AbstractMainView getMainView() {
         return plugin.getApplication().getMainView();
@@ -381,7 +386,11 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
 
         List<String> cmdList = new ArrayList<>();
         if (File.separatorChar == '/') {
-            cmdList.add("/bin/sh");
+            var shell = System.getenv("SHELL");
+            if (shell == null || shell.trim().isEmpty()) {
+                shell = "/bin/sh";
+            }
+            cmdList.add(shell);
             cmdList.add("-c");
         } else {
             cmdList.add("cmd.exe");
@@ -801,7 +810,9 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
                 showPopupMenu(e);
             } else if (handFilePath != null && e.getID() == MouseEvent.MOUSE_CLICKED) {
                 var app = plugin.getApplication();
-                app.openFile(handFilePath, fileLine, fileColumn);
+                if (!handFilePath.endsWith(".o")) {
+                    app.openFile(handFilePath, fileLine, fileColumn);
+                }
 //                app.openFile(new File(handFilePath), () -> {
 //                    var editor = getMainView().getCurrentTextArea();
 //                    if (fileLine > 0) {

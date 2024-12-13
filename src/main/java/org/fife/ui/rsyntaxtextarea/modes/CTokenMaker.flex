@@ -226,7 +226,7 @@ OctalDigit			= [0-7]
 BinaryDigit			= ([0-1])
 Exponent			= [eE][+-]?{Digit}+
 
-PreprocessorWord	= define|elif|else|endif|error|if|ifdef|ifndef|include|line|pragma|undef
+PreprocessorWord	= define|elif|else|endif|error|if|ifdef|ifndef|include|line|pragma|undef|warning
 IncludeWord         = include
 
 Trigraph				= ("??="|"??("|"??)"|"??/"|"??'"|"??<"|"??>"|"??!"|"??-")
@@ -257,7 +257,7 @@ MLCBegin			= "/*"
 MLCEnd			= "*/"
 LineCommentBegin	= "//"
 
-NonFloatSuffix		= (([uU][lL]?)|([lL][uU]?))
+NonFloatSuffix		= (([uU][lL]?)|([lL][uU]?)|([uU][lL][lL]?))
 IntegerLiteral		= ({Digit}+{Exponent}?{NonFloatSuffix}?)
 HexLiteral		    = ("0"[xX]{HexDigit}+{NonFloatSuffix}?)
 BinaryLiteral		= (0b{BinaryDigit}+)
@@ -627,7 +627,7 @@ URL						= (((https?|f(tp|ile))"://"|"www.")({URLCharacters}{URLEndCharacter})?)
 	/* Numbers */
 	{IntegerLiteral}				{ addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 	{HexLiteral}					{ addToken(Token.LITERAL_NUMBER_HEXADECIMAL); }
-    {BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_BINARY); }
+	{BinaryLiteral}					{ addToken(Token.LITERAL_NUMBER_BINARY); }
 	{FloatLiteral}					{ addToken(Token.LITERAL_NUMBER_FLOAT); }
 	{ErrorNumberFormat}				{ addToken(Token.ERROR_NUMBER_FORMAT); }
 

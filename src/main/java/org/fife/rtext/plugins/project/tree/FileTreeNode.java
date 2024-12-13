@@ -50,24 +50,28 @@ public class FileTreeNode extends AbstractWorkspaceTreeNode implements PhysicalL
     public static final int FILE_TYPE_SOURCE = 1;
     public static final int FILE_TYPE_MAKEFILE = 2;
     public static final int FILE_TYPE_OUTPUT = 3;
+    public static final int FILE_TYPE_SOURCE_C = 4;
+    public static final int FILE_TYPE_SOURCE_RAT = 5;
 
     private final int fileType;
 
     private static final Map<Integer, Integer> TYPES_BY_EXT = new HashMap<>();
 
     static {
-        registerFileType("c", FILE_TYPE_SOURCE);
-        registerFileType("h", FILE_TYPE_SOURCE);
-        registerFileType("cpp", FILE_TYPE_SOURCE);
-        registerFileType("hpp", FILE_TYPE_SOURCE);
-        registerFileType("art", FILE_TYPE_SOURCE);
-        registerFileType("arth", FILE_TYPE_SOURCE);
+        registerFileType("c", FILE_TYPE_SOURCE_C);
+        registerFileType("h", FILE_TYPE_SOURCE_C);
+        registerFileType("cpp", FILE_TYPE_SOURCE_C);
+        registerFileType("hpp", FILE_TYPE_SOURCE_C);
+        registerFileType("art", FILE_TYPE_SOURCE_RAT);
+        registerFileType("arth", FILE_TYPE_SOURCE_RAT);
         registerFileType("asm", FILE_TYPE_SOURCE);
         registerFileType("py", FILE_TYPE_SOURCE);
         registerFileType("go", FILE_TYPE_SOURCE);
         registerFileType("java", FILE_TYPE_SOURCE);
+        registerFileType("lua", FILE_TYPE_SOURCE);
         registerFileType("hex", FILE_TYPE_OUTPUT);
         registerFileType("exe", FILE_TYPE_OUTPUT);
+        registerFileType("builder", FILE_TYPE_MAKEFILE);
     }
 
     private static void registerFileType(String ext, int type) {

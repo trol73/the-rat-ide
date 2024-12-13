@@ -1590,9 +1590,11 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         //gets called when we receive an open event from the finder on OS X
         SwingUtilities.invokeLater(() -> {
             // null encoding means check for Unicode before using system default encoding.
-            mainView.openFile(file.getAbsolutePath(), null, true);
-            if (doAfter != null) {
-                doAfter.run();
+            if (file != null) {
+                mainView.openFile(file.getAbsolutePath(), null, true);
+                if (doAfter != null) {
+                    doAfter.run();
+                }
             }
         });
     }

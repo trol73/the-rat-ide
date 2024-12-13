@@ -36,9 +36,23 @@ class WorkspaceTreeRenderer extends DefaultTreeCellRenderer {
     private static final Color FOLDERS_COLOR;
 
     // default source makefile output
-    private static final Color[] FILE_TYPES_DARK_COLORS = {null, new Color(0x9999FF), new Color(0xFF33FF), new Color(0x99FF66)};
-    private static final Color[] FILE_TYPES_LIGHT_COLORS = {null, new Color(0x5555FF), new Color(0xAA22AA), new Color(0x55AA33)};
-    private static final Color[] FILE_TYPES_COLORS = new Color[4];
+    private static final Color[] FILE_TYPES_DARK_COLORS = {
+        null,                       // DEFAULT
+        new Color(0x9999FF),    // SOURCE
+        new Color(0xFF33FF),    // MAKEFILE
+        new Color(0x99FF66),    // OUTPUT
+        new Color(0xFF6666),    // C / C++
+        new Color(0x44AA66),    // Rat
+    };
+    private static final Color[] FILE_TYPES_LIGHT_COLORS = {
+        null,                       // DEFAULT
+        new Color(0x5555FF),    // SOURCE
+        new Color(0xAA22AA),    // MAKEFILE
+        new Color(0x55AA33),    // OUTPUT
+        new Color(0xAA55FF),    // C / C++
+        new Color(0x55AAFF),    // Rat
+    };
+    private static final Color[] FILE_TYPES_COLORS = new Color[FILE_TYPES_LIGHT_COLORS.length];
 
     static {
         if (UIUtil.isDarkLookAndFeel()) {

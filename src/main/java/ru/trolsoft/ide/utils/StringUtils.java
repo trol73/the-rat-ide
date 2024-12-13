@@ -33,6 +33,14 @@ public class StringUtils {
         }
     }
 
+    public static String wordToHexStr(long val) {
+        String result = Long.toHexString(val);
+        int len = result.length();
+        if (len > 4) {
+            return result;
+        }
+        return STRING_OF_ZERO[4-len] + result;
+    }
     public static String dwordToHexStr(long val) {
         String result = Long.toHexString(val);
         int len = result.length();

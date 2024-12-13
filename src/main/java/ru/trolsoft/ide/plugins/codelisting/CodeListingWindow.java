@@ -60,8 +60,20 @@ public class CodeListingWindow extends DockableWindow implements PropertyChangeL
     }
 
     public void initText(String highlighterStyle) {
-        textArea.setText(listingInfo.getText());
+        String text = listingInfo.getText();
+        SwingUtilities.invokeLater(() -> {
+            try {
+                textArea.setText(text);
+            } catch (Exception ignore) {}
+        });
         textArea.setSyntaxEditingStyle(highlighterStyle);
+    }
+
+    public void setSyntax(String syntax) {
+        textArea.setSyntaxEditingStyle(syntax);
+    }
+    public String getSyntax() {
+        return textArea.getSyntaxEditingStyle();
     }
 
     public void activateLineFor(RTextEditorPane srcTextArea, int sourceLine) {

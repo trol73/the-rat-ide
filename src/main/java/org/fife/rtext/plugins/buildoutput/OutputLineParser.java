@@ -45,7 +45,7 @@ public class OutputLineParser {
                 handle(part, BuildOutputTextArea.STYLE_FILE);
                 filePath = part.trim();
                 afterFile = true;
-            } else if (isCurrentProjectSource(part.trim())) {
+            } else if (isCurrentProjectSource(part.trim()) && filePath == null) {
                 handle(part, BuildOutputTextArea.STYLE_FILE);
                 filePath = filePathWithCurrentProjectFolder(part.trim());
                 afterFile = true;
@@ -72,7 +72,7 @@ public class OutputLineParser {
                 afterFile = false;
                 afterFileLine = false;
                 handle(part, BuildOutputTextArea.STYLE_WARNINGS);
-            } else if ("error".equalsIgnoreCase(part.trim())) {
+            } else if ("error".equalsIgnoreCase(part.trim()) || "fatal error".equalsIgnoreCase(part.trim())) {
                 error = true;
                 afterFile = false;
                 afterFileLine = false;

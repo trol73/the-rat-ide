@@ -7,6 +7,7 @@ import org.fife.rtext.plugins.buildoutput.BuildOutputWindow;
 import org.fife.rtext.plugins.buildoutput.BuildTask;
 import org.fife.rtext.plugins.project.model.Project;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.jetbrains.annotations.NotNull;
 import ru.trolsoft.compiler.generator.ListingRec;
 import ru.trolsoft.ide.plugins.codelisting.CodeListingWindow;
 import ru.trolsoft.ide.therat.AvrRatDevicesUtils;
@@ -27,9 +28,9 @@ public class ProjectBuilder {
 
     private Component focusOwner;
 
-    public interface RatListingHandler {
-        kotlin.Unit handle(ru.trolsoft.compiler.generator.ListingRec rec);
-    }
+//    public interface RatListingHandler {
+//        kotlin.Unit handle(ru.trolsoft.compiler.generator.ListingRec rec);
+//    }
 
     public ProjectBuilder(RText rtext, Project project, BuildOutputWindow window) {
         this.rtext = rtext;
@@ -44,9 +45,11 @@ public class ProjectBuilder {
             return;
         }
         switch (project.getType()) {
-            case AVR_RAT -> buildAvrRatProject();
+            case RAT -> buildRatProject();
+            case I8085_RAT -> build8085RatProject();
             case BUILDER -> buildMakeBuilderProject();
             case MAKEFILE -> buildMakeFileProject();
+            default -> window.prompt("Unsupported project type " + project.getType());
         }
 //        window.execute("cat " + activeFilePath);
     }
@@ -60,7 +63,7 @@ public class ProjectBuilder {
         });
     }
 
-    private void buildAvrRatProject() {
+    private void buildRatProject() {
         boolean listingVisible = rtext.getCodeListingPlugin().isCodeListingWindowVisible();
         var listingWindow = rtext.getCodeListingWindow();
         if (listingVisible) {
@@ -71,7 +74,62 @@ public class ProjectBuilder {
             public void run() {
                 String path = project.getMainFile();
                 window.prompt("Compile " + path + "\n");
-                String devPath = AvrRatDevicesUtils.getFolder().getAbsolutePath();
+                String devPath = AvrRatDevicesUtils.getDevFolder().getAbsolutePath();
+                String encodingsPath = AvrRatDevicesUtils.getEncodingsFolder().getAbsolutePath();
+                List<String> defines = new ArrayList<>();
+                PrintStream out = getOutStream();
+                PrintStream err = getErrStream();
+
+                var codeListWindow = rtext.getCodeListingWindow();
+                if (codeListWindow != null) {
+                    codeListWindow.clear();
+                }
+                if (listingVisible) {
+                    listingWindow.setSyntax(detectListingSyntax(path));
+                }
+                try {
+                    RatKt.compileProject(null, path, devPath, encodingsPath, defines, out, err, listingVisible ? listingHandler(listingWindow) : null);
+                } catch (kotlin.NotImplementedError e) {
+                    throw new RuntimeException("Wrong operation", e);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (listingVisible) {
+                    String syntax = detectListingSyntax(path);
+                    listingWindow.initText(syntax);
+                    SwingUtilities.invokeLater(() -> {
+                        var textArea = rtext.getMainView().getCurrentTextArea();
+                        listingWindow.activateLineFor(textArea, textArea.getLine());
+                    });
+                }
+                //window.prompt("Done.\n");
+                restoreFocus();
+            }
+        });
+    }
+
+    @NotNull
+    private static String detectListingSyntax(String path) {
+        if (path.endsWith(".8080") || path.endsWith(".8085")) {
+            return SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_8085;
+        } else {
+            return SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR;
+        }
+    }
+
+    private void build8085RatProject() {
+        boolean listingVisible = rtext.getCodeListingPlugin().isCodeListingWindowVisible();
+        var listingWindow = rtext.getCodeListingWindow();
+        if (listingVisible) {
+            listingWindow.clear();
+        }
+        window.execute(new BuildTask() {
+            @Override
+            public void run() {
+                String path = project.getMainFile();
+                window.prompt("Compile " + path + "\n");
+                String devPath = AvrRatDevicesUtils.getDevFolder().getAbsolutePath();
+                String encodingsPath = AvrRatDevicesUtils.getEncodingsFolder().getAbsolutePath();
                 List<String> defines = new ArrayList<>();
                 PrintStream out = getOutStream();
                 PrintStream err = getErrStream();
@@ -81,12 +139,13 @@ public class ProjectBuilder {
                     codeListWindow.clear();
                 }
                 try {
-                    RatKt.compileProject(path, devPath, defines, out, err, listingVisible ? listingHandler(listingWindow) : null);
+                    RatKt.compileProject(null, path, devPath, encodingsPath, defines, out, err, listingVisible ? listingHandler(listingWindow) : null);
                 } catch (kotlin.NotImplementedError e) {
                     throw new RuntimeException("Wrong operation", e);
                 }
                 if (listingVisible) {
-                    listingWindow.initText(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR);
+                    String syntax = detectListingSyntax(path);
+                    listingWindow.initText(syntax);
                 }
                 //window.prompt("Done.\n");
                 restoreFocus();
@@ -99,7 +158,11 @@ public class ProjectBuilder {
         {
             var loc = rec.getLocation();
             var asm = rec.getAsmCode();
-            var str = (asm.endsWith(":") ? "" : StringUtils.dwordToHexStr(rec.getOffset()) + ": ") + asm;
+
+            var is8085 = listingWindow.getSyntax().equals(SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_8085);
+            var addr = is8085 ? StringUtils.wordToHexStr(rec.getOffset()) : StringUtils.dwordToHexStr(rec.getOffset());
+            var dump = rec.hexDumpStr(is8085 ? 9 : 12);
+            var str = (asm.endsWith(":") ? "" : addr + ": " + dump + ' ') + asm;
             listingWindow.add(loc.getFileName(), loc.getLine(), str);
             //System.out.println(rec);
             return Unit.INSTANCE;

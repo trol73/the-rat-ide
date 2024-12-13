@@ -33,7 +33,7 @@ public class NewProjectDialog extends AbstractEnterFileNameDialog implements Doc
             public BuildTemplate build(String name, File root, String device, String mainFile) {
                 String defineCpu = !device.isBlank() && !device.startsWith("<") ? "#define CPU \"" + device + "\"\n" : "";
                 return new BuildTemplate(root)
-                        .withType(ProjectType.AVR_RAT)
+                        .withType(ProjectType.RAT)
                         .withFolders("src")
                         .withFile("src/" + mainFile + ".art", defineCpu +
                                 """
@@ -130,6 +130,22 @@ public class NewProjectDialog extends AbstractEnterFileNameDialog implements Doc
                                 
                                 int main(int argc, char **argv) {
                                     printf("Hello, World!");
+                                }
+                                """);
+            }
+        },
+        RAT_8080("Rat 8080") {
+            @Override
+            public BuildTemplate build(String name, File root, String device, String mainFile) {
+                return new BuildTemplate(root)
+                        .withType(ProjectType.I8085_RAT)
+                        .withFolders("src")
+                        .withFile("src/" + mainFile + ".8080",
+                                """
+
+                                proc main() {
+                                    SP = 0x75FF
+                                    nop
                                 }
                                 """);
             }

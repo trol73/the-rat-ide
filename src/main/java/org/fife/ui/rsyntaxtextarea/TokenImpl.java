@@ -575,6 +575,9 @@ public class TokenImpl implements Token {
 	public float getWidthUpTo(int numChars, RSyntaxTextArea textArea,
 			TabExpander e, float x0) {
 		float width = x0;
+		if (text == null) {
+			return 0;
+		}
 		FontMetrics fm = textArea.getFontMetricsForTokenType(getType());
 		if (fm != null) {
 			int w;
@@ -598,7 +601,9 @@ public class TokenImpl implements Token {
 			// point to get the widths for, so we don't check for w>0 (mini-
 			// optimization).
 			w = endBefore - currentStart;
-			width += fm.charsWidth(text, currentStart, w);
+			try {
+				width += fm.charsWidth(text, currentStart, w);
+			} catch (IndexOutOfBoundsException ignore) {}
 		}
 		return width - x0;
 	}

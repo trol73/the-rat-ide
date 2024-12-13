@@ -90,11 +90,17 @@ public class RSyntaxTextAreaOptionPanel extends OptionsDialogPanel
 //    private static final String UNKNOWN_PROPERTY = "RSTAOpts.unknown";
 
     private static final String[] SAMPLES = {
-            "previewAvrRat.txt", "previewC.txt", "previewJava.txt", "previewPerl.txt", "previewXml.txt"
+            "previewAvrRat.txt",
+            "preview8085Rat.txt",
+            "previewC.txt",
+            "previewJava.txt",
+            "previewPerl.txt",
+            "previewXml.txt"
     };
 
     private static final String[] SAMPLE_STYLES = {
             SyntaxConstants.SYNTAX_STYLE_AVR_RAT,
+            SyntaxConstants.SYNTAX_STYLE_I8085_RAT,
             SyntaxConstants.SYNTAX_STYLE_C,
             SyntaxConstants.SYNTAX_STYLE_JAVA,
             SyntaxConstants.SYNTAX_STYLE_PERL,

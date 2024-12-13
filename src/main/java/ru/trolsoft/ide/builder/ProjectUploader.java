@@ -21,13 +21,13 @@ public class ProjectUploader {
 
     public void upload() {
         switch (project.getType()) {
-            case AVR_RAT -> uploadAvrRatProject();
+            case RAT -> uploadRatProject();
             case BUILDER -> uploadMakeBuilderProject();
             case MAKEFILE -> uploadMakeFileProject();
         }        
     }
 
-    private void uploadAvrRatProject() {
+    private void uploadRatProject() {
         String path = project.getMainFile();
         File file = new File(path);
         if (!file.exists()) {

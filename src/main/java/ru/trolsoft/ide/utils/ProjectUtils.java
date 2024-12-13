@@ -31,6 +31,13 @@ public class ProjectUtils {
         Iterator<Project> it = workspace.getProjectIterator();
         while (it.hasNext()) {
             Project prj = it.next();
+            if (prj.getMainFile().equalsIgnoreCase(filePath)) {
+                return prj;
+            }
+        }
+        it = workspace.getProjectIterator();
+        while (it.hasNext()) {
+            Project prj = it.next();
             if (projectHasFile(prj, filePath)) {
                 return prj;
             }

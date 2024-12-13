@@ -152,7 +152,7 @@ public class AvrGccMapUtils {
 
     public static void showFunctionSize(RTextEditorPane editor, RText rtext) {
         List<FunctionRec> mapData = getMapDataForSourceFile(editor, rtext);
-        if (mapData == null) {
+        if (mapData == null || mapData.isEmpty()) {
             return;
         }
         String text = getLineStr(editor, editor.getLine());

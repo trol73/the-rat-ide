@@ -279,13 +279,14 @@ class FileFilterOptionPanel extends OptionsDialogPanel
 
 		FilterTableModel(String fileTypeHeader, String filterHeader) {
 			super(new Object[] { fileTypeHeader, filterHeader }, 0);
-			styles = new String[52];
+			styles = new String[53];
 			int c = 0;
 			addRow(new Object[] { "ActionScript",		null }); styles[c++]  = SYNTAX_STYLE_ACTIONSCRIPT;
 			addRow(new Object[] { "Assembler (AVR)",	null }); styles[c++]  = SYNTAX_STYLE_ASSEMBLER_AVR;
 			addRow(new Object[] { "Assembler (6502)",	null }); styles[c++]  = SYNTAX_STYLE_ASSEMBLER_6502;
 			addRow(new Object[] { "Assembler (x86)",	null }); styles[c++]  = SYNTAX_STYLE_ASSEMBLER_X86;
 			addRow(new Object[] { "AVR RAT",	        null }); styles[c++]  = SYNTAX_STYLE_AVR_RAT;
+			addRow(new Object[] { "i8080/i8085 RAT",    null }); styles[c++]  = SYNTAX_STYLE_I8085_RAT;
 			addRow(new Object[] { "Chip test",	        null }); styles[c++]  = SYNTAX_STYLE_CHIP_TEST;
 			addRow(new Object[] { "BBCode",				null }); styles[c++]  = SYNTAX_STYLE_BBCODE;
 			addRow(new Object[] { "C",					null }); styles[c++]  = SYNTAX_STYLE_C;
