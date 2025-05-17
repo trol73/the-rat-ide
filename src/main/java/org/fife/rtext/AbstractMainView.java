@@ -21,11 +21,9 @@ import org.fife.rtext.actions.CapsLockAction;
 import org.fife.rtext.actions.OpenIncludeFileAction;
 import org.fife.rtext.actions.ToggleTextModeAction;
 import org.fife.rtext.plugins.project.model.Project;
+import org.fife.ui.app.AbstractGUIApplication;
 import org.fife.ui.autocomplete.Util;
-import org.fife.ui.rsyntaxtextarea.ErrorStrip;
-import org.fife.ui.rsyntaxtextarea.FileLocation;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
+import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rtextfilechooser.RTextFileChooser;
@@ -2548,7 +2546,7 @@ public abstract class AbstractMainView extends JPanel
 
     /**
      * If the current editor is dirty, the user is prompted whether they want
-     * to save it.  If they choose "yes", the file is saved, otherwise it is
+     * to save it. If they choose "yes", the file is saved, otherwise it is
      * not.
      *
      * @return <code>JOptionPane.YES_OPTION</code> if the file was saved,
@@ -2557,7 +2555,6 @@ public abstract class AbstractMainView extends JPanel
      * dialog, or an IO error occurs.
      */
     protected int promptToSaveBeforeClosingIfDirty() {
-
         int rc = JOptionPane.YES_OPTION;
 
         // If the current document has been modified, prompt them to save it.
@@ -2607,14 +2604,14 @@ public abstract class AbstractMainView extends JPanel
 
             // If the file's path is changing (must be caused by the file being
             // saved(?))...
-            case RTextEditorPane.FULL_PATH_PROPERTY:
+            case TextEditorPane.FULL_PATH_PROPERTY:
                 setDocumentDisplayNameAt(getSelectedIndex(), currentTextArea.getFileName());
                 fireCurrentTextAreaEvent(CurrentTextAreaEvent.FILE_NAME_CHANGED,
                         e.getOldValue(), e.getNewValue());
                 break;
 
             // If the file's modification status is changing...
-            case RTextEditorPane.DIRTY_PROPERTY:
+            case TextEditorPane.DIRTY_PROPERTY:
                 int selectedIndex = getSelectedIndex();
                 String oldTitle = getDocumentDisplayNameAt(selectedIndex);
                 if ((Boolean) e.getNewValue())
@@ -2629,13 +2626,13 @@ public abstract class AbstractMainView extends JPanel
                 break;
 
             // If the highlighting style of the current file changed...
-            case RTextEditorPane.SYNTAX_STYLE_PROPERTY:
+            case RSyntaxTextArea.SYNTAX_STYLE_PROPERTY:
                 fireCurrentTextAreaEvent(
                         CurrentTextAreaEvent.SYNTAX_STYLE_CHANGED,
                         e.getOldValue(), e.getNewValue());
                 break;
 
-            case RText.ICON_STYLE_PROPERTY:
+            case AbstractGUIApplication.ICON_STYLE_PROPERTY:
                 refreshTabIcons();
                 updateBookmarkIcon();
                 break;
