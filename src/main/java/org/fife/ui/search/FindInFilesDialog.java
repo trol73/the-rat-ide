@@ -36,35 +36,31 @@ import org.fife.ui.rtextfilechooser.RDirectoryChooser;
 
 
 /**
- * A dialog allowing the user to search for a text string in all files in a
- * directory, so they don't have to do the files one at a time.
+ * A dialog allowing the user to search for a text string in all files in a directory, so they don't have to do the files one at a time.
  *
  * @author Robert Futrell
  * @version 0.8
  */
 public class FindInFilesDialog extends AbstractSearchDialog {
-
-	// Text fields in which the user enters parameters that are not
-	// defined in AbstractSearchDialog.
+	// Text fields in which the user enters parameters that are not defined in AbstractSearchDialog.
 	protected JComboBox<String> inFilesComboBox;
 	protected FSATextField inFolderTextField;
-	protected JComboBox<String> skipFoldersComboBox;
+	protected JComboBox<String> sbSkipFolders;
 
 	protected JCheckBox subfoldersCheckBox;
 
-	protected JButton findButton;
-	private final JButton browseButton;
+	protected JButton btnFind;
+	private final JButton btnBrowse;
 
-	private JRadioButton matchingLinesRadioButton;
+	private JRadioButton rbMatchingLines;
 
-	protected JCheckBox verboseCheckBox;
+	protected JCheckBox cbVerbose;
 
 	private final StatusBar statusBar;
 
 	private final ResultsComponent resultsComponent;
 
-	// This helps us work around the "bug" where JComboBox eats the first
-	// Enter press.
+	// This helps us work around the "bug" where JComboBox eats the first Enter press.
 	private String lastSearchString;
 	private String lastInFilesString;
 	private String lastSkipFoldersString;
@@ -120,28 +116,28 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		// Make an "In folder" text field.
 		// NOTE:  Change the line below for "directories only", but
 		// SLOW NFS paths because of File.isDirectory()...
-		inFolderTextField = new FSATextField();//true);
+		inFolderTextField = new FSATextField();
 		inFolderTextField.setText(System.getProperty("user.home"));
 		inFolderTextField.addFocusListener(focusAdapter);
 		inFolderTextField.getDocument().addDocumentListener(docListener);
 
-		skipFoldersComboBox = new JComboBox<>(new RComboBoxModel<>());
-		textField = getTextComponent(skipFoldersComboBox);
+		sbSkipFolders = new JComboBox<>(new RComboBoxModel<>());
+		textField = getTextComponent(sbSkipFolders);
 		textField.addFocusListener(focusAdapter);
-		skipFoldersComboBox.addItem(getDefaultFoldersToSkip());
-		skipFoldersComboBox.setSelectedIndex(0);
-		skipFoldersComboBox.setEditable(true);
+		sbSkipFolders.addItem(getDefaultFoldersToSkip());
+		sbSkipFolders.setSelectedIndex(0);
+		sbSkipFolders.setEditable(true);
 
 		// Make a panel containing the edit boxes and their associated labels.
 		JPanel inputPanel = createInputPanel();
 		updateIcons();
 
 		// Make a "Conditions" panel.
-		Box conditionsPanel = Box.createVerticalBox();
+		Box conditionsPanel = Box.createHorizontalBox();
 		conditionsPanel.setBorder(createTitledBorder(getString2("Conditions")));
-		conditionsPanel.add(caseCheckBox);
-		conditionsPanel.add(wholeWordCheckBox);
-		conditionsPanel.add(regexCheckBox);
+		conditionsPanel.add(cbCase);
+		conditionsPanel.add(cbWholeWord);
+		conditionsPanel.add(cbRegex);
 
 		// Make a "Report detail" panel.
 		Box detailEtcPanel = createDetailsPanel();
@@ -160,18 +156,18 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 		// Make a panel containing the buttons.
 		JPanel rightPanel2 = new JPanel(new GridLayout(3,1, 5,5));
-		findButton = UIUtil.newButton(getBundle(), "Find");
-		findButton.setActionCommand("FindInFiles");
-		findButton.addActionListener(this);
-		browseButton = UIUtil.newButton(MSG, "Browse");
-		browseButton.setActionCommand("Browse");
-		browseButton.addActionListener(this);
-		cancelButton = UIUtil.newButton(MSG, "Close");
-		cancelButton.setActionCommand("Close");
-		cancelButton.addActionListener(this);
-		rightPanel2.add(findButton);
-		rightPanel2.add(browseButton);
-		rightPanel2.add(cancelButton);
+		btnFind = UIUtil.newButton(getBundle(), "Find");
+		btnFind.setActionCommand("FindInFiles");
+		btnFind.addActionListener(this);
+		btnBrowse = UIUtil.newButton(MSG, "Browse");
+		btnBrowse.setActionCommand("Browse");
+		btnBrowse.addActionListener(this);
+		btnCancel = UIUtil.newButton(MSG, "Close");
+		btnCancel.setActionCommand("Close");
+		btnCancel.addActionListener(this);
+		rightPanel2.add(btnFind);
+		rightPanel2.add(btnBrowse);
+		rightPanel2.add(btnCancel);
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		if (orientation.isLeftToRight()) {
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
@@ -186,7 +182,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		topPanel.add(rightPanel, BorderLayout.LINE_END);
 
 		// Make a panel containing a "Verbose output" check box.
-		Box extraOptionsPanel = createExtraOptionsPanel();
+//		Box extraOptionsPanel = createExtraOptionsPanel();
 
 		// Make the "results" panel.
 		JPanel resultsPanel = new JPanel(new GridLayout(1,1, 3,3));
@@ -217,13 +213,13 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		temp.setBorder(empty5Border);
 		temp.add(topPanel);
 		temp.add(Box.createVerticalStrut(5));
-		if (extraOptionsPanel != null) {
-			temp.add(extraOptionsPanel);
-		}
+//		if (extraOptionsPanel != null) {
+//			temp.add(extraOptionsPanel);
+//		}
 		contentPane.add(temp, BorderLayout.NORTH);
 		contentPane.add(resultsPanel);
 		contentPane.add(statusBar, BorderLayout.SOUTH);
-		getRootPane().setDefaultButton(findButton);
+		getRootPane().setDefaultButton(btnFind);
 		setModal(false);
 		applyComponentOrientation(orientation);
 		pack();
@@ -240,7 +236,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 		// If the user selects the "Find" button...
 		if ("FindInFiles".equals(command)) {
-
 			// Add the "Find What" item to the combo box's list.  Then, if
 			// they just searched for an item that's already in the list
 			// other than the first, move it to the first position.
@@ -248,35 +243,32 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 			findTextCombo.addItem(item); // Ensures item is at index 0.
 			context.setSearchFor(getSearchString());
 
-			// Add the "In Files" item to the combo box's list.  Then, if
-			// they just searched for an item that's already in the list
-			// other than the first, move it to the first position.
+			// Add the "In Files" item to the combo box's list.  Then, if they just searched for an item that's already
+			// in the list  other than the first, move it to the first position.
 			item = getTextComponent(inFilesComboBox).getText();
 			inFilesComboBox.addItem(item); // Ensures item is at index 0.
 
 			// Add the "Skip folders" item to the combo box's list.  Then, if
 			// they just searched for an item that's already in the list other
 			// than the first, move it to the first position.
-			item = getTextComponent(skipFoldersComboBox).getText();
-			skipFoldersComboBox.addItem(item); // Ensures item is at index 0.
+			item = getTextComponent(sbSkipFolders).getText();
+			sbSkipFolders.addItem(item); // Ensures item is at index 0.
 
 			// Actually perform the search.
 			doFindInFiles();
-
 		}
-
 
 		// If the user selects the "Browse..." button...
 		else if ("Browse".equals(command)) {
 			RDirectoryChooser chooser = new RDirectoryChooser(this);
 			String dirName = inFolderTextField.getText().trim();
-			if (dirName.length()>0) {
+			if (!dirName.isEmpty()) {
 				File dir = new File(dirName);
 				chooser.setChosenDirectory(dir);
 			}
 			chooser.setVisible(true);
 			String directory = chooser.getChosenDirectory();
-			if (directory!=null) {
+			if (directory != null) {
 				inFolderTextField.setFileSystemAware(false);
 				inFolderTextField.setText(directory);
 				inFolderTextField.setFileSystemAware(true);
@@ -289,8 +281,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 			if (workerThread!=null) { // Search going on => stop search.
 				workerThread.interrupt();
 				setSearching(false);
-			}
-			else { // No search => close the dialog.
+			} else { // No search => close the dialog.
 				this.setVisible(false);
 			}
 		}
@@ -301,7 +292,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		}
 
 		else if ("Verbose".equals(command)) {
-			boolean verbose = verboseCheckBox.isSelected();
+			boolean verbose = cbVerbose.isSelected();
 			((FindInFilesSearchContext)context).setVerbose(verbose);
 		}
 
@@ -309,13 +300,11 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		else {
 			super.actionPerformed(e);
 		}
-
 	}
 
 
 	/**
-	 * Adds information on a match (or verbose search information) to the
-	 * search table.<p>
+	 * Adds information on a match (or verbose search information) to the search table.<p>
 	 *
 	 * We assume this method is being called by {@link FindInFilesThread},
 	 * not the EDT, so the match data is added via
@@ -350,16 +339,20 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		inFilesComboBox.addItem(filter);
 	}
 
+	public void selectFirstInFilesItem() {
+		if (inFilesComboBox.getSelectedIndex() < 0 && inFilesComboBox.getItemCount() > 0) {
+			inFilesComboBox.setSelectedIndex(0);
+		}
+	}
+
 
 	/**
-	 * Clears the search results table.  This method can be called from
-	 * threads other than the EDT.
+	 * Clears the search results table. This method can be called from threads other than the EDT.
 	 */
 	void clearSearchResults() {
 		if (SwingUtilities.isEventDispatchThread()) {
 			getResultsComponent().clear();
-		}
-		else {
+		} else {
 			SwingUtilities.invokeLater(() -> getResultsComponent().clear());
 		}
 	}
@@ -371,54 +364,53 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @return The panel.
 	 */
 	protected Box createDetailsPanel() {
-		Box detailPanel = Box.createVerticalBox();
+		Box detailPanel = Box.createHorizontalBox();
 		detailPanel.setBorder(createTitledBorder(getString2("ReportDetail")));
-		matchingLinesRadioButton = new JRadioButton(getString2("MatchingLines"));
-		matchingLinesRadioButton.setMnemonic((int)getString2("MatchingLinesMnemonic").charAt(0));
-		matchingLinesRadioButton.setSelected(true);
-		detailPanel.add(matchingLinesRadioButton);
+		rbMatchingLines = new JRadioButton(getString2("MatchingLines"));
+		rbMatchingLines.setMnemonic((int)getString2("MatchingLinesMnemonic").charAt(0));
+		rbMatchingLines.setSelected(true);
+		detailPanel.add(rbMatchingLines);
 		JRadioButton fileCountsOnlyRadioButton = new JRadioButton(getString2("FileCounts"));
 		fileCountsOnlyRadioButton.setMnemonic((int)getString2("FileCountsMnemonic").charAt(0));
 		ButtonGroup bg = new ButtonGroup();
-		bg.add(matchingLinesRadioButton);
+		bg.add(rbMatchingLines);
 		bg.add(fileCountsOnlyRadioButton);
 		detailPanel.add(fileCountsOnlyRadioButton);
 
 		// Make a panel containing the "Report detail" panel and some check boxes.
-		Box panel = Box.createVerticalBox();
+//		Box panel = Box.createVerticalBox();
 		subfoldersCheckBox = new JCheckBox(getString2("SearchSubfolders"), true);
 		subfoldersCheckBox.setMnemonic((int)getString2("SearchSubfoldersMnemonic").charAt(0));
 		subfoldersCheckBox.setActionCommand("Subfolders");
 		subfoldersCheckBox.addActionListener(this);
-		panel.add(detailPanel);
-		panel.add(subfoldersCheckBox);
+//		panel.add(detailPanel);
+//		panel.add(subfoldersCheckBox);
+		detailPanel.add(subfoldersCheckBox);
 
-		return panel;
+		//return panel;
+		return detailPanel;
 	}
 
 
 	/**
-	 * Returns a panel containing any extra options, such as a "verbose"
-	 * output option.
+	 * Returns a panel containing any extra options, such as a "verbose" output option.
 	 *
-	 * @return The panel, or <code>null</code> if there are no extra
-	 *         options.
+	 * @return The panel, or <code>null</code> if there are no extra options.
 	 */
 	protected Box createExtraOptionsPanel() {
 		Box temp = new Box(BoxLayout.LINE_AXIS);
-		verboseCheckBox = new JCheckBox(getString2("Verbose"));
-		verboseCheckBox.setActionCommand("Verbose");
-		verboseCheckBox.addActionListener(this);
-		verboseCheckBox.setMnemonic((int)getString2("VerboseMnemonic").charAt(0));
-		temp.add(verboseCheckBox);
+		cbVerbose = new JCheckBox(getString2("Verbose"));
+		cbVerbose.setActionCommand("Verbose");
+		cbVerbose.addActionListener(this);
+		cbVerbose.setMnemonic((int)getString2("VerboseMnemonic").charAt(0));
+		temp.add(cbVerbose);
 		temp.add(Box.createHorizontalGlue());
 		return temp;
 	}
 
 
 	/**
-	 * Creates and returns the panel containing input fields and their
-	 * labels.
+	 * Creates and returns the panel containing input fields and their labels.
 	 *
 	 * @return The panel.
 	 */
@@ -434,7 +426,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		dirLabel.setLabelFor(inFolderTextField);
 		dirLabel.setDisplayedMnemonic((int)getString2("InDirectoryMnemonic").charAt(0));
 		JLabel skipLabel = new JLabel(getString2("SkipFolders"));
-		skipLabel.setLabelFor(skipFoldersComboBox);
+		skipLabel.setLabelFor(sbSkipFolders);
 		skipLabel.setDisplayedMnemonic((int)getString2("SkipFoldersMnemonic").charAt(0));
 
 		JPanel temp = new JPanel(new BorderLayout());
@@ -451,11 +443,10 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		temp3.add(Box.createHorizontalStrut(AssistanceIconPanel.WIDTH), BorderLayout.LINE_START);
 
 		JPanel temp4 = new JPanel(new BorderLayout());
-		temp4.add(RTextUtilities.createAssistancePanel(skipFoldersComboBox, DECORATIVE_ICON_WIDTH));
+		temp4.add(RTextUtilities.createAssistancePanel(sbSkipFolders, DECORATIVE_ICON_WIDTH));
 		temp4.add(Box.createHorizontalStrut(AssistanceIconPanel.WIDTH), BorderLayout.LINE_START);
 
-		ComponentOrientation orientation = ComponentOrientation.
-									getOrientation(getLocale());
+		ComponentOrientation orientation = ComponentOrientation.getOrientation(getLocale());
 
 		// Make a panel of the edit fields and add it to inputPanel.
 		UIUtil.addLabelValuePairs(inputPanel, orientation,
@@ -510,7 +501,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	/**
 	 * This function actually performs a search through the given directory.
 	 */
-	private void doFindInFiles() {
+	public void doFindInFiles() {
 		// First, ensure that the directory they selected actually exists.
 		String dirPath = inFolderTextField.getText();
 		final File directory = new File(dirPath);
@@ -526,18 +517,17 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 		// Next, if we're doing a regex search, ensure we have a valid
 		// regex to search for.
-		if (regexCheckBox.isSelected()) {
+		if (cbRegex.isSelected()) {
 			try {
 				Pattern.compile(getSearchString());
 			} catch (Exception e) {
 				// Doesn't usually happen; should be caught earlier.
 				String text = e.getMessage();
-				if (text==null) {
+				if (text == null) {
 					text = e.toString();
 				}
 				JOptionPane.showMessageDialog(this,
-					"Invalid regular expression:\n" + text +
-					"\nPlease check your regular expression search string.",
+					"Invalid regular expression:\n" + text + "\nPlease check your regular expression search string.",
 					getString2("ErrorDialogTitle"),
 					JOptionPane.ERROR_MESSAGE);
 				return;
@@ -570,7 +560,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
-		for (int i = listeners.length-2; i>=0; i-=2) {
+		for (int i = listeners.length-2; i >= 0; i -= 2) {
 			if (listeners[i] == FindInFilesListener.class) {
 				((FindInFilesListener)listeners[i+1]).findInFilesFileSelected(e);
 			}
@@ -606,7 +596,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	/**
 	 * Returns whether to check subfolders.
 	 *
-	 * @return Whether or not to check subfolders.
+	 * @return Whether to check subfolders.
 	 * @see #getMatchCase
 	 * @see #getMatchWholeWord
 	 * @see #getUseRegEx
@@ -633,7 +623,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @return Whether the user wants verbose output about their search.
 	 */
 	boolean getDoVerboseOutput() {
-		return verboseCheckBox.isSelected();
+		return cbVerbose != null && cbVerbose.isSelected();
 	}
 
 
@@ -667,7 +657,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @see #getUseRegEx
 	 */
 	boolean getMatchCase() {
-		return caseCheckBox.isSelected();
+		return cbCase.isSelected();
 	}
 
 
@@ -680,7 +670,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @see #getUseRegEx
 	 */
 	boolean getMatchWholeWord() {
-		return wholeWordCheckBox.isSelected();
+		return cbWholeWord.isSelected();
 	}
 
 
@@ -698,10 +688,10 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * Returns whether each line that matched the search criteria should be
 	 * shown (as opposed to just a match count for each file).
 	 *
-	 * @return Whether or not each matched line should be shown.
+	 * @return Whether each matched line should be shown.
 	 */
 	boolean getShowMatchingLines() {
-		return matchingLinesRadioButton.isSelected();
+		return rbMatchingLines.isSelected();
 	}
 
 
@@ -711,20 +701,20 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @return The names of folders to skip.
 	 */
 	String[] getSkipFolders() {
-		return UIUtil.getCommaSeparatedValues(skipFoldersComboBox);
+		return UIUtil.getCommaSeparatedValues(sbSkipFolders);
 	}
 
 
 	/**
 	 * Returns whether regular expressions should be used in searches.
 	 *
-	 * @return Whether or not regular expressions should be used in searches.
+	 * @return Whether regular expressions should be used in searches.
 	 * @see #getCheckSubfolders
 	 * @see #getMatchCase
 	 * @see #getMatchWholeWord
 	 */
 	boolean getUseRegEx() {
-		return regexCheckBox.isSelected();
+		return cbRegex.isSelected();
 	}
 
 
@@ -751,7 +741,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	protected FindReplaceButtonsEnableResult handleToggleButtons() {
 		FindReplaceButtonsEnableResult er = super.handleToggleButtons();
 		boolean enable = er.getEnable();
-		findButton.setEnabled(enable && isEverythingFilledIn());
+		btnFind.setEnabled(enable && isEverythingFilledIn());
 		JTextComponent tc = getTextComponent(findTextCombo);
 		tc.setForeground(enable ? UIManager.getColor("TextField.foreground") : Color.RED);
 
@@ -784,9 +774,9 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 */
 	protected boolean isEverythingFilledIn() {
 		return getWorkerThread() == null &&
-				getLength(getTextComponent(findTextCombo))>0 &&
-				getLength(getTextComponent(inFilesComboBox))>0 &&
-				getLength(inFolderTextField)>0;
+				getLength(getTextComponent(findTextCombo)) > 0 &&
+				getLength(getTextComponent(inFilesComboBox)) > 0 &&
+				getLength(inFolderTextField) > 0;
 	}
 
 
@@ -796,12 +786,14 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	@Override
 	protected void refreshUIFromContext() {
 		super.refreshUIFromContext();
-		if (this.caseCheckBox==null) {
+		if (this.cbCase == null) {
 			return; // First time through, UI not realized yet
 		}
 		FindInFilesSearchContext fifsc = (FindInFilesSearchContext)context;
 		subfoldersCheckBox.setSelected(fifsc.getSearchSubfolders());
-		verboseCheckBox.setSelected(fifsc.getVerbose());
+		if (cbVerbose != null) {
+			cbVerbose.setSelected(fifsc.getVerbose());
+		}
 	}
 
 
@@ -817,8 +809,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 
 	/**
-	 * Called by the searching thread when searching was terminated early for
-	 * some reason.
+	 * Called by the searching thread when searching was terminated early for some reason.
 	 *
 	 * @param message A message describing why searching was terminated.
 	 */
@@ -846,14 +837,12 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 			// If searching completed normally (e.g., wasn't terminated).
 			if (time != -1) {
-
 				// Make the status bar indicate that searching completed.
-				String temp = MessageFormat.format(searchingCompleteString,""+(time/1000.0f));
+				String temp = MessageFormat.format(searchingCompleteString,resultsComponent.getRowCount(), ""+(time/1000.0f));
 				setStatusText(temp);
 
-				// Update the results list and notify the user if the
-				// message wasn't found at all.
-				if (getResultsComponent().getRowCount()==0) {
+				// Update the results list and notify the user if the message wasn't found at all.
+				if (getResultsComponent().getRowCount() == 0) {
 					String searchString = (String)findTextCombo.getSelectedItem();
 					JOptionPane.showMessageDialog(FindInFilesDialog.this,
 						getString2("SearchStringNotFound") + searchString + "'.",
@@ -886,15 +875,15 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 */
 	protected void setSearching(boolean searching) {
 		boolean enabled = !searching;
-		findButton.setEnabled(enabled);
-		browseButton.setEnabled(enabled);
+		btnFind.setEnabled(enabled);
+		btnBrowse.setEnabled(enabled);
 		if (searching) {
-			cancelButton.setText(getString2("Stop"));
-			cancelButton.setMnemonic((int)getString2("Stop.Mnemonic").charAt(0));
+			btnCancel.setText(getString2("Stop"));
+			btnCancel.setMnemonic((int)getString2("Stop.Mnemonic").charAt(0));
 		}
 		else {
-			cancelButton.setText(getString2("Close"));
-			cancelButton.setMnemonic((int)getString2("Close.Mnemonic").charAt(0));
+			btnCancel.setText(getString2("Close"));
+			btnCancel.setMnemonic((int)getString2("Close.Mnemonic").charAt(0));
 		}
 		findTextCombo.setEnabled(enabled);
 		inFilesComboBox.setEnabled(enabled);
@@ -913,8 +902,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		if (isVisible()) {
 			if (SwingUtilities.isEventDispatchThread()) {
 				statusBar.setStatusMessage(text);
-			}
-			else {
+			} else {
 				SwingUtilities.invokeLater(() -> statusBar.setStatusMessage(text));
 			}
 		}
@@ -1038,18 +1026,14 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 			((JTextField)component).selectAll();
 
 			// Remember what it originally was, in case they tabbed out.
-			if (component==getTextComponent(findTextCombo)) {
+			if (component == getTextComponent(findTextCombo)) {
 				lastSearchString = (String)findTextCombo.getSelectedItem();
-			}
-			else if (component==getTextComponent(inFilesComboBox)) {
+			} else if (component == getTextComponent(inFilesComboBox)) {
 				lastInFilesString = (String)inFilesComboBox.getSelectedItem();
+			} else if (component == getTextComponent(sbSkipFolders)) {
+				lastSkipFoldersString = (String) sbSkipFolders.getSelectedItem();
 			}
-			else if (component==getTextComponent(skipFoldersComboBox)) {
-				lastSkipFoldersString = (String)skipFoldersComboBox.getSelectedItem();
-			}
-
 		}
-
 	}
 
 
@@ -1068,7 +1052,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		private void handleOpenSearchResult() {
 
 			int row = comp.getSelectedRow();
-			if (row==-1)
+			if (row < 0)
 				return;
 
 			MatchData data = comp.getMatchDataForRow(row);

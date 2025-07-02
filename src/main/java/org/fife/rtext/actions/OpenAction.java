@@ -21,15 +21,11 @@ import org.fife.ui.rtextfilechooser.RTextFileChooser;
 
 
 /**
- * Action used by an <code>AbstractMainView</code> to open a document
- * from a file on disk.
- *
+ * Action used by an <code>AbstractMainView</code> to open a document from a file on disk.
  * @author Robert Futrell
  * @version 1.0
  */
 class OpenAction extends AppAction<RText> {
-
-
 	/**
 	 * Constructor.
 	 *
@@ -46,7 +42,6 @@ class OpenAction extends AppAction<RText> {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		RText owner = getApplication();
 		RTextFileChooser chooser = owner.getFileChooser();
 
@@ -55,7 +50,6 @@ class OpenAction extends AppAction<RText> {
 		// but the second one has no components painted on it and is not
 		// responsive, effectively hanging the program.
 		if (!chooser.isShowing()) {
-
 			// Initialize the file chooser to be an Open dialog.
 			chooser.setMultiSelectionEnabled(true);
 			chooser.setOpenedFiles(owner.getMainView().getOpenFiles());

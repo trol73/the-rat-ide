@@ -21,7 +21,6 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.text.DefaultHighlighter;
 
-
 /**
  * Container for all actions used by the demo.
  *
@@ -29,8 +28,6 @@ import javax.swing.text.DefaultHighlighter;
  * @version 1.0
  */
 interface Actions {
-
-
     /**
      * Displays an "About" dialog.
      */
@@ -45,8 +42,7 @@ interface Actions {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            AboutDialog ad = new AboutDialog((DemoApp) SwingUtilities.
-                    getWindowAncestor(demo));
+            AboutDialog ad = new AboutDialog((DemoApp) SwingUtilities.getWindowAncestor(demo));
             ad.setLocationRelativeTo(demo);
             ad.setVisible(true);
         }

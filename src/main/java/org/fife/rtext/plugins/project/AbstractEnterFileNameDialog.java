@@ -29,8 +29,7 @@ import org.fife.ui.widgets.SelectableLabel;
 import org.fife.ui.utils.UIUtil;
 
 
-abstract class AbstractEnterFileNameDialog extends EscapableDialog implements ActionListener {
-
+public abstract class AbstractEnterFileNameDialog extends EscapableDialog implements ActionListener {
     private boolean descAdded;
     private JPanel topPanel;
     private JLabel nameLabel;
@@ -40,7 +39,7 @@ abstract class AbstractEnterFileNameDialog extends EscapableDialog implements Ac
     private final NameChecker nameChecker;
     final boolean isForFile;
 
-    private static Icon errorIcon;
+//    private static Icon errorIcon;
 
     /**
      * Constructor.
@@ -49,7 +48,7 @@ abstract class AbstractEnterFileNameDialog extends EscapableDialog implements Ac
      * @param directory Whether this dialog is for a directory as opposed to a regular file.
      * @param checker   The validator for the entered file name.
      */
-    AbstractEnterFileNameDialog(RText owner, boolean directory, NameChecker checker) {
+    protected AbstractEnterFileNameDialog(RText owner, boolean directory, NameChecker checker) {
         super(owner);
         this.nameChecker = checker;
         this.isForFile = !directory;
@@ -150,8 +149,7 @@ abstract class AbstractEnterFileNameDialog extends EscapableDialog implements Ac
      * @return The icon.
      */
     public static Icon getErrorIcon(RText rtext) {
-        // The IconGroup caches this value, so we just always fetch it so we can pick up
-        // changes in themes/icon groups
+        // The IconGroup caches this value, so we just always fetch it so we can pick up changes in themes/icon groups
         return rtext.getIconGroup().getIcon("error_annotation", 12, 12);
     }
 
@@ -176,7 +174,7 @@ abstract class AbstractEnterFileNameDialog extends EscapableDialog implements Ac
      */
     public String getFileName() {
         String name = nameField.getText();
-        return name.length() > 0 ? name : null;
+        return !name.isEmpty() ? name : null;
     }
 
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 public class IncludeGlobalCompletionProvider extends DefaultCompletionProvider {
     private final List<Completion> completionList = new ArrayList<>();
+
     public IncludeGlobalCompletionProvider(Project project) {
         if (project == null || project.getDevice().equals("<none>")) {
             initDefaultIncludes();

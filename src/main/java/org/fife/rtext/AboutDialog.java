@@ -96,7 +96,7 @@ class AboutDialog extends EscapableDialog {
         Date buildDate = parent.getBuildDate();
         String dateStr = buildDate == null ? "unknown" :
                 DateFormat.getDateTimeInstance().format(buildDate);
-        String desc = getString(msg, "About.MainDesc", parent.getVersionString(), dateStr);
+        String desc = getString(msg, parent.getVersionString(), dateStr);
         SelectableLabel textArea = new SelectableLabel(desc);
         textArea.addHyperlinkListener(listener);
         box2.add(textArea);
@@ -160,8 +160,8 @@ class AboutDialog extends EscapableDialog {
     }
 
 
-    private static String getString(ResourceBundle msg, String key, Object... params) {
-        String value = msg.getString(key);
+    private static String getString(ResourceBundle msg, Object... params) {
+        String value = msg.getString("About.MainDesc");
         return params.length > 0 ? MessageFormat.format(value, params) : value;
     }
 
@@ -222,7 +222,7 @@ class AboutDialog extends EscapableDialog {
             sb.append("<tr><td><b>").append(name).append("</b></td>");
             sb.append("<td><a href=\"").append(url).append("\">");
             sb.append(url).append("</a></td></tr>");
-            sb.append("<tr><td colspan=\"2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\u2022 "); // bullet
+            sb.append("<tr><td colspan=\"2\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• "); // bullet
             sb.append(desc).append("</td></tr>");
             // Add an empty row, just for spacing.
             sb.append("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>");

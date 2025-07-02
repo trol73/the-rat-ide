@@ -312,19 +312,19 @@ public abstract class AbstractFindReplaceDialog extends AbstractSearchDialog {
 		markAllCheckBox.addActionListener(this);
 
 		// Rearrange the search conditions panel.
-		searchConditionsPanel.removeAll();
-		searchConditionsPanel.setLayout(new BorderLayout());
+		pnlSearchConditions.removeAll();
+		pnlSearchConditions.setLayout(new BorderLayout());
 		JPanel temp = new JPanel();
 		temp.setLayout(new BoxLayout(temp, BoxLayout.PAGE_AXIS));
-		temp.add(caseCheckBox);
-		temp.add(wholeWordCheckBox);
-		temp.add(wrapCheckBox);
-		searchConditionsPanel.add(temp, BorderLayout.LINE_START);
+		temp.add(cbCase);
+		temp.add(cbWholeWord);
+		temp.add(cbWrap);
+		pnlSearchConditions.add(temp, BorderLayout.LINE_START);
 		temp = new JPanel();
 		temp.setLayout(new BoxLayout(temp, BoxLayout.PAGE_AXIS));
-		temp.add(regexCheckBox);
+		temp.add(cbRegex);
 		temp.add(markAllCheckBox);
-		searchConditionsPanel.add(temp, BorderLayout.LINE_END);
+		pnlSearchConditions.add(temp, BorderLayout.LINE_END);
 
 		// Create the "Find what" label.
 		findFieldLabel = UIUtil.newLabel(getBundle(), "FindWhat",findTextCombo);

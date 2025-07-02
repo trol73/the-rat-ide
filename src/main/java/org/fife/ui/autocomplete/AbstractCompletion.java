@@ -33,7 +33,7 @@ public abstract class AbstractCompletion implements Completion {
 	/**
 	 * The provider that created this completion.
 	 */
-	private CompletionProvider provider;
+	private final CompletionProvider provider;
 
 	/**
 	 * The icon to use for this completion.
@@ -78,8 +78,7 @@ public abstract class AbstractCompletion implements Completion {
 	public int compareTo(Completion c2) {
 		if (c2==this) {
 			return 0;
-		}
-		else if (c2!=null) {
+		} else if (c2!=null) {
 			return toString().compareToIgnoreCase(c2.toString());
 		}
 		return -1;

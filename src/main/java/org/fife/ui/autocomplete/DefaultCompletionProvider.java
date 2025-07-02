@@ -79,12 +79,9 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 
 
 	/**
-	 * Returns the text just before the current caret position that could be
-	 * the start of something auto-completable.<p>
+	 * Returns the text just before the current caret position that could be the start of something auto-completable.<p>
 	 *
-	 * This method returns all characters before the caret that are matched
-	 * by  {@link #isValidChar(char)}.
-	 *
+	 * This method returns all characters before the caret that are matched by {@link #isValidChar(char)}.
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -123,8 +120,7 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 	 */
 	@Override
 	public List<Completion> getCompletionsAt(JTextComponent tc, Point p) {
-
-		int offset = tc.viewToModel(p);
+		int offset = tc.viewToModel2D(p);
 		if (offset<0 || offset>=tc.getDocument().getLength()) {
 			lastCompletionsAtText = null;
 			return lastParameterizedCompletionsAt = null;
@@ -139,7 +135,6 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 		int end = elem.getEndOffset() - 1;
 
 		try {
-
 			doc.getText(start, end-start, s);
 
 			// Get the valid chars before the specified offset.
@@ -183,15 +178,13 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ParameterizedCompletion> getParameterizedCompletions(
-			JTextComponent tc) {
-
+	public List<ParameterizedCompletion> getParameterizedCompletions(JTextComponent tc) {
 		List<ParameterizedCompletion> list = null;
 
 		// If this provider doesn't support parameterized completions,
 		// bail out now.
 		char paramListStart = getParameterListStart();
-		if (paramListStart==0) {
+		if (paramListStart == 0) {
 			return list; // null
 		}
 
@@ -208,7 +201,6 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 		}
 
 		try {
-
 			doc.getText(offs, len, s);
 
 			// Get the identifier preceding the '(', ignoring any whitespace
@@ -285,8 +277,7 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 
 
 	/**
-	 * Loads completions from an XML input stream.  The XML should validate
-	 * against <code>CompletionXml.dtd</code>.
+	 * Loads completions from an XML input stream.  The XML should validate against <code>CompletionXml.dtd</code>.
 	 *
 	 * @param in The input stream to read from.
 	 * @throws IOException If an IO error occurs.
@@ -297,8 +288,7 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 
 
 	/**
-	 * Loads completions from an XML input stream.  The XML should validate
-	 * against <code>CompletionXml.dtd</code>.
+	 * Loads completions from an XML input stream.  The XML should validate against <code>CompletionXml.dtd</code>.
 	 *
 	 * @param in The input stream to read from.
 	 * @param cl The class loader to use when loading any extra classes defined
@@ -308,7 +298,6 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 	 * @throws IOException If an IO error occurs.
 	 */
 	public void loadFromXML(InputStream in, ClassLoader cl) throws IOException {
-
 		//long start = System.currentTimeMillis();
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -324,7 +313,7 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 				char endChar = handler.getParamEndChar();
 				String sep = handler.getParamSeparator();
 				// Sanity check.  Note endChar can be null
-				if (sep != null && sep.length() > 0) {
+				if (sep != null && !sep.isEmpty()) {
 					setParameterizedCompletionParams(startChar, sep, endChar);
 				}
 			}
@@ -338,8 +327,7 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 
 
 	/**
-	 * Loads completions from an XML file.  The XML should validate against
-	 * <code>CompletionXml.dtd</code>.
+	 * Loads completions from an XML file.  The XML should validate against <code>CompletionXml.dtd</code>.
 	 *
 	 * @param resource A resource the current ClassLoader can get to.
 	 * @throws IOException If an IO error occurs.
@@ -347,14 +335,12 @@ public class DefaultCompletionProvider extends AbstractCompletionProvider {
 	public void loadFromXML(String resource) throws IOException {
 		ClassLoader cl = getClass().getClassLoader();
 		InputStream in = cl.getResourceAsStream(resource);
-		if (in==null) {
+		if (in == null) {
 			File file = new File(resource);
-			if (file.isFile()) {
-				in = new FileInputStream(file);
-			}
-			else {
+			if (!file.isFile()) {
 				throw new IOException("No such resource: " + resource);
 			}
+			in = new FileInputStream(file);
 		}
 		try (BufferedInputStream bin = new BufferedInputStream(in)) {
 			loadFromXML(bin);

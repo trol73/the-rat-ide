@@ -24,8 +24,6 @@ import org.fife.ui.app.AppAction;
  * @version 1.0
  */
 class FindInFilesAction extends AppAction<RText> {
-
-
 	/**
 	 * Constructor.
 	 *
@@ -45,6 +43,4 @@ class FindInFilesAction extends AppAction<RText> {
 		AbstractMainView mainView = rtext.getMainView();
 		mainView.getFindInFilesDialog().setVisible(true);
 	}
-
-
 }

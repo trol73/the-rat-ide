@@ -195,12 +195,10 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 			if (line!=lastLine) {
 				lastLine = -1;
 				setVisible(false);
-			}
-			else {
+			} else {
 				doAutocomplete();
 			}
-		}
-		else if (AutoCompletion.getDebug()) {
+		} else if (AutoCompletion.getDebug()) {
 			Thread.dumpStack();
 		}
 	}
@@ -212,7 +210,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * @return The description window.
 	 */
 	private AutoCompleteDescWindow createDescriptionWindow() {
-
 		AutoCompleteDescWindow dw = new AutoCompleteDescWindow(this, ac);
 		dw.applyComponentOrientation(ac.getTextComponentOrientation());
 
@@ -222,10 +219,9 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 		}
 		dw.setSize(size);
 
-		if (descWindowColor  != null) {
+		if (descWindowColor != null) {
 		    dw.setBackground(descWindowColor);
-        }
-        else {
+        } else {
             descWindowColor = dw.getBackground();
         }
 
@@ -238,7 +234,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * text component's ActionMap and InputMap.
 	 */
 	private void createKeyActionPairs() {
-
 		// Actions we'll install.
 		EnterAction enterAction = new EnterAction();
 		escapeKap = new KeyActionPair("Escape", new EscapeAction());
@@ -267,7 +262,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 		oldPageUp = new KeyActionPair();
 		oldPageDown = new KeyActionPair();
 		oldCtrlC = new KeyActionPair();
-
 	}
 
 
@@ -343,7 +337,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * @see #uninstallKeyBindings()
 	 */
 	private void installKeyBindings() {
-
 		if (AutoCompletion.getDebug()) {
 			System.out.println("PopupWindow: Installing keybindings");
 		}
@@ -388,13 +381,12 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 		comp.addCaretListener(this);
 
 		keyBindingsInstalled = true;
-
 	}
 
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount()==2) {
+		if (e.getClickCount() == 2) {
 			insertSelectedCompletion();
 		}
 	}
@@ -426,7 +418,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * entire window to fit.
 	 */
 	private void positionDescWindow() {
-
 		boolean showDescWindow = descWindow!=null && ac.getShowDescWindow();
 		if (!showDescWindow) {
 			return;
@@ -477,8 +468,7 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * @param kap The (original) key/Action pair.
 	 * @see #replaceAction(InputMap, ActionMap, int, KeyActionPair, KeyActionPair)
 	 */
-	private void putBackAction(InputMap im, ActionMap am, int key,
-								KeyActionPair kap) {
+	private void putBackAction(InputMap im, ActionMap am, int key, KeyActionPair kap) {
 		KeyStroke ks = KeyStroke.getKeyStroke(key, 0);
 		am.put(im.get(ks), kap.action); // Original action for the "new" key
 		im.put(ks, kap.key); // Original key for the keystroke.
@@ -639,8 +629,7 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	public void setDescriptionWindowColor(Color color) {
 		if (descWindow!=null) {
 			descWindow.setBackground(color);
-		}
-		else {
+		} else {
 			descWindowColor = color;
 		}
 	}
@@ -650,8 +639,7 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * Sets the default list cell renderer to use when a completion provider
 	 * does not supply its own.
 	 *
-	 * @param renderer The renderer to use.  If this is <code>null</code>,
-	 *        a default renderer is used.
+	 * @param renderer The renderer to use.  If this is <code>null</code>, a default renderer is used.
 	 * @see #getListCellRenderer()
 	 */
 	public void setListCellRenderer(ListCellRenderer<Object> renderer) {
@@ -662,14 +650,12 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 
 
 	/**
-	 * Sets the location of this window to be "good" relative to the specified
-	 * rectangle.  That rectangle should be the location of the text
-	 * component's caret, in screen coordinates.
+	 * Sets the location of this window to be "good" relative to the specified rectangle.
+	 * That rectangle should be the location of the text component's caret, in screen coordinates.
 	 *
 	 * @param r The text component's caret position, in screen coordinates.
 	 */
 	public void setLocationRelativeTo(Rectangle r) {
-
 		// Multi-monitor support - make sure the completion window (and
 		// description window, if applicable) both fit in the same window in
 		// a multi-monitor environment.  To do this, we decide which monitor
@@ -712,7 +698,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 		if (showDescWindow) {
 			positionDescWindow();
 		}
-
 	}
 
 
@@ -723,60 +708,55 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 */
 	@Override
 	public void setVisible(boolean visible) {
-
-		if (visible!=isVisible()) {
-
-			if (visible) {
-				installKeyBindings();
-				lastLine = ac.getLineOfCaret();
-				selectFirstItem();
-				if (descWindow==null && ac.getShowDescWindow()) {
-					descWindow = createDescriptionWindow();
-					positionDescWindow();
-				}
-				// descWindow needs a kick-start the first time it's displayed.
-				// Also, the newly-selected item in the choices list is
-				// probably different from the previous one anyway.
-				if (descWindow!=null) {
-					Completion c = list.getSelectedValue();
-					if (c!=null) {
-						descWindow.setDescriptionFor(c);
-					}
-				}
+		if (visible == isVisible()) {
+			return;
+		}
+		if (visible) {
+			installKeyBindings();
+			lastLine = ac.getLineOfCaret();
+			selectFirstItem();
+			if (descWindow==null && ac.getShowDescWindow()) {
+				descWindow = createDescriptionWindow();
+				positionDescWindow();
 			}
-			else {
-				uninstallKeyBindings();
-			}
-
-			super.setVisible(visible);
-
-			// Some languages, such as Java, can use quite a lot of memory
-			// when displaying hundreds of completion choices.  We proactively
-			// clear our list model here to make them available for GC.
-			// Otherwise, they stick around, and consider the following:  a
-			// user starts code-completion for Java 5 SDK classes, then hides
-			// the dialog, then changes the "class path" to use a Java 6 SDK
-			// instead.  On pressing Ctrl+space, a new array of Completions is
-			// created.  If this window holds on to the previous Completions,
-			// you're getting roughly 2x the necessary Completions in memory
-			// until the Completions are actually passed to this window.
-			if (!visible) { // Do after super.setVisible(false)
-				lastSelection = list.getSelectedValue();
-				model.clear();
-			}
-			else {
-				list.repaint(); // https://github.com/bobbylight/AutoComplete/issues/70
-			}
-
-			// Must set descWindow's visibility one way or the other each time,
-			// because of the way child JWindows' visibility is handled - in
-			// some ways it's dependent on the parent, in other ways it's not.
+			// descWindow needs a kick-start the first time it's displayed.
+			// Also, the newly-selected item in the choices list is
+			// probably different from the previous one anyway.
 			if (descWindow!=null) {
-				descWindow.setVisible(visible && ac.getShowDescWindow());
+				Completion c = list.getSelectedValue();
+				if (c!=null) {
+					descWindow.setDescriptionFor(c);
+				}
 			}
-
+		} else {
+			uninstallKeyBindings();
 		}
 
+		super.setVisible(visible);
+
+		// Some languages, such as Java, can use quite a lot of memory
+		// when displaying hundreds of completion choices.  We proactively
+		// clear our list model here to make them available for GC.
+		// Otherwise, they stick around, and consider the following:  a
+		// user starts code-completion for Java 5 SDK classes, then hides
+		// the dialog, then changes the "class path" to use a Java 6 SDK
+		// instead.  On pressing Ctrl+space, a new array of Completions is
+		// created.  If this window holds on to the previous Completions,
+		// you're getting roughly 2x the necessary Completions in memory
+		// until the Completions are actually passed to this window.
+		if (!visible) { // Do after super.setVisible(false)
+			lastSelection = list.getSelectedValue();
+			model.clear();
+		} else {
+			list.repaint(); // https://github.com/bobbylight/AutoComplete/issues/70
+		}
+
+		// Must set descWindow's visibility one way or the other each time,
+		// because of the way child JWindows' visibility is handled - in
+		// some ways it's dependent on the parent, in other ways it's not.
+		if (descWindow!=null) {
+			descWindow.setVisible(visible && ac.getShowDescWindow());
+		}
 	}
 
 
@@ -818,7 +798,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 		comp.removeCaretListener(this);
 
 		keyBindingsInstalled = false;
-
 	}
 
 
@@ -866,7 +845,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 				ac.getTextComponent().copy();
 			}
 		}
-
 	}
 
 
@@ -934,14 +912,12 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * Selects the first item.
 	 */
 	class HomeAction extends AbstractAction {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (isVisible()) {
 				selectFirstItem();
 			}
 		}
-
 	}
 
 
@@ -949,7 +925,6 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 	 * A mapping from a key (an Object) to an Action.
 	 */
 	private static class KeyActionPair {
-
 		private Object key;
 		private Action action;
 
@@ -1032,8 +1007,7 @@ class AutoCompletePopupWindow extends JWindow implements CaretListener,
 
 		@Override
 		public void setUI(ListUI ui) {
-			if (Util.getUseSubstanceRenderers() &&
-					SUBSTANCE_LIST_UI.equals(ui.getClass().getName())) {
+			if (Util.getUseSubstanceRenderers() && SUBSTANCE_LIST_UI.equals(ui.getClass().getName())) {
 				// Substance requires its special ListUI be installed for
 				// its renderers to actually render (!), but long completion
 				// lists (e.g. PHPCompletionProvider in RSTALanguageSupport)

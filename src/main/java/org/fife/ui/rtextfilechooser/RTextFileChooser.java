@@ -92,8 +92,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	private static final boolean IGNORE_CASE = !OS.get().isCaseSensitive();
 
-	private FileSystemView fileSystemView;
-	private ItemListener itemListener;
+	private final FileSystemView fileSystemView;
+	private final ItemListener itemListener;
 	private AcceptAllFileFilter acceptAllFilter;
 
 	private BreadcrumbBar lookInBreadcrumbBar;
@@ -137,7 +137,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Icon listViewIcon;
 	private Icon iconsViewIcon;
 	private Icon favoritesIcon;
-	private FileChooserIconManager iconManager;
+	private final FileChooserIconManager iconManager;
 
 	/*
 	 * Strings used by the file chooser.
@@ -191,8 +191,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private String encoding;
 	private FileFilter filterToSelect;
 
-	private FileTypeInfo tempInfo;	// Used internally.
-	private Map<String, Color> customColors; // Mapping of extensions to colors.
+	private final FileTypeInfo tempInfo;	// Used internally.
+	private final Map<String, Color> customColors; // Mapping of extensions to colors.
 	private boolean showHiddenFiles;
 	private Color hiddenFileColor;
 	private boolean styleOpenFiles;
@@ -204,7 +204,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	private Dimension lastSize;
 	private int lastType;
 
-	private Vector<FileFilter> fileFilters = new Vector<>(5,1);
+	private final Vector<FileFilter> fileFilters = new Vector<>(5,1);
 	private FileFilter currentFileFilter;
 
 	private boolean isChangingDirectories;
@@ -216,9 +216,9 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 	private boolean guiInitialized;
 
-	private boolean showEncodingCombo;
+	private final boolean showEncodingCombo;
 
-	private Comparator<File> fileComparator;
+	private final Comparator<File> fileComparator;
 
 	/**
 	 * Sorted list of "favorite" directories.
@@ -233,8 +233,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	/**
 	 * The default directory for the file chooser.
 	 */
-	private static final File DEFAULT_START_DIRECTORY =
-									new File(System.getProperty("user.dir"));
+	private static final File DEFAULT_START_DIRECTORY = new File(System.getProperty("user.dir"));
 
 	/**
 	 * The encoding used for writing "Favorites" files.
@@ -1092,8 +1091,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 	 * matter).
 	 *
 	 * @param extension The extension for which to get the associated image.
-	 * @return The color associated with this extension, or <code>null</code>
-	 *         if there is none.
+	 * @return The color associated with this extension, or <code>null</code> if there is none.
 	 * @see #setColorForExtension
 	 * @see #clearExtensionColorMap
 	 */
@@ -1437,7 +1435,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			// If there's an extension, check for a custom color.
 			String fileName = file.getName();
 			String extension = Utilities.getExtension(fileName);
-			if (extension!=null && extension.length()>0) {
+			if (extension!=null && !extension.isEmpty()) {
 				Color color = getColorForExtension(extension);
 				if (color==null)
 					color = getDefaultFileColor();
@@ -1554,16 +1552,22 @@ public class RTextFileChooser extends ResizableFrameContentPane
 
 		Object value = UIManager.get(key);
 
-		if (value == null)
-			return 0;
-		else if (value instanceof Integer) {
-			return (Integer)value;
-		}
-		else if (value instanceof String) {
-			try {
-				return Integer.parseInt((String)value);
-			} catch (NumberFormatException nfe) { }
-		}
+        switch (value) {
+            case null -> {
+                return 0;
+            }
+            case Integer i -> {
+                return i;
+            }
+            case String s -> {
+                try {
+                    return Integer.parseInt(s);
+                } catch (NumberFormatException nfe) {
+                }
+            }
+            default -> {
+            }
+        }
 
 		return 0;
 
@@ -1882,7 +1886,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 		try (BufferedReader r = new BufferedReader(new InputStreamReader(
 			new FileInputStream(file), FAVORITES_ENCODING))) {
 			while ((line = r.readLine()) != null) {
-				if (line.length() > 0 && !line.startsWith("#")) {
+				if (!line.isEmpty() && !line.startsWith("#")) {
 					addToFavorites(line);
 					count++;
 				}
@@ -2342,7 +2346,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 						failed = true;
 				}
 				if (failed)
-					setSelectedFiles((fList.size() == 0) ? null :
+					setSelectedFiles((fList.isEmpty()) ? null :
 						fList.toArray(new File[0]));
 			}
 			else if (selectedFiles!=null && selectedFiles.length>0 &&
@@ -2841,8 +2845,7 @@ public class RTextFileChooser extends ResizableFrameContentPane
 					// actually occurred.
 					//e.printStackTrace();
 					setEncoding(getDefaultEncoding());
-					return; // What can you do?
-				}
+                }
 			}
 			else {
 				// Set the default encoding for 0 or >1 files selected.
@@ -2919,9 +2922,8 @@ public class RTextFileChooser extends ResizableFrameContentPane
 			int count = favoritesButton.getItemCount();
 			while (count>2) { // Remove all but last 2.
 				Component old = favoritesButton.removeItem(0);
-				if (old instanceof JMenuItem) {
-					JMenuItem oldItem = (JMenuItem)old;
-					oldItem.removeActionListener(RTextFileChooser.this);
+				if (old instanceof JMenuItem oldItem) {
+                    oldItem.removeActionListener(RTextFileChooser.this);
 				}
 				count--;
 			}

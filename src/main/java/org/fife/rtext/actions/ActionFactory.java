@@ -226,5 +226,6 @@ public final class ActionFactory implements RTextActionInfo {
 		rtext.addAction(CODE_LISTING_ACTION, new ShowCodeListingAction(rtext, msg));
 		rtext.addAction(UPLOAD_ACTION, new UploadAction(rtext, msg));
 		rtext.addAction(NEW_PROJECT_ACTION, new NewProjectAction(rtext, msg));
+		rtext.addAction(GOTO_PROJECT_FILE_ACTION, new GotoProjectFileAction(rtext, msg, null));
 	}
 }

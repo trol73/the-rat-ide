@@ -14,15 +14,12 @@ import org.fife.ui.autocomplete.CompletionProvider;
 import org.fife.ui.autocomplete.VariableCompletion;
 
 
-public class JSBeanCompletion extends VariableCompletion implements
-		JSCompletion {
-
-	private JSMethodData methodData;
-	private Method method;
+public class JSBeanCompletion extends VariableCompletion implements JSCompletion {
+	private final JSMethodData methodData;
+	private final Method method;
 
 
-	public JSBeanCompletion(CompletionProvider provider, MethodInfo methodInfo,
-			JarManager jarManager) {
+	public JSBeanCompletion(CompletionProvider provider, MethodInfo methodInfo, JarManager jarManager) {
 		super(provider, convertNameToBean(methodInfo.getName()), null);
 		setRelevance(BEAN_METHOD_RELEVANCE);
 		this.methodData = new JSMethodData(methodInfo, jarManager);
@@ -46,8 +43,7 @@ public class JSBeanCompletion extends VariableCompletion implements
 	@Override
 	public String getAlreadyEntered(JTextComponent comp) {
 		String temp = getProvider().getAlreadyEnteredText(comp);
-		int lastDot = JavaScriptHelper
-				.findLastIndexOfJavaScriptIdentifier(temp);
+		int lastDot = JavaScriptHelper.findLastIndexOfJavaScriptIdentifier(temp);
 		if (lastDot > -1) {
 			temp = temp.substring(lastDot + 1);
 		}
@@ -70,8 +66,7 @@ public class JSBeanCompletion extends VariableCompletion implements
 
 	private String getMethodSummary() {
 		String docComment = method != null ? method.getDocComment() : getName();
-		return docComment != null ? docComment : method != null ? method
-				.toString() : null;
+		return docComment != null ? docComment : method != null ? method.toString() : null;
 	}
 
 
@@ -112,7 +107,7 @@ public class JSBeanCompletion extends VariableCompletion implements
 		if (memberIsGetMethod || memberIsIsMethod || memberIsSetMethod) {
 			// Double check name component.
 			String nameComponent = name.substring(memberIsIsMethod ? 2 : 3);
-			if (nameComponent.length() == 0)
+			if (nameComponent.isEmpty())
 				return name; // return name
 
 			// Make the bean property name.

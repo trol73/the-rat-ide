@@ -27,9 +27,8 @@ import java.util.List;
 
 
 /**
- * A completion provider for the C programming language.  It provides
- * code completion support and parameter assistance for the C Standard Library.
- * This information is read from an XML file.
+ * A completion provider for the C programming language.  It provides code completion support and parameter assistance
+ * for the C Standard Library. This information is read from an XML file.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -173,9 +172,8 @@ public class CCompletionProvider extends LanguageAwareCompletionProvider {
 
 
     /**
-     * Called from {@link #createCodeCompletionProvider()} to actually load
-     * the completions from XML.  Subclasses that override that method will
-     * want to call this one.
+     * Called from {@link #createCodeCompletionProvider()} to actually load the completions from XML.
+     * Subclasses that override that method will want to call this one.
      *
      * @param cp The code completion provider.
      */
@@ -186,16 +184,20 @@ public class CCompletionProvider extends LanguageAwareCompletionProvider {
         String res = getXmlResource();
         if (res != null) { // Subclasses may specify a null value
             InputStream in = cl.getResourceAsStream(res);
-            try {
-                if (in != null) {
-                    cp.loadFromXML(in);
-                    in.close();
-                } else {
-                    cp.loadFromXML(new File(res));
-                }
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
+            loadFromXml(cp, in, res);
+        }
+    }
+
+    private static void loadFromXml(DefaultCompletionProvider cp, InputStream in, String res) {
+        try {
+            if (in != null) {
+                cp.loadFromXML(in);
+                in.close();
+            } else {
+                cp.loadFromXML(new File(res));
             }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 

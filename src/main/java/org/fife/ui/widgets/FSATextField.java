@@ -24,9 +24,8 @@ import javax.swing.text.*;
 
 
 /**
- * A "File System-Aware" text field.  When the user is typing into this text
- * field, it automagically locates all files that begin with the text typed in,
- * and populates a text field-style list with file choices.  This is similar to
+ * A "File System-Aware" text field.  When the user is typing into this text field, it automagically locates all files
+ * that begin with the text typed in, and populates a text field-style list with file choices.  This is similar to
  * the text field found in the "Run" dialog in Microsoft Windows.
  *
  * @author Robert Futrell
@@ -65,8 +64,7 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
     private boolean autoCompleteFileName;
 
     /**
-     * Variables used by the text field to implement the "combo-box"
-     * style list.
+     * Variables used by the text field to implement the "combo-box" style list.
      */
     private final JList<String> fileList;
     private final DefaultListModel<String> fileListModel;
@@ -78,8 +76,7 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
     private final Runnable listValueChangedRunnable;
 
     /**
-     * Cached values of the files in the current directory and the number
-     * of files in the current directory.
+     * Cached values of the files in the current directory and the number of files in the current directory.
      */
     private String[] containedFiles;
     private int num;
@@ -136,10 +133,8 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
     /**
      * Creates a new FSATextField.
      *
-     * @param directoriesOnly  Whether this text field should preview only
-     *                         directories (or both files and directories).
-     * @param currentDirectory The directory for which the text field should
-     *                         assume relative filenames are in.
+     * @param directoriesOnly  Whether this text field should preview only directories (or both files and directories).
+     * @param currentDirectory The directory for which the text field should assume relative filenames are in.
      */
     public FSATextField(boolean directoriesOnly, String currentDirectory) {
         enableEvents(AWTEvent.FOCUS_EVENT_MASK);
@@ -187,15 +182,12 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Fills in the remainder of the next "matching" file name into this text
-     * field.  The next "matching" file is the first file displayed in the
-     * drop-down list.  This effect is similar to that seen in Microsoft
-     * Office.  The text will be selected so it can be overwritten by the
-     * user typing.
+     * Fills in the remainder of the next "matching" file name into this text field.
+     * The next "matching" file is the first file displayed in the drop-down list.
+     * This effect is similar to that seen in Microsoft Office.
+     * The text will be selected so it can be overwritten by the user typing.
      *
-     * @param entered The text currently in the text field, or
-     *                <code>null</code> if the drop-down list is not currently
-     *                visible.
+     * @param entered The text currently in the text field, or <code>null</code> if the drop-down list is not currently visible.
      * @see #getAutoCompleteFileName()
      * @see #setAutoCompleteFileName(boolean)
      */
@@ -483,8 +475,7 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
             public void actionPerformed(ActionEvent e) {
                 if (popupWindow != null && popupWindow.isVisible()) {
                     int index = fileList.getSelectedIndex();
-                    index = (index > 0) ? (index - 1) :
-                            (fileList.getModel().getSize() - 1);
+                    index = (index > 0) ? (index - 1) : (fileList.getModel().getSize() - 1);
                     fileList.setSelectedIndex(index);
                     fileList.ensureIndexIsVisible(index);
                 }
@@ -594,23 +585,18 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
                         return;
                     }
                 }
-                // Programmatically focus next component as focus keys have
-                // been disabled.
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().
-                        focusNextComponent();
+                // Programmatically focus next component as focus keys have been disabled.
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
             }
         });
 
         // Make Shift+Tab focus the previous component (as it normally would).
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                InputEvent.SHIFT_DOWN_MASK), "OnShiftTab");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "OnShiftTab");
         actionMap.put("OnShiftTab", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Programmatically focus previous component as focus keys
-                // have been disabled.
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().
-                        focusPreviousComponent();
+                // Programmatically focus previous component as focus keys have been disabled.
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().focusPreviousComponent();
             }
         });
 
@@ -618,8 +604,7 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Returns whether this text field previews both files and
-     * directories or just directories.
+     * Returns whether this text field previews both files and directories or just directories.
      *
      * @return Whether this text field shows only directories.
      * @see #setDirectoriesOnly
@@ -630,9 +615,8 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Called when the parent dialog/frame fires a component event.  This
-     * method is here so we can hide the drop-down file list when the parent
-     * frame is moved or resized.
+     * Called when the parent dialog/frame fires a component event.
+     * This method is here so we can hide the drop-down file list when the parent frame is moved or resized.
      *
      * @param e The component event fired by the parent dialog/frame.
      */
@@ -698,9 +682,8 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Sets whether this text field auto-completes the next matching
-     * filename when the drop-down list is visible.  Note that this property
-     * is only honored when this text field is "file system aware".
+     * Sets whether this text field auto-completes the next matching filename when the drop-down list is visible.
+     * Note that this property is only honored when this text field is "file system aware".
      *
      * @param auto Whether the next matching filename is auto-inserted.
      * @see #getAutoCompleteFileName()
@@ -711,12 +694,10 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Sets the current directory for this text field.  The current directory
-     * is the directory in which the text field assumes typed relative
-     * files reside in.
+     * Sets the current directory for this text field.  The current directory is the directory in which the text field
+     * assumes typed relative files reside in.
      *
-     * @param currentDirectory The new "current directory" for this combo
-     *                         box.  This value should be an absolute pathname.
+     * @param currentDirectory The new "current directory" for this combobox.  This value should be an absolute pathname.
      * @see #getCurrentDirectory
      */
     public void setCurrentDirectory(File currentDirectory) {
@@ -756,8 +737,7 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Sets the document for this text field.  This is overridden so we can
-     * add a document listener to it.
+     * Sets the document for this text field.  This is overridden so we can add a document listener to it.
      */
     @Override
     public void setDocument(Document document) {
@@ -772,10 +752,8 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Toggles whether this dialog is file-system-aware.  This
-     * property should be set to <code>false</code> when programmatically
-     * inserting text into the text field; otherwise, it has a bad habit of
-     * stealing the focus from the currently focused component, etc.
+     * Toggles whether this dialog is file-system-aware.  This property should be set to <code>false</code> when programmatically
+     * inserting text into the text field; otherwise, it has a bad habit of stealing the focus from the currently focused component, etc.
      *
      * @param aware Whether this text field should be file-system aware.
      * @see #getFileSystemAware
@@ -860,8 +838,7 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Updates the text field's drop-down list to contain files matching
-     * the characters typed by the user into the text field's text field.
+     * Updates the text field's drop-down list to contain files matching the characters typed by the user into the text field's text field.
      *
      * @return The text currently entered into the text field if the popup
      * is visible, or <code>null</code> if it is not visible.
@@ -876,10 +853,11 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
             return null;
         }
 
-        // We're nice and allow the user to type either '/' or '\\' as the
-        // separator on any OS.
-        int lastSeparator = Math.max(text.lastIndexOf('/'),
-                text.lastIndexOf('\\')) + 1;
+        // We're nice and allow the user to type either '/' or '\\' as the separator on any OS.
+        int lastSeparator = Math.max(
+            text.lastIndexOf('/'),
+            text.lastIndexOf('\\')
+        ) + 1;
 
         // Get the path for the file they're typing.  If they haven't typed a
         // separator char yet, assume it's a relative path from the current
@@ -911,13 +889,10 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
                 return null;
             }
 
-            // Take special care if this is a UNC path, to work around
-            // performance problems listing files in them if the file
-            // list is long.
+            // Take special care if this is a UNC path, to work around performance problems listing files in them if the file list is long.
             // TODO: Always do this work in a Thread, restarting it if the
             // user types a key before it completes.
-            if (File.separatorChar == '\\' &&
-                    directory.getAbsolutePath().startsWith("\\\\")) {
+            if (File.separatorChar == '\\' && directory.getAbsolutePath().startsWith("\\\\")) {
                 // listFiles() is by far the slowest when returning the list
                 // of files from "\\foobar\" and "\\foobar\dir1\".  It seems
                 // generally much faster with "\\foobar\dir1\dir2\", so we'll
@@ -1049,10 +1024,8 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
 
 
     /**
-     * Runnable queued on the EDT to run whenever the drop-down list's
-     * selection changes.  It is safe to reuse this runnable object because
-     * it's only ever executed on the EDT, so it'll only ever be run one
-     * at a time.
+     * Runnable queued on the EDT to run whenever the drop-down list's selection changes.
+     * It is safe to reuse this runnable object because it's only ever executed on the EDT, so it'll only ever be run one at a time.
      */
     private class ListValueChangedRunnable implements Runnable {
 

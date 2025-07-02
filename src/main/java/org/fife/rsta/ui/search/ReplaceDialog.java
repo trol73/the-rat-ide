@@ -214,7 +214,7 @@ public class ReplaceDialog extends AbstractFindReplaceDialog {
     protected void handleRegExCheckBoxClicked() {
         super.handleRegExCheckBoxClicked();
         // "Content assist" support
-        boolean b = regexCheckBox.isSelected();
+        boolean b = cbRegex.isSelected();
         // Always true except when debugging.  findTextCombo done in parent
         replaceWithCombo.setAutoCompleteEnabled(b);
     }
@@ -323,8 +323,8 @@ public class ReplaceDialog extends AbstractFindReplaceDialog {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         temp = new JPanel(new BorderLayout());
         bottomPanel.setBorder(UIUtil.getEmpty5Border());
-        temp.add(searchConditionsPanel, BorderLayout.LINE_START);
-        temp.add(searchConditionsPanel, BorderLayout.LINE_START);
+        temp.add(pnlSearchConditions, BorderLayout.LINE_START);
+        temp.add(pnlSearchConditions, BorderLayout.LINE_START);
         temp2 = new JPanel(new BorderLayout());
         temp2.add(dirPanel, BorderLayout.NORTH);
         temp.add(temp2);
@@ -355,7 +355,7 @@ public class ReplaceDialog extends AbstractFindReplaceDialog {
         buttonPanel.add(findNextButton);
         buttonPanel.add(replaceButton);
         buttonPanel.add(replaceAllButton);
-        buttonPanel.add(cancelButton);        // Defined in superclass.
+        buttonPanel.add(btnCancel);        // Defined in superclass.
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.add(buttonPanel, BorderLayout.NORTH);
 

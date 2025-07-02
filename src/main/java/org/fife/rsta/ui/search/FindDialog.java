@@ -132,7 +132,7 @@ public class FindDialog extends AbstractFindReplaceDialog {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         temp = new JPanel(new BorderLayout());
         bottomPanel.setBorder(UIUtil.getEmpty5Border());
-        temp.add(searchConditionsPanel, BorderLayout.LINE_START);
+        temp.add(pnlSearchConditions, BorderLayout.LINE_START);
         JPanel temp2 = new JPanel(new BorderLayout());
         temp2.add(dirPanel, BorderLayout.NORTH);
         temp.add(temp2);
@@ -148,7 +148,7 @@ public class FindDialog extends AbstractFindReplaceDialog {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(2, 1, 5, 5));
         buttonPanel.add(findNextButton);
-        buttonPanel.add(cancelButton);
+        buttonPanel.add(btnCancel);
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
         rightPanel.add(buttonPanel, BorderLayout.NORTH);

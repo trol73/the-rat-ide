@@ -97,6 +97,7 @@ public class RTextMenuBar extends MenuBar<RText>
 
 	private JMenuItem newItem;
 	private JMenuItem openItem;
+	private JMenuItem gotoProjectFileItem;
 	private JMenuItem openInNewWindowItem;
 	private JMenuItem openRecentItem;
 	private JMenuItem openRemoteItem;
@@ -164,8 +165,7 @@ public class RTextMenuBar extends MenuBar<RText>
 	/**
 	 * Creates an instance of the menu bar.
 	 *
-	 * @param rtext The instance of the <code>RText</code> editor that this
-	 *        menu bar belongs to.
+	 * @param rtext The instance of the <code>RText</code> editor that this menu bar belongs to.
 	 */
 	public RTextMenuBar(final RText rtext) {
 		super(rtext);
@@ -173,7 +173,6 @@ public class RTextMenuBar extends MenuBar<RText>
 
 
 	private void addCopyAsSubMenu(JMenu menu) {
-
 		RText rtext = getApplication();
 		ResourceBundle msg = ResourceBundle.getBundle("org.fife.rtext.actions.Actions");
 
@@ -184,9 +183,7 @@ public class RTextMenuBar extends MenuBar<RText>
 
 		String[] themes = { "dark", "default", "eclipse", "idea", "monokai" };
 		try {
-
 			for (String theme : themes) {
-
 				String themeTitleCase = Character.toUpperCase(theme.charAt(0)) + theme.substring(1);
 				String title = MessageFormat.format(msg.getString("CopyAsStyledTextAction.Themed"), themeTitleCase);
 
@@ -358,7 +355,6 @@ public class RTextMenuBar extends MenuBar<RText>
 
 
 	private JMenu createFileMenu(ResourceBundle menuMsg) {
-
 		RText rtext = getApplication();
 		JMenu fileMenu = createMenu(menuMsg, "MenuFile");
 
@@ -367,7 +363,12 @@ public class RTextMenuBar extends MenuBar<RText>
 		fileMenu.add(newItem);
 
 		openItem = createMenuItem(rtext.getAction(RText.OPEN_ACTION));
+		openItem.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.META_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK));
 		fileMenu.add(openItem);
+
+		gotoProjectFileItem = createMenuItem(rtext.getAction(RText.GOTO_PROJECT_FILE_ACTION));
+		gotoProjectFileItem.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.META_DOWN_MASK));
+		fileMenu.add(gotoProjectFileItem);
 
 		openInNewWindowItem = createMenuItem(rtext.getAction(RText.OPEN_NEWWIN_ACTION));
 		fileMenu.add(openInNewWindowItem);
@@ -432,8 +433,7 @@ public class RTextMenuBar extends MenuBar<RText>
 		recentFilesMenu = new RecentFilesMenu(menuMsg.getString("RecentFiles")) {
 			@Override
 			protected Action createOpenAction(String fileFullPath) {
-				OpenFileFromHistoryAction action =
-					new OpenFileFromHistoryAction(rtext);
+				OpenFileFromHistoryAction action = new OpenFileFromHistoryAction(rtext);
 				action.setName(UIUtil.getDisplayPathForFile(RTextMenuBar.this, fileFullPath));
 				action.setFileFullPath(fileFullPath);
 				return action;

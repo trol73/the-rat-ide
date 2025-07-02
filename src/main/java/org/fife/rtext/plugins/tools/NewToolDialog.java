@@ -282,13 +282,15 @@ class NewToolDialog extends EscapableDialog implements ActionListener {
 		programBrowseButton.setActionCommand("BrowseProgram");
 		programBrowseButton.addActionListener(this);
 		JLabel dirLabel = new JLabel(MSG.getString("Directory"));
+
 		dirField = new FSATextField();
-DefaultCompletionProvider provider = new DefaultCompletionProvider();
-provider.addCompletion(new BasicCompletion(provider, "${file_dir}", "Directory of the current file"));
-AutoCompletion ac = new AutoCompletion(provider);
-ac.setAutoCompleteSingleChoices(false);
-ac.install(dirField);
+		DefaultCompletionProvider provider = new DefaultCompletionProvider();
+		provider.addCompletion(new BasicCompletion(provider, "${file_dir}", "Directory of the current file"));
+		AutoCompletion ac = new AutoCompletion(provider);
+		ac.setAutoCompleteSingleChoices(false);
+		ac.install(dirField);
 		dirField.setDirectoriesOnly(true);
+
 		AssistanceIconPanel aip = new AssistanceIconPanel(dirField);
 		aip.setAssistanceEnabled(AbstractSearchDialog.getContentAssistImage());
 		JPanel dirFieldPanel = RTextUtilities.createAssistancePanel(dirField, aip);
@@ -409,7 +411,7 @@ ac.install(dirField);
 	private static boolean isValidName(String name) {
 		boolean valid = false;
 
-		if (name.length()>0) {
+		if (!name.isEmpty()) {
 			valid = true;
 			for (int i=0; i<name.length(); i++) {
 				char ch = name.charAt(i);
@@ -432,7 +434,6 @@ ac.install(dirField);
 	 * @see #getTool()
 	 */
 	public void setTool(Tool tool) {
-
 		origName = tool.getName();
 		nameField.setText(origName);
 		descField.setText(tool.getDescription());
@@ -600,9 +601,8 @@ ac.install(dirField);
 		void setArg(String arg) {
 			argField.setText(arg);
 			argField.selectAll();
-			okButton.setEnabled(arg!=null && arg.length()>0);
+			okButton.setEnabled(arg!=null && !arg.isEmpty());
 		}
-
 	}
 
 
@@ -743,7 +743,7 @@ ac.install(dirField);
 		void setData(String name, String value) {
 			nameField.setText(name);
 			valueField.setText(value);
-			okButton.setEnabled(name!=null && name.length()>0);
+			okButton.setEnabled(name!=null && !name.isEmpty());
 		}
 
 	}

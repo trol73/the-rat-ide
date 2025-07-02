@@ -21,6 +21,7 @@ import org.fife.rtext.actions.CapsLockAction;
 import org.fife.rtext.actions.OpenIncludeFileAction;
 import org.fife.rtext.actions.ToggleTextModeAction;
 import org.fife.rtext.plugins.project.model.Project;
+import org.fife.rtext.plugins.project.model.ProjectEntry;
 import org.fife.ui.app.AbstractGUIApplication;
 import org.fife.ui.autocomplete.Util;
 import org.fife.ui.rsyntaxtextarea.*;
@@ -1224,8 +1225,50 @@ public abstract class AbstractMainView extends JPanel
             RTextUtilities.configureFindInFilesDialog(findInFilesDialog);
             findInFilesDialog.addPropertyChangeListener(this);
             findInFilesDialog.addFindInFilesListener(this);
+            findInFilesDialog.selectFirstInFilesItem();
+            if (findInFilesDialog.getWidth() < owner.getWidth()*2/3) {
+                findInFilesDialog.setSize(new Dimension(owner.getWidth()*2/3, findInFilesDialog.getHeight()));
+                findInFilesDialog.setLocationRelativeTo(owner);
+            }
         }
+        var dirs = getActiveProjectFolders();
+        if (!dirs.isEmpty()) {
+            findInFilesDialog.setSearchIn(dirs.getFirst());
+        }
+        AbstractMainView mainView = owner.getMainView();
+        if (mainView != null) {
+            RTextEditorPane editor = mainView.getCurrentTextArea();
+            if (editor != null) {
+                String selected = editor.getSelectedText();
+                if (selected != null) {
+                    findInFilesDialog.setSearchString(selected);
+                    findInFilesDialog.doFindInFiles();
+                    SwingUtilities.invokeLater(
+                            () -> findInFilesDialog.requestFocusInWindow()
+                    );
+                }
+            }
+        }
+
         return findInFilesDialog;
+    }
+
+    private List<File> getActiveProjectFolders() {
+        var project = ProjectUtils.getProjectForCurrentFile(owner);
+        var result = new ArrayList<File>();
+        if (project != null) {
+            var it = project.getEntryIterator();
+            while (it.hasNext()) {
+                var entry = it.next();
+                if (ProjectEntry.DIR_PROJECT_ENTRY.equals(entry.getType())) {
+                    //result.add(entry.getFile().getParentFile().getAbsolutePath() + File.separatorChar);
+                    result.add(entry.getFile());
+//                } else if (ProjectEntry.FILE_PROJECT_ENTRY.equals(entry.getType())) {
+//                    addFilesRecursive(entry.getFile());
+                }
+            }
+        }
+        return result;
     }
 
 

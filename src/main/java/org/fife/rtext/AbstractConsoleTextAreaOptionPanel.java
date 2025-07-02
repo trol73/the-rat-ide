@@ -134,8 +134,8 @@ public abstract class AbstractConsoleTextAreaOptionPanel<P extends Plugin<?>> ex
      * Returns a checkbox used to toggle whether a color in a console uses
      * a special color.
      *
-     * @param label The label for the check box.
-     * @return The check box.
+     * @param label The label for the checkbox.
+     * @return The checkbox.
      */
     protected JCheckBox createColorActivateCB(String label) {
         JCheckBox cb = new JCheckBox(label);

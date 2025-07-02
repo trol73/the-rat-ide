@@ -13,9 +13,7 @@
 
 -->
 <api language="C">
-
 	<environment paramStartChar="(" paramEndChar=")" paramSeparator=", " terminal=";"/>
-
 	<keywords>
 
 
@@ -1667,6 +1665,6 @@ Implementations may change field order and include additional fields.]]></desc>
 	</params>
 	<desc>Equivalent to sprintf with variable argument list replaced by arg, which must have been initialised by the va_start macro (and may have been used in calls to va_arg).</desc>
 </keyword>
-	</keywords>
+</keywords>
 
 </api>

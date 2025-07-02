@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.Serial;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
@@ -46,7 +47,7 @@ import org.fife.ui.rtextarea.SearchContext;
  * @version 0.1
  */
 public class AbstractSearchDialog extends EscapableDialog implements ActionListener {
-
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	protected SearchContext context;
@@ -54,11 +55,11 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 
 	// Conditions check boxes and the panel they go in.
 	// This should be added in the actual layout of the search dialog.
-	protected JCheckBox caseCheckBox;
-	protected JCheckBox wholeWordCheckBox;
-	protected JCheckBox regexCheckBox;
-	protected JCheckBox wrapCheckBox;
-	protected JPanel searchConditionsPanel;
+	protected JCheckBox cbCase;
+	protected JCheckBox cbWholeWord;
+	protected JCheckBox cbRegex;
+	protected JCheckBox cbWrap;
+	protected JPanel pnlSearchConditions;
 
 	/**
 	 * The image to use beside a text component when content assist is
@@ -72,7 +73,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	protected SearchComboBox findTextCombo;
 
 	// Miscellaneous other stuff.
-	protected JButton cancelButton;
+	protected JButton btnCancel;
 
 	private static final ResourceBundle MSG = ResourceBundle.getBundle("org.fife.rsta.ui.search.Search");
 
@@ -112,25 +113,25 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 
 			// They check/uncheck the "Match Case" checkbox on the Find dialog.
 			case "FlipMatchCase":
-				boolean matchCase = caseCheckBox.isSelected();
+				boolean matchCase = cbCase.isSelected();
 				context.setMatchCase(matchCase);
 				break;
 
 			// They check/uncheck the "Whole word" checkbox on the Find dialog.
 			case "FlipWholeWord":
-				boolean wholeWord = wholeWordCheckBox.isSelected();
+				boolean wholeWord = cbWholeWord.isSelected();
 				context.setWholeWord(wholeWord);
 				break;
 
 			// They check/uncheck the "Regular expression" checkbox.
 			case "FlipRegEx":
-				boolean useRegEx = regexCheckBox.isSelected();
+				boolean useRegEx = cbRegex.isSelected();
 				context.setRegularExpression(useRegEx);
 				break;
 
 			// They check/uncheck the "Wrap" checkbox on the Find dialog.
 			case "FlipWrap":
-				boolean wrap = wrapCheckBox.isSelected();
+				boolean wrap = cbWrap.isSelected();
 				context.setSearchWrap(wrap);
 				break;
 
@@ -219,7 +220,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #setCancelButtonText
 	 */
 	public final String getCancelButtonText() {
-		return cancelButton.getText();
+		return btnCancel.getText();
 	}
 
 
@@ -249,7 +250,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #setMatchCaseCheckboxText
 	 */
 	public final String getMatchCaseCheckboxText() {
-		return caseCheckBox.getText();
+		return cbCase.getText();
 	}
 
 
@@ -260,7 +261,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #setRegularExpressionCheckboxText
 	 */
 	public final String getRegularExpressionCheckboxText() {
-		return regexCheckBox.getText();
+		return cbRegex.getText();
 	}
 
 
@@ -303,7 +304,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #setWholeWordCheckboxText
 	 */
 	public final String getWholeWordCheckboxText() {
-		return wholeWordCheckBox.getText();
+		return cbWholeWord.getText();
 	}
 
 	/**
@@ -313,7 +314,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #setWrapCheckboxText
 	 */
 	public final String getWrapCheckboxText() {
-		return wrapCheckBox.getText();
+		return cbWrap.getText();
 	}
 
 
@@ -325,7 +326,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	protected void handleRegExCheckBoxClicked() {
 		handleToggleButtons();
 		// "Content assist" support
-		boolean b = regexCheckBox.isSelected();
+		boolean b = cbRegex.isSelected();
 		findTextCombo.setAutoCompleteEnabled(b);
 	}
 
@@ -343,11 +344,11 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 
 		if (SearchContext.PROPERTY_MATCH_CASE.equals(prop)) {
 			boolean newValue = (Boolean) e.getNewValue();
-			caseCheckBox.setSelected(newValue);
+			cbCase.setSelected(newValue);
 		}
 		else if (SearchContext.PROPERTY_MATCH_WHOLE_WORD.equals(prop)) {
 			boolean newValue = (Boolean) e.getNewValue();
-			wholeWordCheckBox.setSelected(newValue);
+			cbWholeWord.setSelected(newValue);
 		}
 		//else if (SearchContext.PROPERTY_SEARCH_FORWARD.equals(prop)) {
 		//	boolean newValue = ((Boolean)e.getNewValue()).booleanValue();
@@ -359,7 +360,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 		//}
 		else if (SearchContext.PROPERTY_USE_REGEX.equals(prop)) {
 			boolean newValue = (Boolean) e.getNewValue();
-			regexCheckBox.setSelected(newValue);
+			cbRegex.setSelected(newValue);
 			handleRegExCheckBoxClicked();
 		}
 		else if (SearchContext.PROPERTY_SEARCH_FOR.equals(prop)) {
@@ -372,7 +373,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 		}
 		else if (SearchContext.PROPERTY_SEARCH_WRAP.equals(prop)) {
 			boolean newValue = ((Boolean)e.getNewValue()).booleanValue();
-			wrapCheckBox.setSelected(newValue);
+			cbWrap.setSelected(newValue);
 		}
 
 	}
@@ -393,7 +394,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 		if (text.length()==0) {
 			return new FindReplaceButtonsEnableResult(false, null);
 		}
-		if (regexCheckBox.isSelected()) {
+		if (cbRegex.isSelected()) {
 			try {
 				Pattern.compile(text);
 			} catch (PatternSyntaxException pse) {
@@ -411,27 +412,27 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 		setSearchContext(createDefaultSearchContext());
 
 		// Make a panel containing the option check boxes.
-		searchConditionsPanel = new JPanel();
-		searchConditionsPanel.setLayout(new BoxLayout(
-						searchConditionsPanel, BoxLayout.Y_AXIS));
-		caseCheckBox = createCheckBox(MSG, "MatchCase");
-		searchConditionsPanel.add(caseCheckBox);
-		wholeWordCheckBox = createCheckBox(MSG, "WholeWord");
-		searchConditionsPanel.add(wholeWordCheckBox);
-		regexCheckBox = createCheckBox(MSG, "RegEx");
-		searchConditionsPanel.add(regexCheckBox);
+		pnlSearchConditions = new JPanel();
+		pnlSearchConditions.setLayout(new BoxLayout(
+				pnlSearchConditions, BoxLayout.Y_AXIS));
+		cbCase = createCheckBox(MSG, "MatchCase");
+		pnlSearchConditions.add(cbCase);
+		cbWholeWord = createCheckBox(MSG, "WholeWord");
+		pnlSearchConditions.add(cbWholeWord);
+		cbRegex = createCheckBox(MSG, "RegEx");
+		pnlSearchConditions.add(cbRegex);
 
-		wrapCheckBox = createCheckBox(MSG, "Wrap");
-		searchConditionsPanel.add(wrapCheckBox);
+		cbWrap = createCheckBox(MSG, "Wrap");
+		pnlSearchConditions.add(cbWrap);
 
 		// Initialize any text fields.
 		findTextCombo = new SearchComboBox(null, false);
 
 		// Initialize other stuff.
-		cancelButton = new JButton(getString("Cancel"));
+		btnCancel = new JButton(getString("Cancel"));
 		//cancelButton.setMnemonic((int)getString("CancelMnemonic").charAt(0));
-		cancelButton.setActionCommand("Cancel");
-		cancelButton.addActionListener(this);
+		btnCancel.setActionCommand("Cancel");
+		btnCancel.addActionListener(this);
 
 	}
 
@@ -442,8 +443,8 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 		}
 		String searchFor = findTextCombo.getSelectedString();
 		if (searchFor!=null && searchFor.length()>0) {
-			boolean matchCase = caseCheckBox.isSelected();
-			if (regexCheckBox.isSelected()) {
+			boolean matchCase = cbCase.isSelected();
+			if (cbRegex.isSelected()) {
 				int flags = Pattern.MULTILINE; // '^' and '$' are done per line.
 				flags = RSyntaxUtilities.getPatternFlags(matchCase, flags);
 				Pattern pattern;
@@ -527,13 +528,13 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * (which should practically be never).
 	 */
 	protected void refreshUIFromContext() {
-		if (this.caseCheckBox == null) {
+		if (this.cbCase == null) {
 			return; // First time through, UI not realized yet
 		}
-		this.caseCheckBox.setSelected(context.getMatchCase());
-		this.regexCheckBox.setSelected(context.isRegularExpression());
-		this.wholeWordCheckBox.setSelected(context.getWholeWord());
-		this.wrapCheckBox.setSelected(context.getSearchWrap());
+		this.cbCase.setSelected(context.getMatchCase());
+		this.cbRegex.setSelected(context.isRegularExpression());
+		this.cbWholeWord.setSelected(context.getWholeWord());
+		this.cbWrap.setSelected(context.getSearchWrap());
 	}
 
 
@@ -554,7 +555,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #getCancelButtonText
 	 */
 	public final void setCancelButtonText(String text) {
-		cancelButton.setText(text);
+		btnCancel.setText(text);
 	}
 
 
@@ -578,7 +579,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #getMatchCaseCheckboxText
 	 */
 	public final void setMatchCaseCheckboxText(String text) {
-		caseCheckBox.setText(text);
+		cbCase.setText(text);
 	}
 
 
@@ -589,7 +590,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #getRegularExpressionCheckboxText
 	 */
 	public final void setRegularExpressionCheckboxText(String text) {
-		regexCheckBox.setText(text);
+		cbRegex.setText(text);
 	}
 
 
@@ -630,7 +631,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #getWholeWordCheckboxText
 	 */
 	public final void setWholeWordCheckboxText(String text) {
-		wholeWordCheckBox.setText(text);
+		cbWholeWord.setText(text);
 	}
 
 	/**
@@ -640,7 +641,7 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @see #getWholeWordCheckboxText
 	 */
 	public final void setWrapCheckboxText(String text) {
-		wrapCheckBox.setText(text);
+		cbWrap.setText(text);
 	}
 
 	/**

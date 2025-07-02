@@ -84,6 +84,7 @@ public interface RTextActionInfo {
 	String SHOW_FUNCTION_SIZE_ACTION = "showFunctionSizeAction";
 	String SHOW_FILE_MAP_ACTION = "showFileMapAction";
 	String SHOW_GCC_LISTING_ACTION = "showGccListingAction";
+	String GOTO_PROJECT_FILE_ACTION = "gotoProjectFileAction";
 
 	String[] ACTION_NAMES = {
 		NEW_ACTION,

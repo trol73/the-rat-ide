@@ -175,18 +175,21 @@ public final class RTextUtilities {
      * @param fnfd The <code>FindInFilesDialog</code> to configure.
      */
     public static void configureFindInFilesDialog(FindInFilesDialog fnfd) {
+//        fnfd.addInFilesComboBoxFilter("*.bat *.cmd");
+//        fnfd.addInFilesComboBoxFilter("*.c *.cpp *.cxx *.h");
+//        fnfd.addInFilesComboBoxFilter("*.cs");
+//        fnfd.addInFilesComboBoxFilter("*.htm *.html");
+//        fnfd.addInFilesComboBoxFilter("*.java");
+//        fnfd.addInFilesComboBoxFilter("*.js");
+//        fnfd.addInFilesComboBoxFilter("*.pl *.perl *.pm");
+        fnfd.addInFilesComboBoxFilter("*.sh *.bsh *.csh *.ksh");
+        fnfd.addInFilesComboBoxFilter("*.py");
+//        fnfd.addInFilesComboBoxFilter("*.txt");
         fnfd.addInFilesComboBoxFilter("*.asm");
         fnfd.addInFilesComboBoxFilter("*.art *.arth");
-        fnfd.addInFilesComboBoxFilter("*.bat *.cmd");
-        fnfd.addInFilesComboBoxFilter("*.c *.cpp *.cxx *.h");
-        fnfd.addInFilesComboBoxFilter("*.cs");
-        fnfd.addInFilesComboBoxFilter("*.htm *.html");
-        fnfd.addInFilesComboBoxFilter("*.java");
-        fnfd.addInFilesComboBoxFilter("*.js");
-        fnfd.addInFilesComboBoxFilter("*.pl *.perl *.pm");
-        fnfd.addInFilesComboBoxFilter("*.py");
-        fnfd.addInFilesComboBoxFilter("*.sh *.bsh *.csh *.ksh");
-        fnfd.addInFilesComboBoxFilter("*.txt");
+        fnfd.addInFilesComboBoxFilter("*.h");
+        fnfd.addInFilesComboBoxFilter("*.c");
+        fnfd.addInFilesComboBoxFilter("*.c *.h *.art *.arth");
     }
 
 

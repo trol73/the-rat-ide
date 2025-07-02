@@ -25,9 +25,8 @@ import org.fife.ui.rtextarea.ToolTipSupplier;
 
 
 /**
- * A completion provider for the C programming language (and other languages
- * with similar syntax).  This provider simply delegates to another provider,
- * depending on whether the caret is in:
+ * A completion provider for the C programming language (and other languages with similar syntax).
+ * This provider simply delegates to another provider, depending on whether the caret is in:
  *
  * <ul>
  *    <li>Code (plain text)</li>
@@ -36,16 +35,13 @@ import org.fife.ui.rtextarea.ToolTipSupplier;
  *    <li>A documentation comment</li>
  * </ul>
  * <p>
- * This allows for different completion choices in comments than  in code,
- * for example.<p>
+ * This allows for different completion choices in comments than  in code, for example.<p>
  * <p>
  * This provider also implements the
- * {@code org.fife.ui.rtextarea.ToolTipSupplier} interface, which allows it
- * to display tooltips for completion choices.  Thus the standard
- * {@link VariableCompletion} and {@link FunctionCompletion} completions should
- * be able to display tooltips with the variable declaration or function
- * definition (provided the {@code RSyntaxTextArea} was registered with the
- * {@code javax.swing.ToolTipManager}).
+ * {@code org.fife.ui.rtextarea.ToolTipSupplier} interface, which allows it to display tooltips for completion choices.
+ * Thus, the standard {@link VariableCompletion} and {@link FunctionCompletion} completions should be able to display
+ * tooltips with the variable declaration or function definition (provided the {@code RSyntaxTextArea} was registered
+ * with the {@code javax.swing.ToolTipManager}).
  *
  * @author Robert Futrell
  * @version 1.0
@@ -53,8 +49,7 @@ import org.fife.ui.rtextarea.ToolTipSupplier;
 public class LanguageAwareCompletionProvider extends CompletionProviderBase implements ToolTipSupplier {
 
     /**
-     * The provider to use when no provider is assigned to a particular token
-     * type.
+     * The provider to use when no provider is assigned to a particular token type.
      */
     private CompletionProvider defaultProvider;
 
@@ -75,10 +70,8 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
 
 
     /**
-     * Constructor subclasses can use when they don't have their default
-     * provider created at construction time.  They should call
-     * {@link #setDefaultCompletionProvider(CompletionProvider)} in this
-     * constructor.
+     * Constructor subclasses can use when they don't have their default provider created at construction time.
+     * They should call {@link #setDefaultCompletionProvider(CompletionProvider)} in this constructor.
      */
     protected LanguageAwareCompletionProvider() {
     }
@@ -163,8 +156,7 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
 
 
     /**
-     * Returns the completion provider used when one isn't defined for a
-     * particular token type.
+     * Returns the completion provider used when one isn't defined for a particular token type.
      *
      * @return The completion provider to use.
      * @see #setDefaultCompletionProvider(CompletionProvider)
@@ -190,10 +182,12 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
      */
     @Override
     public List<ParameterizedCompletion> getParameterizedCompletions(JTextComponent tc) {
-        // Parameterized completions can only come from the "code" completion
-        // provider.  We do not do function/method completions while editing
-        // strings or comments.
+        // Parameterized completions can only come from the "code" completion provider.
+        // We do not do function/method completions while editing strings or comments.
         CompletionProvider provider = getProviderFor(tc);
+        if (provider == null) {
+            return null;
+        }
         return provider == defaultProvider ? provider.getParameterizedCompletions(tc) : null;
     }
 
@@ -290,11 +284,10 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
             default -> null;
         };
 
-        // In a token type we can't auto-complete from.
+        // In a token type we can't autocomplete from.
     }
 
-    protected CompletionProvider getCompletionProvider(RTextEditorPane editor, Token firstLineToken,
-                                                       Token lastPaintedToken) {
+    protected CompletionProvider getCompletionProvider(RTextEditorPane editor, Token firstLineToken, Token lastPaintedToken) {
         return null;
     }
 
@@ -401,9 +394,9 @@ public class LanguageAwareCompletionProvider extends CompletionProviderBase impl
         String tip = null;
 
         List<Completion> completions = getCompletionsAt(textArea, e.getPoint());
-        if (completions != null && completions.size() > 0) {
+        if (completions != null && !completions.isEmpty()) {
             // Only ever 1 match for us in C...
-            Completion c = completions.get(0);
+            Completion c = completions.getFirst();
             tip = c.getToolTipText();
         }
 

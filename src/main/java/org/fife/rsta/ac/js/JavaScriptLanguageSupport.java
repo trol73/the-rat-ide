@@ -52,8 +52,7 @@ import org.mozilla.javascript.ast.NodeVisitor;
 
 
 /**
- * Language support for JavaScript. This requires Rhino, which is included with
- * this library.
+ * Language support for JavaScript. This requires Rhino, which is included with this library.
  * 
  * @author Robert Futrell
  * @version 1.0
@@ -65,15 +64,15 @@ public class JavaScriptLanguageSupport extends AbstractLanguageSupport {
 	 * Maps <code>JavaScriptParser</code>s to <code>Info</code> instances
 	 * about them.
 	 */
-	private Map<JavaScriptParser, Info> parserToInfoMap;
-	private JarManager jarManager;
+	private final Map<JavaScriptParser, Info> parserToInfoMap;
+	private final JarManager jarManager;
 	private boolean xmlAvailable;
 	private boolean client;
 	private boolean strictMode;
 	private int languageVersion;
 	private JsErrorParser errorParser;
 	private JavaScriptParser parser;
-	private JavaScriptCompletionProvider provider;
+	private final JavaScriptCompletionProvider provider;
 	private File defaultJshintrc;
 //	private int jshintIndent;
 //	private long jshintrcLastModified;
@@ -107,8 +106,7 @@ public class JavaScriptLanguageSupport extends AbstractLanguageSupport {
 	 * @return The jar manager instance.
 	 */
 	protected JarManager createJarManager() {
-		JarManager jarManager = new JarManager();
-		return jarManager;
+        return new JarManager();
 	}
 	
 	public void setECMAVersion(String version, JarManager jarManager) {
@@ -249,13 +247,11 @@ return DEFAULT;
 
 
 	/**
-	 * Returns the JS parser running on a text area with this JavaScript
-	 * language support installed.
+	 * Returns the JS parser running on a text area with this JavaScript language support installed.
 	 * 
 	 * @param textArea The text area.
 	 * @return The JS parser. This will be <code>null</code> if the text area
-	 *         does not have this <code>JavaScriptLanguageSupport</code>
-	 *         installed.
+	 *         does not have this <code>JavaScriptLanguageSupport</code> installed.
 	 */
 	public JavaScriptParser getParser(RSyntaxTextArea textArea) {
 		// Could be a parser for another language.
@@ -308,7 +304,6 @@ return DEFAULT;
 	 * @param textArea The text area to install the shortcuts into.
 	 */
 	private void installKeyboardShortcuts(RSyntaxTextArea textArea) {
-
 		InputMap im = textArea.getInputMap();
 		ActionMap am = textArea.getActionMap();
 		int c = textArea.getToolkit().getMenuShortcutKeyMask();
@@ -410,7 +405,7 @@ return DEFAULT;
 	 * @see #getErrorParser()
 	 */
 	public boolean setErrorParser(JsErrorParser errorParser) {
-		if (errorParser==null) {
+		if (errorParser == null) {
 			throw new IllegalArgumentException("errorParser cannot be null");
 		}
 		if (errorParser!=this.errorParser) {
@@ -433,7 +428,7 @@ return DEFAULT;
 	 * @see #getLanguageVersion()
 	 */
 	public void setLanguageVersion(int languageVersion) {
-		if (languageVersion<0) {
+		if (languageVersion < 0) {
 			languageVersion = Context.VERSION_UNKNOWN;
 		}
 		this.languageVersion = languageVersion;
@@ -450,7 +445,7 @@ return DEFAULT;
 	 * @see #isStrictMode()
 	 */
 	public boolean setStrictMode(boolean strict) {
-		if (strict!=strictMode) {
+		if (strict != strictMode) {
 			strictMode = strict;
 			return true;
 		}
@@ -508,7 +503,6 @@ return DEFAULT;
 	 * @param textArea The text area to uninstall the actions from.
 	 */
 	private void uninstallKeyboardShortcuts(RSyntaxTextArea textArea) {
-
 		InputMap im = textArea.getInputMap();
 		ActionMap am = textArea.getActionMap();
 		int c = textArea.getToolkit().getMenuShortcutKeyMask();
@@ -516,7 +510,6 @@ return DEFAULT;
 
 		im.remove(KeyStroke.getKeyStroke(KeyEvent.VK_O, c | shift));
 		am.remove("GoToType");
-
 	}
 
 	/**
@@ -534,8 +527,7 @@ return DEFAULT;
 		public Info(JavaScriptCompletionProvider provider, JavaScriptParser parser) {
 			this.provider = provider;
 			// this.parser = parser;
-			parser.addPropertyChangeListener(JavaScriptParser.PROPERTY_AST,
-					this);
+			parser.addPropertyChangeListener(JavaScriptParser.PROPERTY_AST, this);
 		}
 
 		/**
@@ -545,7 +537,6 @@ return DEFAULT;
 		 */
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
-
 			String name = e.getPropertyName();
 
 			if (JavaScriptParser.PROPERTY_AST.equals(name)) {
@@ -554,41 +545,31 @@ return DEFAULT;
 			}
 
 		}
-
 	}
 
 
 	/**
-	 * A hack of <code>AutoCompletion</code> that forces the parser to
-	 * re-parse the document when the user presses Ctrl+space.
+	 * A hack of <code>AutoCompletion</code> that forces the parser to reparse the document when the user presses Ctrl+space.
 	 */
 	private class JavaScriptAutoCompletion extends AutoCompletion {
+		private final RSyntaxTextArea textArea;
 
-		private RSyntaxTextArea textArea;
-
-		public JavaScriptAutoCompletion(JavaScriptCompletionProvider provider,
-				RSyntaxTextArea textArea) {
+		public JavaScriptAutoCompletion(JavaScriptCompletionProvider provider, RSyntaxTextArea textArea) {
 			super(provider);
 			this.textArea = textArea;
 		}
 
 		@Override
-		protected String getReplacementText(Completion c, Document doc,
-				int start, int len) {
-			
+		protected String getReplacementText(Completion c, Document doc, int start, int len) {
 			String replacement = super.getReplacementText(c, doc, start, len);
-			if(c instanceof JavaScriptShorthandCompletion)
-			{
-				try
-				{
+			if (c instanceof JavaScriptShorthandCompletion) {
+				try {
 					int caret = textArea.getCaretPosition();
 					String leadingWS = RSyntaxUtilities.getLeadingWhitespace(doc, caret);
-					if (replacement.indexOf('\n')>-1) {
+					if (replacement.indexOf('\n') > -1) {
 						replacement = replacement.replaceAll("\n", "\n" + leadingWS);
 					}
-					
-				}
-				catch(BadLocationException ble){}
+				} catch(BadLocationException ignore) {}
 			}
 			return replacement;
 		}
@@ -602,7 +583,6 @@ return DEFAULT;
 			parser.parse(doc, style);
 			return super.refreshPopupWindow();
 		}
-
 	}
 
 
@@ -613,22 +593,20 @@ return DEFAULT;
 	// TODO: This class shares a lot of code in common with
 	// JavaLanguageSupport's version, but is it worth factoring out?
 	private class Listener implements CaretListener, ActionListener {
-
-		private RSyntaxTextArea textArea;
-		private Timer t;
-		private DeepestScopeVisitor visitor;
+		private final RSyntaxTextArea textArea;
+		private final Timer timer;
+		private final DeepestScopeVisitor visitor;
 
 		public Listener(RSyntaxTextArea textArea) {
 			this.textArea = textArea;
 			textArea.addCaretListener(this);
-			t = new Timer(650, this);
-			t.setRepeats(false);
+			timer = new Timer(650, this);
+			timer.setRepeats(false);
 			visitor = new DeepestScopeVisitor();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			JavaScriptParser parser = getParser(textArea);
 			if (parser==null) {
 				return; // Shouldn't happen
@@ -642,18 +620,15 @@ return DEFAULT;
 				AstNode scope = visitor.getDeepestScope();
 				if (scope!=null && scope!=astRoot) {
 					int start = scope.getAbsolutePosition();
-					int end = Math.min(start + scope.getLength() - 1,
-										textArea.getDocument().getLength());
+					int end = Math.min(start + scope.getLength() - 1, textArea.getDocument().getLength());
 					try {
 						int startLine = textArea.getLineOfOffset(start);
-						int endLine = end<0 ? textArea.getLineCount() :
-										textArea.getLineOfOffset(end);
+						int endLine = end < 0 ? textArea.getLineCount() : textArea.getLineOfOffset(end);
 						textArea.setActiveLineRange(startLine, endLine);
 					} catch (BadLocationException ble) {
 						ble.printStackTrace(); // Never happens
 					}
-				}
-				else {
+				} else {
 					textArea.setActiveLineRange(-1, -1);
 				}
 			}
@@ -662,7 +637,7 @@ return DEFAULT;
 
 		@Override
 		public void caretUpdate(CaretEvent e) {
-			t.restart();
+			timer.restart();
 		}
 
 //		private Scope getDeepestScope(Scope root, int offs) {
@@ -729,7 +704,6 @@ return DEFAULT;
 
 		@Override
 		public boolean visit(AstNode node) {
-
 			switch (node.getType()) {
 				case Token.FUNCTION:
 					if (containsOffs(node)) {

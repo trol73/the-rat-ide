@@ -49,12 +49,11 @@ class ReplaceInFilesAction extends AppAction<RText> {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		RText rtext = getApplication();
 		AbstractMainView mainView = rtext.getMainView();
 
 		// Create the "Replace in Files" dialog if it hasn't already been.
-		if (mainView.replaceInFilesDialog==null) {
+		if (mainView.replaceInFilesDialog == null) {
 			mainView.replaceInFilesDialog = new ReplaceInFilesDialog(rtext);
 			mainView.replaceInFilesDialog.setSearchContext(mainView.searchContext);
 			RTextUtilities.configureFindInFilesDialog(mainView.replaceInFilesDialog);
@@ -63,7 +62,6 @@ class ReplaceInFilesAction extends AppAction<RText> {
 		}
 
 		mainView.replaceInFilesDialog.setVisible(true);
-
 	}
 
 

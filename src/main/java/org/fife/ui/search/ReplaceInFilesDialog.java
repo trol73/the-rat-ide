@@ -39,8 +39,8 @@ public class ReplaceInFilesDialog extends FindInFilesDialog {
 	public ReplaceInFilesDialog(Frame owner) {
 		super(owner);
 		this.setTitle(getString2("ReplaceInFilesDialogTitle"));
-		findButton.setText(getString("Replace"));
-		findButton.setMnemonic((int)getString("Replace.Mnemonic").charAt(0));
+		btnFind.setText(getString("Replace"));
+		btnFind.setMnemonic((int)getString("Replace.Mnemonic").charAt(0));
 	}
 
 
@@ -53,9 +53,9 @@ public class ReplaceInFilesDialog extends FindInFilesDialog {
 		subfoldersCheckBox = new JCheckBox(getString2("SearchSubfolders"));
 		subfoldersCheckBox.setMnemonic((int)getString2("SearchSubfoldersMnemonic").charAt(0));
 		panel.add(subfoldersCheckBox);
-		verboseCheckBox = new JCheckBox(getString2("Verbose"));
-		verboseCheckBox.setMnemonic((int)getString2("VerboseMnemonic").charAt(0));
-		panel.add(verboseCheckBox);
+		cbVerbose = new JCheckBox(getString2("Verbose"));
+		cbVerbose.setMnemonic((int)getString2("VerboseMnemonic").charAt(0));
+		panel.add(cbVerbose);
 		panel.add(Box.createVerticalGlue());
 
 		return panel;
@@ -159,7 +159,7 @@ public class ReplaceInFilesDialog extends FindInFilesDialog {
 		super.handleRegExCheckBoxClicked();
 
 		// "Content assist" support
-		boolean b = regexCheckBox.isSelected();
+		boolean b = cbRegex.isSelected();
 		// Always true except when debugging.  findTextCombo done in parent
 		if (replaceCombo != null) {
 			replaceCombo.setAutoCompleteEnabled(b);
@@ -189,7 +189,7 @@ public class ReplaceInFilesDialog extends FindInFilesDialog {
 		// Make sure content assist is enabled (regex check box might have
 		// been checked in a different search dialog).
 		if (visible) {
-			boolean regexEnabled = regexCheckBox.isSelected();
+			boolean regexEnabled = cbRegex.isSelected();
 			// Always true except when debugging.  findTextCombo done in parent
 			if (replaceCombo != null) {
 				replaceCombo.setAutoCompleteEnabled(regexEnabled);

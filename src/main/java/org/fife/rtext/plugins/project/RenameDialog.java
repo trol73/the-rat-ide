@@ -14,16 +14,13 @@ import org.fife.rtext.plugins.project.tree.NameChecker;
 
 
 /**
- * A dialog for renaming nodes in the workspace outline tree.  Note that
- * although we extend {@link AbstractEnterFileNameDialog}, we are not always
- * renaming a file.
+ * A dialog for renaming nodes in the workspace outline tree.
+ * Note that although we extend {@link AbstractEnterFileNameDialog}, we are not always renaming a file.
  *
  * @author Robert Futrell
  * @version 1.0
  */
 public class RenameDialog extends AbstractEnterFileNameDialog {
-
-
     /**
      * Constructor.
      *
