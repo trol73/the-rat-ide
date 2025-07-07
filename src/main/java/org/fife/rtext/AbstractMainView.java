@@ -411,7 +411,7 @@ public abstract class AbstractMainView extends JPanel
             // If no documents were modified outside the editor, allow the
             // thread to check again; otherwise, remember to prompt the user
             // about all the documents that changed outside the editor.
-            if (sb.length() == 0) {
+            if (sb.isEmpty()) {
                 checkForModification = true;
             } else {
                 final String actionCommand = "FileModified." + sb;
@@ -466,8 +466,7 @@ public abstract class AbstractMainView extends JPanel
                 // If the user cancels out of it, quit the whole schibang.
                 if (!closed) {
                     // If the newly-active file is read-only, say so in the status bar.
-                    owner.setStatusBarReadOnlyIndicatorEnabled(
-                            currentTextArea != null && currentTextArea.isReadOnly());
+                    owner.setStatusBarReadOnlyIndicatorEnabled(currentTextArea != null && currentTextArea.isReadOnly());
                     return false;
                 }
             }
@@ -1146,9 +1145,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns the name being displayed for the document.  For example, in a
-     * tabbed pane subclass, this could be the text on the tab for this
-     * document.
+     * Returns the name being displayed for the document.
+     * For example, in a tabbed pane subclass, this could be the text on the tab for this document.
      *
      * @param index The index at which to find the name.  If the index is
      *              invalid, <code>null</code> is returned.
@@ -1650,12 +1648,10 @@ public abstract class AbstractMainView extends JPanel
     /**
      * Returns all the files opened in this main view.
      *
-     * @return An array of files representing the files being edited in this
-     * main view.  If no documents are open, <code>null</code> is
-     * returned.
+     * @return An array of files representing the files being edited in this main view.
+     * If no documents are open, <code>null</code> is returned.
      */
     public File[] getOpenFiles() {
-
         int num = getNumDocuments();
         if (num == 0)
             return null;
@@ -1666,7 +1662,6 @@ public abstract class AbstractMainView extends JPanel
         }
 
         return files;
-
     }
 
 
@@ -2566,9 +2561,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Adds an already-created text file to this tabbed pane.  This method is
-     * synchronized so it doesn't interfere with the thread checking for files
-     * being modified outside of the editor.
+     * Adds an already-created text file to this tabbed pane.
+     * This method is synchronized so it doesn't interfere with the thread checking for files being modified outside the editor.
      *
      * @param fileNameAndPath The full path and name of the file to add.
      * @param charSet         The encoding to use when reading/writing this file.
@@ -2588,9 +2582,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * If the current editor is dirty, the user is prompted whether they want
-     * to save it. If they choose "yes", the file is saved, otherwise it is
-     * not.
+     * If the current editor is dirty, the user is prompted whether they want to save it.
+     * If they choose "yes", the file is saved, otherwise it is not.
      *
      * @return <code>JOptionPane.YES_OPTION</code> if the file was saved,
      * <code>NO_OPTION</code> if the user chose not to save, and
@@ -2603,8 +2596,7 @@ public abstract class AbstractMainView extends JPanel
         // If the current document has been modified, prompt them to save it.
         if (currentTextArea.isDirty()) {
 
-            String temp = owner.getString("SaveChangesPrompt",
-                    currentTextArea.getFileName());
+            String temp = owner.getString("SaveChangesPrompt", currentTextArea.getFileName());
 
             // The prompting dialog.
             rc = JOptionPane.showConfirmDialog(owner, temp,

@@ -1599,6 +1599,22 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         });
     }
 
+    public boolean isFileOpen(File file) {
+        if (file == null) {
+            return false;
+        }
+        var files = mainView.getOpenFiles();
+        if (files == null) {
+            return false;
+        }
+        for (File f : files) {
+            if (file.equals(f)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void openFile(String filePath, int line, int column) {
         openFile(new File(filePath), () -> {
             var editor = getMainView().getCurrentTextArea();

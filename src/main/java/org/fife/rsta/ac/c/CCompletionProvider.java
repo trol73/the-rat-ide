@@ -186,6 +186,8 @@ public class CCompletionProvider extends LanguageAwareCompletionProvider {
             InputStream in = cl.getResourceAsStream(res);
             loadFromXml(cp, in, res);
         }
+        InputStream in = cl.getResourceAsStream("data/c_avr.xml");
+        loadFromXml(cp, in, res);
     }
 
     private static void loadFromXml(DefaultCompletionProvider cp, InputStream in, String res) {

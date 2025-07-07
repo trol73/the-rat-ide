@@ -30,31 +30,35 @@ public class SwitchSourceHeaderAction extends AppAction<RText> {
         }
         String fileWithoutExt = currentFilePath.substring(0, lastDot+1);
         if (currentFilePath.endsWith(".h")) {
-            File cFile = new File(fileWithoutExt + "c");
-            if (cFile.exists()) {
-                getApplication().openFile(cFile);
+            if (switchTo(new File(fileWithoutExt + "c")))
                 return;
-            }
-            File cppFile = new File(fileWithoutExt + "cpp");
-            if (cppFile.exists()) {
-                getApplication().openFile(cppFile);
-            }
+            else if (switchTo(new File(fileWithoutExt + "cpp")))
+                return;
         } else if (currentFilePath.endsWith(".c")) {
-            File hFile = new File(fileWithoutExt + "h");
-            if (hFile.exists()) {
-                getApplication().openFile(hFile);
-            }
-        } else if (currentFilePath.endsWith(".cpp")) {
-            File hFile = new File(fileWithoutExt + "h");
-            if (hFile.exists()) {
-                getApplication().openFile(hFile);
+            if (switchTo(new File(fileWithoutExt + "h")))
                 return;
-            }
-            File hppFile = new File(fileWithoutExt + "hpp");
-            if (hppFile.exists()) {
-                getApplication().openFile(hppFile);
-            }
+        } else if (currentFilePath.endsWith(".cpp")) {
+            if (switchTo(new File(fileWithoutExt + "h")))
+                return;
+            else if (switchTo(new File(fileWithoutExt + "hpp")))
+                return;
         }
     }
+
+
+    private boolean switchTo(File file) {
+        if (!file.exists()) {
+            return false;
+        }
+        if (!getApplication().isFileOpen(file)) {
+            var current = getApplication().getMainView().getCurrentTextArea();
+            if (!current.isDirty()) {
+                getApplication().getMainView().closeCurrentDocument();
+            }
+        }
+        getApplication().openFile(file);
+        return true;
+    }
+
 
 }

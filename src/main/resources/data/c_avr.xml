@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE api SYSTEM "CompletionXml.dtd">
+<api language="C">
+    <environment paramStartChar="(" paramEndChar=")" paramSeparator=", " terminal=";"/>
+    <keywords>
+        <keyword name="eeprom_read_block" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="void *" name="dst"/>
+                <param type="const void *" name="src"/>
+                <param type="size_t" name="n"/>
+            </params>
+            <desc>Read a block of n bytes from EEPROM address src to SRAM dst.</desc>
+        </keyword>
+        <keyword name="eeprom_read_byte" type="function" returnType="uint8_t" definedIn="avr/eeprom.h">
+            <params>
+                <param type="const uint8_t *" name="p"/>
+            </params>
+            <desc>Read one byte from EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_read_dword" type="function" returnType="uint32_t" definedIn="avr/eeprom.h">
+            <params>
+                <param type="const uint32_t *" name="p"/>
+            </params>
+            <desc>Read one 32-bit double word (little endian) from EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_read_float" type="function" returnType="float" definedIn="avr/eeprom.h">
+            <params>
+                <param type="const float *" name="p"/>
+            </params>
+            <desc>Read one float value (little endian) from EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_read_word" type="function" returnType="uint16_t" definedIn="avr/eeprom.h">
+            <params>
+                <param type="const uint16_t *" name="p"/>
+            </params>
+            <desc>Read one 16-bit word (little endian) from EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_update_block" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="const void *" name="src"/>
+                <param type="void *" name="dst"/>
+                <param type="size_t" name="n"/>
+            </params>
+            <desc>Update a block of n bytes to EEPROM address dst from src. NOTE: The argument order is mismatch with common functions like strcpy().</desc>
+        </keyword>
+        <keyword name="eeprom_update_byte" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="uint8_t *" name="p"/>
+                <param type="uint8_t" name="value"/>
+            </params>
+            <desc>Update a byte value to EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_update_dword" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="uint32_t *" name="p"/>
+                <param type="uint32_t" name="value"/>
+            </params>
+            <desc>Update a 32-bit double word value to EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_update_float" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="float *" name="p"/>
+                <param type="float" name="value"/>
+            </params>
+            <desc>Update a float value to EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_update_word" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="uint16_t *" name="p"/>
+                <param type="uint16_t" name="value"/>
+            </params>
+            <desc>Update a word value to EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_write_block" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="const void *" name="src"/>
+                <param type="void *" name="dst"/>
+                <param type="size_t" name="n"/>
+            </params>
+            <desc>Write a block of n bytes to EEPROM address dst from src. NOTE: The argument order is mismatch with common functions like strcpy().</desc>
+        </keyword>
+        <keyword name="eeprom_write_byte" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="uint8_t *" name="p"/>
+                <param type="uint8_t" name="value"/>
+            </params>
+            <desc>Write a byte value to EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_write_dword" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="uint32_t *" name="p"/>
+                <param type="uint32_t" name="value"/>
+            </params>
+            <desc>Write a 32-bit double word value to EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_write_float" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="float *" name="p"/>
+                <param type="float" name="value"/>
+            </params>
+            <desc>Write a float value to EEPROM address p.</desc>
+        </keyword>
+        <keyword name="eeprom_write_word" type="function" returnType="void" definedIn="avr/eeprom.h">
+            <params>
+                <param type="uint16_t *" name="p"/>
+                <param type="uint16_t" name="value"/>
+            </params>
+            <desc>Write a word value to EEPROM address p.</desc>
+        </keyword>
+
+    </keywords>
+</api>

@@ -53,6 +53,11 @@ public class FileList {
         }
     }
 
+    public boolean contains(File file) {
+        return list.contains(file.getAbsolutePath());
+    }
+
+
     public void forEach(Consumer<String> consumer) {
         enabled = false;
         list.forEach(consumer);
