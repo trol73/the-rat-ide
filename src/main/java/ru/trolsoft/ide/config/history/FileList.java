@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -26,13 +27,18 @@ public class FileList {
         }
     }
 
-    public void load(String path) {
+    public void load(String path, boolean onlyExisted) {
         list.clear();
-        try (Stream<String> lines = Files.lines(Paths.get(path), Charset.defaultCharset())) {
-            lines.forEachOrdered(list::add);
+        try (Stream<String> lines = Files.lines(Paths.get(path).normalize(), Charset.defaultCharset())) {
+            lines.forEachOrdered((String s) -> {
+                list.add(Paths.get(s).normalize().toString());
+            });
         } catch (NoSuchFileException ignore) {
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if (onlyExisted) {
+            list.removeIf(s -> !new File(s).exists());
         }
     }
 

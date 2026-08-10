@@ -47,11 +47,9 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
     private FilenameFilter directoriesOnlyFilenameFilter;
 
     /**
-     * These are an attempt to speed things up in the "common" case.  If the
-     * user types a letter into the text field but the last position of a
-     * file separator is the same as it was last time, then the "current
-     * directory" hasn't changed, so we can just keep the File instance for
-     * the directory we already have.  We do this because doing a regex match
+     * These are an attempt to speed things up in the "common" case.  If the user types a letter into the text field but
+     * the last position of a file separator is the same as it was last time, then the "current directory" hasn't changed,
+     * so we can just keep the File instance for the directory we already have.  We do this because doing a regex match
      * loop through multiple file names can be slow on some systems.
      */
     private File directory;
@@ -193,18 +191,19 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
      */
     private void autoCompleteFileName(String entered) {
         //if (popupWindow!=null && popupWindow.isVisible()) {
-        if (entered != null) { // popup must be visible
-            char ch = entered.charAt(entered.length() - 1);
-            if (ch != '/' && ch != '\\') { // Don't auto-complete for dirs.
-                String value = fileListModel.get(0);
-                int len = getDocument().getLength();
-                if (getCaretPosition() == len && len < value.length()) {
-                    String remaining = value.substring(len);
-                    ignoreDocumentUpdates = true;
-                    replaceSelection(remaining);
-                    select(len, getDocument().getLength());
-                    ignoreDocumentUpdates = false;
-                }
+        if (entered == null) { // popup must be visible
+            return;
+        }
+        char ch = entered.charAt(entered.length() - 1);
+        if (ch != '/' && ch != '\\') { // Don't auto-complete for dirs.
+            String value = fileListModel.get(0);
+            int len = getDocument().getLength();
+            if (getCaretPosition() == len && len < value.length()) {
+                String remaining = value.substring(len);
+                ignoreDocumentUpdates = true;
+                replaceSelection(remaining);
+                select(len, getDocument().getLength());
+                ignoreDocumentUpdates = false;
             }
         }
     }
@@ -224,11 +223,8 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
      * field is removed from a view hierarchy.
      */
     private void cleanupOldParentWindow() {
-
-        // Get rid of old popup window if it exists.  We must create a new
-        // one, as if the user has called discoverParentWindow(), they
-        // have probably re-parented this text field, so we must in turn
-        // "re-parent" our popup.
+        // Get rid of old popup window if it exists.  We must create a new one, as if the user has called
+        // discoverParentWindow(), they  have probably re-parented this text field, so we must in turn  "re-parent" our popup.
         if (popupWindow != null) {
             //popupWindow.remove(contentPane);
             popupWindow.setContentPane(new JPanel());
@@ -240,7 +236,6 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
             parent.removeComponentListener(this);
             parent = null;
         }
-
     }
 
 
@@ -290,7 +285,6 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
      * @return The popup window.
      */
     private JWindow createPopupWindow() {
-
         //System.err.println("... Creating a new popupWindow!");
         JWindow popupWindow = new JWindow(parent);
 
@@ -784,16 +778,12 @@ public class FSATextField extends JTextField implements ComponentListener, Docum
                 popupWindow = createPopupWindow();
             }
             popupWindow.pack();
-            // For some reason, when adding an FSATextField to an
-            // already-visible window, the popupWindow.pack() call always
-            // results in a 0-width window the first time through.  This seems
-            // to be because, even though we call
-            // addNotify() -> invokeLater() -> discoverParentWindow() ->
-            // updatePopupWindowDimensions(), in the last call in that chain,
-            // getSize() returns [0, 0].  I'm not sure why this is, since the
-            // component is realized and visible by that point.  But to take
-            // care of that case, we do one last check here.  Any other time,
-            // this conditional is not met.
+            // For some reason, when adding an FSATextField to an already-visible window, the popupWindow.pack() call always
+            // results in a 0-width window the first time through.  This seems  to be because, even though we call
+            // addNotify() -> invokeLater() -> discoverParentWindow() -> updatePopupWindowDimensions(),
+            // in the last call in that chain, getSize() returns [0, 0].  I'm not sure why this is, since the
+            // component is realized and visible by that point.  But to take care of that case, we do one last check here.
+            // Any other time, this conditional is not met.
             if (popupWindow.getWidth() != getWidth()) {
                 updatePopupWindowDimensions();
                 popupWindow.pack();

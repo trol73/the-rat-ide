@@ -806,7 +806,7 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     private void initRecentFileManager(RTextPrefs prefs) {
         String fileHistoryStr = prefs.fileHistoryString;
         java.util.List<String> recentFiles = new ArrayList<>();
-        if (fileHistoryStr != null && fileHistoryStr.length() > 0) {
+        if (fileHistoryStr != null && !fileHistoryStr.isEmpty()) {
             String[] initialContents = fileHistoryStr.split("<");
             recentFiles.addAll(Arrays.asList(initialContents));
         }

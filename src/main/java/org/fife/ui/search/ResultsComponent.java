@@ -18,7 +18,7 @@ package org.fife.ui.search;
  * @author Robert Futrell
  * @version 1.0
  */
-interface ResultsComponent {
+public interface ResultsComponent {
 
 	/**
 	 * Adds data on a match to the component.

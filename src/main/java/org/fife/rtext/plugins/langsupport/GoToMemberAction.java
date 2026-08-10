@@ -28,8 +28,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 
 /**
- * Action that opens the active language support's "Go to Member" window, if
- * one is available.
+ * Action that opens the active language support's "Go to Member" window, if one is available.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -47,7 +46,6 @@ class GoToMemberAction extends AppAction<RText>
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		RText rtext = getApplication();
 		RTextEditorPane textArea = rtext.getMainView().getCurrentTextArea();
 		int c = textArea.getToolkit().getMenuShortcutKeyMaskEx();
@@ -57,7 +55,7 @@ class GoToMemberAction extends AppAction<RText>
 
 		InputMap im = textArea.getInputMap();
 		Object key = im.get(ks);
-		if (key!=null) {
+		if (key != null) {
 			ActionMap am = textArea.getActionMap();
 			Action a = am.get(key);
 			if (a instanceof org.fife.rsta.ac.GoToMemberAction) {
@@ -66,8 +64,7 @@ class GoToMemberAction extends AppAction<RText>
 			}
 		}
 
-		// Shouldn't happen unless they've mapped a different action to
-		// C+Shift+O.
+		// Shouldn't happen unless they've mapped a different action to C+Shift+O.
 		if (!success) {
 			UIManager.getLookAndFeel().provideErrorFeedback(textArea);
 		}
@@ -107,8 +104,7 @@ class GoToMemberAction extends AppAction<RText>
 
 
 	/**
-	 * Refreshes whether this action is enabled, based on the currently active
-	 * text area and its state.
+	 * Refreshes whether this action is enabled, based on the currently active text area and its state.
 	 */
 	private void refreshEnabledState() {
 		boolean enabled = false;

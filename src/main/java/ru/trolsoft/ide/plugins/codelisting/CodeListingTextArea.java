@@ -32,7 +32,7 @@ public class CodeListingTextArea extends RSyntaxTextArea {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int viewToModel = viewToModel(e.getPoint());
+                int viewToModel = viewToModel2D(e.getPoint());
                 if (viewToModel >= 0) {
                     try {
                         int line = getLineOfOffset(viewToModel);
@@ -101,7 +101,6 @@ public class CodeListingTextArea extends RSyntaxTextArea {
 
     private void load(File f) throws IOException {
         UnicodeReader ur = new UnicodeReader(new FileInputStream(f), project.getEncoding());
-
         try (BufferedReader r = new BufferedReader(ur)) {
             read(r, null);
         }

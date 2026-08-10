@@ -50,9 +50,9 @@ public class ReplaceInFilesDialog extends FindInFilesDialog {
 		// A panel containing the "Report detail" panel and some check boxes.
 		Box panel = Box.createVerticalBox();
 		panel.add(Box.createVerticalStrut(5));
-		subfoldersCheckBox = new JCheckBox(getString2("SearchSubfolders"));
-		subfoldersCheckBox.setMnemonic((int)getString2("SearchSubfoldersMnemonic").charAt(0));
-		panel.add(subfoldersCheckBox);
+		sbSubfolders = new JCheckBox(getString2("SearchSubfolders"));
+		sbSubfolders.setMnemonic((int)getString2("SearchSubfoldersMnemonic").charAt(0));
+		panel.add(sbSubfolders);
 		cbVerbose = new JCheckBox(getString2("Verbose"));
 		cbVerbose.setMnemonic((int)getString2("VerboseMnemonic").charAt(0));
 		panel.add(cbVerbose);

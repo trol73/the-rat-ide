@@ -500,27 +500,30 @@ public class AbstractSearchDialog extends EscapableDialog implements ActionListe
 	 * @param len The length of the possible word.
 	 * @return Whether the specified range represents a "whole word".
 	 */
-	public static boolean isWholeWord(CharSequence searchIn,
-									  int offset, int len) {
-
+	public static boolean isWholeWord(CharSequence searchIn, int offset, int len) {
 		boolean wsBefore;
-		boolean wsAfter;
-
 		try {
-			wsBefore = Character.isWhitespace(searchIn.charAt(offset - 1));
+			wsBefore = isSpaceOrSeparator(searchIn.charAt(offset - 1));
 		} catch (IndexOutOfBoundsException e) {
 		    wsBefore = true;
 		}
+		if (!wsBefore) {
+			return false;
+		}
+		boolean wsAfter;
 		try {
-			wsAfter  = Character.isWhitespace(searchIn.charAt(offset + len));
+			wsAfter  = isSpaceOrSeparator(searchIn.charAt(offset + len));
 		} catch (IndexOutOfBoundsException e) {
 		    wsAfter = true;
 		}
 
-		return wsBefore && wsAfter;
-
+		return wsAfter;
 	}
 
+
+	private static boolean isSpaceOrSeparator(char ch) {
+		return Character.isWhitespace(ch) || ",()[].<>-+=*/:?".indexOf(ch) >= 0;
+	}
 
 	/**
 	 * Initializes the UI in this tool bar from a search context.  This is

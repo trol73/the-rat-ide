@@ -27,7 +27,7 @@ public class ListingInfo {
     public void clear() {
         codeListing.clear();
         if (!text.isEmpty()) {
-            text.delete(0, text.length() - 1);
+            text.delete(0, text.length());
         }
         textLine = 0;
         sourceFiles.clear();

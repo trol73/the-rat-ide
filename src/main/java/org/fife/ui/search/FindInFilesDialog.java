@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -47,8 +48,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	protected FSATextField inFolderTextField;
 	protected JComboBox<String> sbSkipFolders;
 
-	protected JCheckBox subfoldersCheckBox;
-
+	protected JCheckBox sbSubfolders;
 	protected JButton btnFind;
 	private final JButton btnBrowse;
 
@@ -287,7 +287,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		}
 
 		else if ("Subfolders".equals(command)) {
-			boolean search = subfoldersCheckBox.isSelected();
+			boolean search = sbSubfolders.isSelected();
 			((FindInFilesSearchContext)context).setSearchSubfolders(search);
 		}
 
@@ -299,6 +299,20 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		// The superclass might care about this action.
 		else {
 			super.actionPerformed(e);
+		}
+	}
+
+	public void addPath(String s) {
+		inFolderTextField.addItem(s);
+	}
+
+	public void addPath(File f) {
+		addPath(f.getAbsolutePath());
+	}
+
+	public void addPaths(List<File> files) {
+		for (File f : files) {
+			addPath(f);
 		}
 	}
 
@@ -379,13 +393,13 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 		// Make a panel containing the "Report detail" panel and some check boxes.
 //		Box panel = Box.createVerticalBox();
-		subfoldersCheckBox = new JCheckBox(getString2("SearchSubfolders"), true);
-		subfoldersCheckBox.setMnemonic((int)getString2("SearchSubfoldersMnemonic").charAt(0));
-		subfoldersCheckBox.setActionCommand("Subfolders");
-		subfoldersCheckBox.addActionListener(this);
+		sbSubfolders = new JCheckBox(getString2("SearchSubfolders"), true);
+		sbSubfolders.setMnemonic((int)getString2("SearchSubfoldersMnemonic").charAt(0));
+		sbSubfolders.setActionCommand("Subfolders");
+		sbSubfolders.addActionListener(this);
 //		panel.add(detailPanel);
 //		panel.add(subfoldersCheckBox);
-		detailPanel.add(subfoldersCheckBox);
+		detailPanel.add(sbSubfolders);
 
 		//return panel;
 		return detailPanel;
@@ -464,8 +478,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 
 	/**
-	 * Creates and returns the component used to display search
-	 * results.
+	 * Creates and returns the component used to display search results.
 	 *
 	 * @return The component.
 	 */
@@ -602,7 +615,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * @see #getUseRegEx
 	 */
 	boolean getCheckSubfolders() {
-		return subfoldersCheckBox.isSelected();
+		return sbSubfolders.isSelected();
 	}
 
 
@@ -790,7 +803,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 			return; // First time through, UI not realized yet
 		}
 		FindInFilesSearchContext fifsc = (FindInFilesSearchContext)context;
-		subfoldersCheckBox.setSelected(fifsc.getSearchSubfolders());
+		sbSubfolders.setSelected(fifsc.getSearchSubfolders());
 		if (cbVerbose != null) {
 			cbVerbose.setSelected(fifsc.getVerbose());
 		}
@@ -1042,7 +1055,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * is what sends out <code>FindInFilesEvent</code>s.
 	 */
 	class FindInFilesDialogMouseListener extends MouseAdapter {
-
 		ResultsComponent comp;
 
 		FindInFilesDialogMouseListener(ResultsComponent comp) {
@@ -1050,7 +1062,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		}
 
 		private void handleOpenSearchResult() {
-
 			int row = comp.getSelectedRow();
 			if (row < 0)
 				return;
@@ -1078,8 +1089,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 				}
 			}
 
-			fireFindInFilesEvent(new FindInFilesEvent(
-				FindInFilesDialog.this, fileName, line));
+			fireFindInFilesEvent(new FindInFilesEvent(FindInFilesDialog.this, fileName, line));
 		}
 
 		@Override

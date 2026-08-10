@@ -45,8 +45,7 @@ import org.fife.ui.rtextarea.RTextAreaOptionPanel;
 
 
 /**
- * A plugin that "tidies" source code. This code calls into other libraries
- * for its functionality.
+ * A plugin that "tidies" source code. This code calls into other libraries for its functionality.
  *
  * @author Robert Futrell
  * @version 1.0
@@ -94,8 +93,8 @@ public class Plugin extends AbstractPlugin<RText>
 	 */
 	@Override
 	public void currentTextAreaPropertyChanged(CurrentTextAreaEvent e) {
-		if (e.getType()==CurrentTextAreaEvent.TEXT_AREA_CHANGED ||
-				e.getType()==CurrentTextAreaEvent.SYNTAX_STYLE_CHANGED) {
+		if (e.getType() == CurrentTextAreaEvent.TEXT_AREA_CHANGED ||
+				e.getType() == CurrentTextAreaEvent.SYNTAX_STYLE_CHANGED) {
 			possiblyEnableAction();
 		}
 	}
@@ -106,11 +105,8 @@ public class Plugin extends AbstractPlugin<RText>
 	 * since this plugin has consolidated all preferences into a single file.
 	 */
 	private static void deleteOldVersionTidyPreferenceFiles() {
-
-		File oldPrefsDir = new File(RTextUtilities.getPreferencesDirectory(),
-				"tidy");
+		File oldPrefsDir = new File(RTextUtilities.getPreferencesDirectory(), "tidy");
 		if (oldPrefsDir.isDirectory()) {
-
 			boolean success = true;
 			File[] propFiles = oldPrefsDir.listFiles();
 			for (File propFile : propFiles) {
@@ -213,7 +209,6 @@ public class Plugin extends AbstractPlugin<RText>
 
 	@Override
 	public void install() {
-
 		PluginPrefs prefs = loadPreferences();
 		RText rtext = getApplication();
 
@@ -228,26 +223,22 @@ public class Plugin extends AbstractPlugin<RText>
 		JMenuItem item = new JMenuItem(action);
 		item.setToolTipText(null);
 
-		// On OS X, the "Options" menu item is in the application menu, not
-		// in the Edit menu.
-		if (rtext.getOS()==OS.MAC_OS_X) {
+		// On OS X, the "Options" menu item is in the application menu, not in the Edit menu.
+		if (rtext.getOS() == OS.MAC_OS_X) {
 			menu.addSeparator();
 			menu.add(item);
-		}
-		else {
+		} else {
 			int index = menu.getMenuComponentCount() - 2;
 			menu.insert(item, index);
 			menu.insertSeparator(index);
 		}
 
 		rtext.getMainView().addCurrentTextAreaListener(this);
-
 	}
 
 
 	/**
-	 * Returns whether the specified language can be pretty printed by this
-	 * plugin.
+	 * Returns whether the specified language can be pretty printed by this plugin.
 	 *
 	 * @param style The language.
 	 * @return Whether the language can be pretty printed.
@@ -260,7 +251,6 @@ public class Plugin extends AbstractPlugin<RText>
 
 
 	private void loadIcons() {
-
 		icons = new HashMap<>();
 
 		try {
@@ -284,7 +274,6 @@ public class Plugin extends AbstractPlugin<RText>
 	 * Loads our tidying preferences.
 	 */
 	private PluginPrefs loadPreferences() {
-
 		PluginPrefs prefs = new PluginPrefs();
 		htmlOptions = new HtmlOptions();
 		xmlOptions = new XmlOptions();
@@ -294,7 +283,6 @@ public class Plugin extends AbstractPlugin<RText>
 		if (prefsFile.isFile()) {
 
 			try {
-
 				Properties props = new Properties();
 				try (BufferedInputStream bin = new BufferedInputStream(
 					new FileInputStream(prefsFile))) {
@@ -313,7 +301,6 @@ public class Plugin extends AbstractPlugin<RText>
 		}
 
 		return prefs;
-
 	}
 
 
@@ -328,7 +315,6 @@ public class Plugin extends AbstractPlugin<RText>
 
 	@Override
 	public void savePreferences() {
-
 		deleteOldVersionTidyPreferenceFiles();
 
 		File prefsFile = getPrefsFile();
@@ -337,7 +323,6 @@ public class Plugin extends AbstractPlugin<RText>
 		}
 
 		try {
-
 			Properties props = new Properties();
 			getHtmlOptions().save(props);
 			getXmlOptions().save(props);
@@ -352,7 +337,6 @@ public class Plugin extends AbstractPlugin<RText>
 				props.store(out,
 					"Preferences for the tidy/pretty-print plugin");
 			}
-
 		} catch (IOException ioe) {
 			getApplication().displayException(ioe);
 		}

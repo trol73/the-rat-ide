@@ -82,14 +82,13 @@ public class NewFileOrFolderDialog extends AbstractEnterFileNameDialog {
 
 
 	/**
-	 * Returns whether the user wants to open the entered file after it is
-	 * created.
+	 * Returns whether the user wants to open the entered file after it is created.
 	 *
 	 * @return Whether to open the file.  If this dialog is for a folder name,
 	 *         this method will always return <code>false</code>.
 	 */
 	public boolean getOpenOnCreate() {
-		return openOnCreateCB.isSelected();
+		return openOnCreateCB != null && openOnCreateCB.isSelected();
 	}
 
 	public void center() {

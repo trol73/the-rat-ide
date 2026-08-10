@@ -120,13 +120,11 @@ public final class RTextUtilities {
 
 
     /**
-     * Scrolls the selected text of a text area so that it is centered
-     * vertically.
+     * Scrolls the selected text of a text area so that it is centered vertically.
      *
      * @param textArea The text area.
      */
     public static void centerSelectionVertically(RSyntaxTextArea textArea) {
-
         Rectangle visible = textArea.getVisibleRect();
 
         Rectangle2D r2d;
@@ -136,8 +134,13 @@ public final class RTextUtilities {
             ble.printStackTrace();
             return;
         }
-        Rectangle r = new Rectangle((int) r2d.getX(), (int) r2d.getY(), (int) r2d.getWidth(),
-                (int) r2d.getHeight());
+        if (r2d == null) {
+            SwingUtilities.invokeLater(() -> {
+                centerSelectionVertically(textArea);
+            });
+            return;
+        }
+        Rectangle r = new Rectangle((int) r2d.getX(), (int) r2d.getY(), (int) r2d.getWidth(), (int) r2d.getHeight());
         visible.x = r.x - (visible.width - r.width) / 2;
         visible.y = r.y - (visible.height - r.height) / 2;
 
@@ -165,7 +168,6 @@ public final class RTextUtilities {
         }
 
         textArea.scrollRectToVisible(visible);
-
     }
 
 
@@ -415,8 +417,7 @@ public final class RTextUtilities {
      *
      * @param rtext   The application.
      * @param enabled Whether templates should be enabled.
-     * @return <code>true</code> if everything went okay; <code>false</code>
-     * if the method failed.
+     * @return <code>true</code> if everything went okay; <code>false</code> if the method failed.
      */
     static boolean enableTemplates(RText rtext, boolean enabled) {
         boolean old = RSyntaxTextArea.getTemplatesEnabled();
@@ -427,8 +428,7 @@ public final class RTextUtilities {
                 if (!f.isDirectory() && !f.mkdirs()) {
                     return false;
                 }
-                return RSyntaxTextArea.setTemplateDirectory(
-                        f.getAbsolutePath());
+                return RSyntaxTextArea.setTemplateDirectory(f.getAbsolutePath());
             }
         }
         return true;
@@ -436,17 +436,14 @@ public final class RTextUtilities {
 
 
     /**
-     * Returns a string with characters that are special to HTML (such as
-     * <code>&lt;</code>, <code>&gt;</code> and <code>&amp;</code>) replaced
-     * by their HTML escape sequences.
+     * Returns a string with characters that are special to HTML (such as <code>&lt;</code>, <code>&gt;</code>
+     * and <code>&amp;</code>) replaced by their HTML escape sequences.
      *
      * @param s                  The input string.
-     * @param newlineReplacement What to replace newline characters with.
-     *                           If this is <code>null</code>, they are simply removed.
+     * @param newlineReplacement What to replace newline characters with. If this is <code>null</code>, they are simply removed.
      * @return The escaped version of <code>s</code>.
      */
-    public static String escapeForHTML(String s,
-                                       String newlineReplacement) {
+    public static String escapeForHTML(String s, String newlineReplacement) {
         return escapeForHTML(s, newlineReplacement, false);
     }
 
@@ -661,7 +658,6 @@ public final class RTextUtilities {
 
         // If the macro directory exists...
         if (macroDir != null && macroDir.isDirectory()) {
-
             File[] allFiles = macroDir.listFiles();
 
             // And if there are files in it...
@@ -682,13 +678,10 @@ public final class RTextUtilities {
                     macroFiles[i] = allFiles[dia.get(i)];
 
                 return macroFiles;
-
             }
-
         }
 
-        // Otherwise, the macro directory couldn't be created for some reason,
-        // or it was empty.
+        // Otherwise, the macro directory couldn't be created for some reason, or it was empty.
         return new File[0];
     }
 
@@ -709,8 +702,7 @@ public final class RTextUtilities {
     /**
      * Returns all elements in an array, joined by <code>", "</code>.
      *
-     * @param array The array.  If this is <code>null</code> or has zero
-     *              length, <code>null</code> is returned.
+     * @param array The array.  If this is <code>null</code> or has zero length, <code>null</code> is returned.
      * @return The joined text.
      * @see #join(String[], String)
      */
@@ -722,8 +714,7 @@ public final class RTextUtilities {
     /**
      * Returns all elements in an array, joined by a specific sequence.
      *
-     * @param array     The array.  If this is <code>null</code> or has zero
-     *                  length, <code>null</code> is returned.
+     * @param array     The array.  If this is <code>null</code> or has zero length, <code>null</code> is returned.
      * @param connector Text to connect each array element with.
      * @return The joined text.
      * @see #join(String[])
@@ -744,8 +735,7 @@ public final class RTextUtilities {
      * Opens all files in the specified directory tree in RText.
      *
      * @param rtext     The RText instance in which to open the files.
-     * @param directory The top of the directory tree, all files in which
-     *                  you want opened in RText.
+     * @param directory The top of the directory tree, all files in which you want opened in RText.
      */
     public static void openAllFilesIn(RText rtext, File directory) {
         if (directory != null && directory.isDirectory()) {
@@ -764,12 +754,10 @@ public final class RTextUtilities {
 
 
     /**
-     * Saves the "Favorite Directories" of RText's file chooser.  It is
-     * assumed that the file chooser has been created via
+     * Saves the "Favorite Directories" of RText's file chooser.  It is assumed that the file chooser has been created via
      * {@link #createFileChooser(RText)} before calling this method.
      * <p>
-     * If an error occurs saving the favorites, an error message is
-     * displayed.
+     * If an error occurs saving the favorites, an error message is displayed.
      *
      * @param rtext The parent RText instance.
      * @see #createFileChooser(RText)
@@ -793,34 +781,32 @@ public final class RTextUtilities {
      * @see #getDropShadowsEnabledInEditor()
      */
     public static void setDropShadowsEnabledInEditor(boolean enabled) {
-        if (enabled != dropShadowsEnabledInEditor) {
-
-            dropShadowsEnabledInEditor = enabled;
-
-            if (dropShadowsEnabledInEditor) {
-                TranslucencyUtil util = TranslucencyUtil.get();
-                if (util != null && util.isTranslucencySupported(true)) {
-                    PopupWindowDecorator.set(new PopupWindowDecorator() {
-                        @Override
-                        public void decorate(JWindow window) {
-                            Container cp = window.getContentPane();
-                            if (cp instanceof JComponent) {
-                                TranslucencyUtil util = TranslucencyUtil.get();
-                                util.setOpaque(window, false);
-                                ((JComponent) cp).setBorder(
-                                        BorderFactory.createCompoundBorder(
-                                                ShadowPopupBorder.getInstance(),
-                                                ((JComponent) cp).getBorder()));
-                            }
-                        }
-                    });
-                }
-            } else { // Not enabled
-                PopupWindowDecorator.set(null);
-            }
-
+        if (enabled == dropShadowsEnabledInEditor) {
+            return;
         }
+        dropShadowsEnabledInEditor = enabled;
 
+        if (dropShadowsEnabledInEditor) {
+            TranslucencyUtil util = TranslucencyUtil.get();
+            if (util != null && util.isTranslucencySupported(true)) {
+                PopupWindowDecorator.set(new PopupWindowDecorator() {
+                    @Override
+                    public void decorate(JWindow window) {
+                        Container cp = window.getContentPane();
+                        if (cp instanceof JComponent) {
+                            TranslucencyUtil util = TranslucencyUtil.get();
+                            util.setOpaque(window, false);
+                            ((JComponent) cp).setBorder(
+                                    BorderFactory.createCompoundBorder(
+                                            ShadowPopupBorder.getInstance(),
+                                            ((JComponent) cp).getBorder()));
+                        }
+                    }
+                });
+            }
+        } else { // Not enabled
+            PopupWindowDecorator.set(null);
+        }
     }
 
 

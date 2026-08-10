@@ -282,14 +282,16 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	/**
 	 * Performs a non-regex "Find in Files" operation on a single file.
 	 */
-	private void doSearchNoRegex(String buffer, String searchString,
-							RSyntaxTextArea textArea,
-							boolean matchCase, boolean wholeWord,
-							boolean matchingLines, String fileFullPath,
-							Segment seg) {
-
-		// If search is not case-sensitive, lower-case text to search in
-		// (searchString is already done).
+	private void doSearchNoRegex(
+			String buffer,
+			String searchString,
+			RSyntaxTextArea textArea,
+			boolean matchCase,
+			boolean wholeWord,
+			boolean matchingLines, String fileFullPath,
+			Segment seg
+	) {
+		// If search is not case-sensitive, lower-case text to search in (searchString is already done).
 		if (!matchCase)
 			buffer = buffer.toLowerCase();
 
@@ -308,7 +310,6 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 
 			// If we found a match...
 			if (!wholeWord || FindDialog.isWholeWord(buffer, i, len)) {
-
 				numMatches++;
 				if (matchingLines) {
 					int line;
@@ -475,9 +476,8 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 	 * @return The HTML.
 	 */
 	private static String getHtml(Token t, RSyntaxTextArea textArea) {
-		// HTML rendering in Swing is very slow, and we've also seen OOME's
-		// from trying render lines that were too long in the Find in Files
-		// table, so we'll limit how much we display.
+		// HTML rendering in Swing is very slow, and we've also seen OOME's from trying render lines that were too long
+		// in the Find in Files  table, so we'll limit how much we display.
 		final int maxLen = 1280;
 
 		Font font = RTextArea.getDefaultFont();

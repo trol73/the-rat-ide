@@ -251,8 +251,7 @@ public abstract class AbstractPluggableGUIApplication<P extends AppPrefs> extend
         pluginList.remove(plugin);
 
         // If it's a GUI plugin...
-        if (plugin instanceof GUIPlugin) {
-            GUIPlugin<?> gp = (GUIPlugin<?>) plugin;
+        if (plugin instanceof GUIPlugin<?> gp) {
             return ((MainContentPanel) mainContentPanel).removePlugin(gp);
         }
 

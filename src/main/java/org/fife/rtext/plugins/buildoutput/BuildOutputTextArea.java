@@ -810,7 +810,7 @@ class BuildOutputTextArea extends AbstractConsoleTextArea {
                 showPopupMenu(e);
             } else if (handFilePath != null && e.getID() == MouseEvent.MOUSE_CLICKED) {
                 var app = plugin.getApplication();
-                if (!handFilePath.endsWith(".o")) {
+                if (!handFilePath.endsWith(".o") && !handFilePath.endsWith("avr-ld")) {
                     app.openFile(handFilePath, fileLine, fileColumn);
                 }
 //                app.openFile(new File(handFilePath), () -> {

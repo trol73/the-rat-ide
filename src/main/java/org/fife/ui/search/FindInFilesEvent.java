@@ -15,28 +15,26 @@ import java.util.EventObject;
 
 
 /**
- * Event fired by <code>FindInFileDialog</code>s when the user clicks on a
- * match.
+ * Event fired by <code>FindInFileDialog</code>s when the user clicks on a match.
  *
  * @author Robert Futrell
  * @version 0.5
  */
 public class FindInFilesEvent extends EventObject {
-
 	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The name of the file for the match they clicked.
 	 */
-	private String fileName;
+	private final String fileName;
 
 	/**
 	 * The line number of the match they clicked.  Note that this value may be
 	 * <code>-1</code> signifying that no match was found (i.e., they clicked on
 	 * a "verbose" informational line).
 	 */
-	private int line;
+	private final int line;
 
 
 	/**

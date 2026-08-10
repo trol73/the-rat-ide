@@ -58,11 +58,7 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 	private static final String MSG = "org.fife.ui.search.FindInFilesTable";
 
 
-	/**
-	 * Constructor.
-	 */
 	public FindInFilesTable() {
-
 		ResourceBundle msg = ResourceBundle.getBundle(MSG);
 
 		// Create the table model, and make it sortable.
@@ -90,7 +86,6 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 		// slowdown.
 		ToolTipManager.sharedInstance().unregisterComponent(this);
 		ToolTipManager.sharedInstance().unregisterComponent(getTableHeader());
-
 	}
 
 
@@ -127,20 +122,17 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 		Vector<String> v = createMatchDataVector(fileName, matchData);
 		tableModel.addRow(v);
 		matchDatas.add(matchData);
-
 	}
 
 
 	/**
-	 * Overridden to ensure the table's header and cells are also rendered
-	 * correctly (RTL, LTR).  For some reason, Swing doesn't take care of
-	 * this by default.
+	 * Overridden to ensure the table's header and cells are also rendered correctly (RTL, LTR).
+	 * For some reason, Swing doesn't take care of this by default.
 	 *
 	 * @param o The new component orientation.
 	 */
 	@Override
 	public void applyComponentOrientation(ComponentOrientation o) {
-
 		super.applyComponentOrientation(o);
 
 		// Default renderers installed into all tables.
@@ -164,13 +156,10 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 		if (getTableHeader()!=null) {
 			r = getTableHeader().getDefaultRenderer();
 			// Should always be the first one.
-			if (r instanceof FileExplorerTableModel.SortableHeaderRenderer) {
-				((FileExplorerTableModel.SortableHeaderRenderer)r).
-								applyComponentOrientation(o);
-			}
-			else if (r instanceof Component) {
-				Component c = (Component)r;
-				c.applyComponentOrientation(o);
+			if (r instanceof FileExplorerTableModel.SortableHeaderRenderer hr) {
+				hr.applyComponentOrientation(o);
+			} else if (r instanceof Component c) {
+                c.applyComponentOrientation(o);
 			}
 		}
 
@@ -179,7 +168,6 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 		if (verboseRenderer!=null) {
 			verboseRenderer.applyComponentOrientation(o);
 		}
-
 	}
 
 
@@ -196,15 +184,13 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 
 
 	/**
-	 * Return the vector of data to display in the table for a
-	 * match data instance.
+	 * Return the vector of data to display in the table for a match data instance.
 	 *
 	 * @param fileName The (relative) filename.
 	 * @param data The match data.
 	 * @return The vector.
 	 */
-	protected Vector<String> createMatchDataVector(String fileName,
-			MatchData data) {
+	protected Vector<String> createMatchDataVector(String fileName, MatchData data) {
 		Vector<String> v = new Vector<>(3);
 		v.add(fileName);
 		v.add(data.getLineNumber());
@@ -249,18 +235,13 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 
 	@Override
 	public JPopupMenu getComponentPopupMenu() {
-
 		if (contextMenu == null) {
-
 			contextMenu = new JPopupMenu();
-			ResourceBundle bundle = ResourceBundle.getBundle(
-				FileSystemTree.class.getName());
+			ResourceBundle bundle = ResourceBundle.getBundle(FileSystemTree.class.getName());
 
 			JMenu openInMenu = new JMenu(bundle.getString("PopupMenu.OpenIn"));
-			openInMenu.add(new Actions.SystemOpenAction(this,
-				Actions.SystemOpenAction.OpenMethod.EDIT));
-			openInMenu.add(new Actions.SystemOpenAction(this,
-				Actions.SystemOpenAction.OpenMethod.OPEN));
+			openInMenu.add(new Actions.SystemOpenAction(this, Actions.SystemOpenAction.OpenMethod.EDIT));
+			openInMenu.add(new Actions.SystemOpenAction(this, Actions.SystemOpenAction.OpenMethod.OPEN));
 			contextMenu.add(openInMenu);
 		}
 
@@ -379,14 +360,12 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 
 	@Override
 	protected void processMouseEvent(MouseEvent e) {
-
 		// Ensure right-clicking selects the current row too
 		if (SwingUtilities.isRightMouseButton(e)) {
 			int row = rowAtPoint(e.getPoint());
 			if (row > -1) {
 				setRowSelectionInterval(row, row);
-			}
-			else {
+			} else {
 				clearSelection();
 			}
 		}
@@ -399,14 +378,12 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 	 * Resizes the columns of the table to accommodate their data.
 	 */
 	private void refreshColumnWidths() {
-
 		TableColumnModel columnModel = getColumnModel();
 		int columnCount = getColumnCount();
 		int width;
 		int rowCount = getRowCount();
 
 		for (int j=0; j<columnCount; j++) {
-
 			// Initialize width of column to best width for its header.
 			TableColumn column = columnModel.getColumn(j);
 			//column.sizeWidthToFit();
@@ -446,8 +423,7 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 
 	/**
 	 * Overridden to keep the left-hand side of the row visible on selection.
-	 * This is because otherwise the viewport jumps to show the entire cell
-	 * selected.
+	 * This is because otherwise the viewport jumps to show the entire cell selected.
 	 */
 	@Override
 	public void scrollRectToVisible(Rectangle r) {
@@ -547,14 +523,12 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 		public Component getTableCellRendererComponent(JTable table,
 								Object value, boolean isSelected,
 								boolean hasFocus, int row, int column) {
-			super.getTableCellRendererComponent(table, value, isSelected,
-										hasFocus, row, column);
+			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (!isSelected) {
 				MatchData data = getMatchDataForRow(row);
 				if (data.isVerboseSearchInfo()) {
 					setForeground(Color.GRAY);
-				}
-				else if (data.isError()) {
+				} else if (data.isError()) {
 					setForeground(Color.RED);
 				}
 			}

@@ -166,7 +166,6 @@ class LanguageOptionPanel extends OptionsDialogPanel implements ListSelectionLis
      * @throws IOException If an error occurs while parsing the file.
      */
     private void getLocalizations(File xmlFile) throws IOException {
-
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db;
         Document doc;
@@ -225,82 +224,75 @@ class LanguageOptionPanel extends OptionsDialogPanel implements ListSelectionLis
         if (node == null)
             throw new IOException("XML error:  node==null!");
 
-        int type = node.getNodeType();
-        switch (type) {
-
-            // The document node is ???
-            case Node.DOCUMENT_NODE:
-                initializeFromXMLFile(
-                        ((Document) node).getDocumentElement());
+        switch (node.getNodeType()) {
+            case Node.DOCUMENT_NODE:    // The document node is ???
+                initializeFromXMLFile(((Document) node).getDocumentElement());
                 break;
 
-            // Handle element nodes.
-            case Node.ELEMENT_NODE:
-
-                String nodeName = node.getNodeName();
-
-                // Might be the "topmost" node.
-                if (nodeName.equals(ROOT_ELEMENT)) {
-                    NodeList childNodes = node.getChildNodes();
-                    // We should at least have English.
-                    if (childNodes.getLength() == 0) {
-                        throw new IOException("XML error:  There must " +
-                                "be at least 1 language declared!");
-                    }
-                    int childCount = childNodes.getLength();
-                    for (int i = 0; i < childCount; i++)
-                        initializeFromXMLFile(childNodes.item(i));
-                }
-
-                // Might be a language declaration.
-                else if (nodeName.equals(LANGUAGE)) {
-                    // Shouldn't have any children.
-                    NodeList childNodes = node.getChildNodes();
-                    if (childNodes.getLength() > 0) {
-                        throw new IOException("XML error:  language tags shouldn't have children!");
-                    }
-                    NamedNodeMap attributes = node.getAttributes();
-                    if (attributes.getLength() != 2) {
-                        throw new IOException("XML error:  language tags should have two attributes!");
-                    }
-                    String name = null;
-                    String id = null;
-                    for (int i = 0; i < 2; i++) {
-                        Node node2 = attributes.item(i);
-                        nodeName = node2.getNodeName();
-                        if (nodeName.equals(NAME))
-                            name = node2.getNodeValue();
-                        else if (nodeName.equals(ID))
-                            id = node2.getNodeValue();
-                        else
-                            throw new IOException("XML error: unknown attribute: '" + nodeName + "'");
-                    }
-                    if (name == null || id == null) {
-                        throw new IOException("XML error: language must have attributes 'name' and 'id'.");
-                    }
-                    Icon icon = getIconFor(id);
-                    IconTextInfo iti = new IconTextInfo(name, icon);
-                    listModel.addElement(iti);
-                    languageMap.put(name, id);
-                }
-
-                // Anything else is an error.
-                else {
-                    throw new IOException("XML error:  Unknown element node: " + nodeName);
-                }
-
+            case Node.ELEMENT_NODE:     // Handle element nodes.
+                processXmlNode(node);
                 break;
 
-            // Whitespace nodes.
-            case Node.TEXT_NODE:
+            case Node.TEXT_NODE:        // Whitespace nodes.
                 break;
 
-            // An error occurred?
-            default:
-                throw new IOException("XML error:  Unknown node type: " + type);
+            default:            // An error occurred?
+                throw new IOException("XML error:  Unknown node type: " + node.getNodeType());
 
-        } // End of switch (type).
+        }
+    }
 
+    private void processXmlNode(Node node) throws IOException {
+        String nodeName = node.getNodeName();
+
+        // Might be the "topmost" node.
+        if (nodeName.equals(ROOT_ELEMENT)) {
+            NodeList childNodes = node.getChildNodes();
+            // We should at least have English.
+            if (childNodes.getLength() == 0) {
+                throw new IOException("XML error:  There must be at least 1 language declared!");
+            }
+            int childCount = childNodes.getLength();
+            for (int i = 0; i < childCount; i++)
+                initializeFromXMLFile(childNodes.item(i));
+        }
+
+        // Might be a language declaration.
+        else if (nodeName.equals(LANGUAGE)) {
+            // Shouldn't have any children.
+            NodeList childNodes = node.getChildNodes();
+            if (childNodes.getLength() > 0) {
+                throw new IOException("XML error:  language tags shouldn't have children!");
+            }
+            NamedNodeMap attributes = node.getAttributes();
+            if (attributes.getLength() != 2) {
+                throw new IOException("XML error:  language tags should have two attributes!");
+            }
+            String name = null;
+            String id = null;
+            for (int i = 0; i < 2; i++) {
+                Node node2 = attributes.item(i);
+                nodeName = node2.getNodeName();
+                if (nodeName.equals(NAME))
+                    name = node2.getNodeValue();
+                else if (nodeName.equals(ID))
+                    id = node2.getNodeValue();
+                else
+                    throw new IOException("XML error: unknown attribute: '" + nodeName + "'");
+            }
+            if (name == null || id == null) {
+                throw new IOException("XML error: language must have attributes 'name' and 'id'.");
+            }
+            Icon icon = getIconFor(id);
+            IconTextInfo iti = new IconTextInfo(name, icon);
+            listModel.addElement(iti);
+            languageMap.put(name, id);
+        }
+
+        // Anything else is an error.
+        else {
+            throw new IOException("XML error:  Unknown element node: " + nodeName);
+        }
     }
 
 
@@ -311,7 +303,6 @@ class LanguageOptionPanel extends OptionsDialogPanel implements ListSelectionLis
      *                 constant (e.g., <code>en</code> or <code>es</code>).
      */
     private void setSelectedLanguage(String language) {
-
         int count = listModel.size();
         for (int i = 0; i < count; i++) {
             IconTextInfo obj = listModel.get(i);
@@ -323,8 +314,7 @@ class LanguageOptionPanel extends OptionsDialogPanel implements ListSelectionLis
             }
         }
 
-        // If the passed-in language wasn't "recognized," default to
-        // English.
+        // If the passed-in language wasn't "recognized," default to English.
         for (int i = 0; i < count; i++) {
             IconTextInfo obj = listModel.get(i);
             String langName = obj.getText();
@@ -334,7 +324,6 @@ class LanguageOptionPanel extends OptionsDialogPanel implements ListSelectionLis
                 return;
             }
         }
-
     }
 
 
@@ -375,8 +364,6 @@ class LanguageOptionPanel extends OptionsDialogPanel implements ListSelectionLis
         public String getText() {
             return text;
         }
-
     }
-
 
 }

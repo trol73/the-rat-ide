@@ -80,7 +80,6 @@ import java.util.function.Function;
  * @author Robert Futrell
  * @version 0.5
  */
-//@SuppressWarnings("checkstyle:VisibilityModifier")
 public abstract class AbstractMainView extends JPanel
         implements PropertyChangeListener, ActionListener, SearchListener, FindInFilesListener, HyperlinkListener {
 
@@ -859,8 +858,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Called when the user selects a file in a listened-to find-in-files
-     * dialog.
+     * Called when the user selects a file in a listened-to find-in-files dialog.
      *
      * @param e The event received from the <code>FindInFilesDialog</code>.
      */
@@ -881,31 +879,45 @@ public abstract class AbstractMainView extends JPanel
         String desc = owner.getString("FileOpened", fileName);
         fnfd.setStatusText(desc);
         int line = e.getLine();
+//System.err.println("-> " + line);
+        // эта хитрая логика подобрана эмпирически чтобы переход выполнялся гарантировано
         if (line != -1) {
-            try {
-                // currentTextArea is updated here.  Highlight the searched-for
-                // text.
-                int start = currentTextArea.getLineStartOffset(line - 1);
-                int end = currentTextArea.getLineEndOffset(line - 1) - 1;
-                currentTextArea.setCaretPosition(end);
-                currentTextArea.moveCaretPosition(start);
-                currentTextArea.getCaret().setSelectionVisible(true);
-
-                // The editor isn't visible initially, must wait to do this
-                SwingUtilities.invokeLater(() -> RTextUtilities.centerSelectionVertically(currentTextArea));
-
-            } catch (Exception exc) {
-                owner.displayException(exc);
-                moveToTopOfCurrentDocument();
-            }
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    gotoLine(line);
+                    Thread.sleep(100);
+                    gotoLine(line);
+                    SwingUtilities.invokeLater(() -> {
+                        gotoLine(line);
+//System.err.println(currentTextArea.getLine());
+                    });
+//System.err.println(currentTextArea.getLine());
+                } catch (InterruptedException ignore) {
+                }
+            });
         } else
             moveToTopOfCurrentDocument();
     }
 
+    private void gotoLine(int line) {
+        try {
+            // currentTextArea is updated here.  Highlight the searched-for text.
+            int start = currentTextArea.getLineStartOffset(line - 1);
+            int end = currentTextArea.getLineEndOffset(line - 1) - 1;
+            currentTextArea.setCaretPosition(end);
+            currentTextArea.moveCaretPosition(start);
+            currentTextArea.getCaret().setSelectionVisible(true);
+
+            // The editor isn't visible initially, must wait to do this
+            RTextUtilities.centerSelectionVertically(currentTextArea);
+        } catch (Exception exc) {
+            owner.displayException(exc);
+            moveToTopOfCurrentDocument();
+        }
+    }
 
     /**
-     * Notifies all registered <code>CurrentTextAreaListener</code>s of a
-     * change in the current text area.
+     * Notifies all registered <code>CurrentTextAreaListener</code>s of a change in the current text area.
      *
      * @param type     The type of event to fire.
      * @param oldValue The old value.
@@ -1068,7 +1080,7 @@ public abstract class AbstractMainView extends JPanel
                 sb.append(entry.getKey()).append(',');
             }
         }
-        if (sb.length() > 0) {
+        if (!sb.isEmpty()) {
             sb.setLength(sb.length() - 1);
         }
         return sb.toString();
@@ -1148,8 +1160,7 @@ public abstract class AbstractMainView extends JPanel
      * Returns the name being displayed for the document.
      * For example, in a tabbed pane subclass, this could be the text on the tab for this document.
      *
-     * @param index The index at which to find the name.  If the index is
-     *              invalid, <code>null</code> is returned.
+     * @param index The index at which to find the name.  If the index is invalid, <code>null</code> is returned.
      * @return The name being displayed for this document.
      */
     public abstract String getDocumentDisplayNameAt(int index);
@@ -1167,8 +1178,7 @@ public abstract class AbstractMainView extends JPanel
      * Returns the index of the specified document.
      *
      * @param fileFullPath The file to look up.
-     * @return The index of the specified file, or <code>-1</code> if the file
-     * is not being edited.
+     * @return The index of the specified file, or <code>-1</code> if the file isn't being edited.
      */
     public int getFileIndex(String fileFullPath) {
         for (int i = 0; i < getNumDocuments(); i++) {
@@ -1180,15 +1190,13 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * If the user has set a maximum file size to open, they are prompted
-     * whether they are "sure" they want to open the file if it is over
-     * their set size.
+     * If the user has set a maximum file size to open, they are prompted whether they are "sure" they want to
+     * open the file if it is over their set size.
      *
      * @param fileName The file to check.
-     * @return If they do not want to check files of a certain size, this
-     * method will return <code>false</code>.  Otherwise, it will
-     * return <code>true</code> if and only if this file is larger
-     * than their threshold and they chose not to open it.
+     * @return If they do not want to check files of a certain size, this method will return <code>false</code>.
+     *         Otherwise, it will return <code>true</code> if and only if this file is larger than their threshold,
+     *         and they chose not to open it.
      */
     private boolean getFileIsTooLarge(String fileName) {
         if (getDoFileSizeCheck()) {
@@ -1232,6 +1240,7 @@ public abstract class AbstractMainView extends JPanel
         var dirs = getActiveProjectFolders();
         if (!dirs.isEmpty()) {
             findInFilesDialog.setSearchIn(dirs.getFirst());
+            findInFilesDialog.addPaths(dirs);
         }
         AbstractMainView mainView = owner.getMainView();
         if (mainView != null) {
@@ -1352,10 +1361,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns the system icon associated with the file being edited in the
-     * given scroll pane (actually, in the text area inside of it).  This
-     * method is called by subclasses that want to display a system icon for
-     * open files.
+     * Returns the system icon associated with the file being edited in the given scroll pane (actually,  in the
+     * text area inside of it).  This method is called by subclasses that want to display a system icon for open files.
      *
      * @param scrollPane The scroll pane.
      * @return The icon.
@@ -1367,9 +1374,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns the system icon associated with the file being edited in the
-     * given text area.  This method is called by subclasses that want to
-     * display a system icon for open files.
+     * Returns the system icon associated with the file being edited in the given text area.
+     * This method is called by subclasses that want to display a system icon for open files.
      *
      * @param textArea The text area.
      * @return The icon.
@@ -1452,8 +1458,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns whether line (word) wrap is enabled for the open
-     * documents.
+     * Returns whether line (word) wrap is enabled for the open documents.
      *
      * @return Whether line wrap is enabled.
      */
@@ -1468,43 +1473,37 @@ public abstract class AbstractMainView extends JPanel
      * @return The cursor for text areas when a macro is being recorded.
      */
     private static synchronized Cursor getMacroCursor() {
-        if (macroCursor == null) {
+        if (macroCursor != null) {
+            return macroCursor;
+        }
+        // OS's will force the cursor to be a certain size (e.g., Windows will make it 32x32 usually),
+        // even if you try to set the cursor to some other size.  So, we create a cursor that is the "best"
+        // cursor size to prevent our cursor image from being stretched.
+        try {
+            java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
+            java.awt.Dimension dim = toolkit.getBestCursorSize(16, 16);
+            BufferedImage transparentImage = new BufferedImage(
+                    dim.width, dim.height,
+                    BufferedImage.TYPE_INT_ARGB);
 
-            // OS's will force the cursor to be a certain size (e.g., Windows
-            // will make it 32x32 usually), even if you try to set the cursor
-            // to some other size.  So, we create a cursor that is the "best"
-            // cursor size to prevent our cursor image from being stretched.
+            Graphics2D g2d = transparentImage.createGraphics();
+            BufferedImage image;
 
-            try {
-                java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
-                java.awt.Dimension dim = toolkit.getBestCursorSize(16, 16);
-                BufferedImage transparentImage = new BufferedImage(
-                        dim.width, dim.height,
-                        BufferedImage.TYPE_INT_ARGB);
+            ClassLoader cl = AbstractMainView.class.getClassLoader();
+            image = ImageIO.read(cl.getResource("org/fife/rtext/graphics/macrocursor.gif"));
+            g2d.drawImage(image, 0, 0, null);
+            g2d.dispose();
 
-                Graphics2D g2d = transparentImage.createGraphics();
-                BufferedImage image;
+            Point hotspot = new Point(0, 0);
+            return toolkit.createCustomCursor(transparentImage, hotspot, "macroCursor");
 
-                ClassLoader cl = AbstractMainView.class.getClassLoader();
-                image = ImageIO.read(cl.getResource("org/fife/rtext/graphics/macrocursor.gif"));
-                g2d.drawImage(image, 0, 0, null);
-                g2d.dispose();
-
-                Point hotspot = new Point(0, 0);
-                macroCursor = toolkit.createCustomCursor(transparentImage,
-                        hotspot, "macroCursor");
-
-                // If something fails (such as the cursor image not being found),
-                // just use the crosshair cursor.
-            } catch (RuntimeException re) {
-                throw re; // Keep FindBugs happy - don't mask RuntimeExceptions
-            } catch (Exception e) {
-                macroCursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
-            }
-
-        } // End of if (macroCursor==null).
-
-        return macroCursor;
+            // If something fails (such as the cursor image not being found),
+            // just use the crosshair cursor.
+        } catch (RuntimeException re) {
+            throw re; // Keep FindBugs happy - don't mask RuntimeExceptions
+        } catch (Exception e) {
+            return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+        }
     }
 
 
@@ -1656,7 +1655,6 @@ public abstract class AbstractMainView extends JPanel
         if (num == 0)
             return null;
         File[] files = new File[num];
-
         for (int i = 0; i < num; i++) {
             files[i] = new File(getRTextEditorPaneAt(i).getFileFullPath());
         }
@@ -1679,8 +1677,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns whether whitespace lines are remembered (as opposed to cleared
-     * on Enter presses).
+     * Returns whether whitespace lines are remembered (as opposed to cleared on Enter presses).
      *
      * @return Whether whitespace lines are remembered.
      * @see #setRememberWhitespaceLines(boolean)
@@ -1702,12 +1699,10 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns the <code>org.fife.rtext.RTextEditorPane</code> on the
-     * specified tab.  This is a convenience method for
-     * <code>(RTextEditorPane)getRTextScrollPaneAt(i).textArea</code>.
+     * Returns the <code>org.fife.rtext.RTextEditorPane</code> on the specified tab.
+     * This is a convenience method for <code>(RTextEditorPane)getRTextScrollPaneAt(i).textArea</code>.
      *
-     * @param index The tab for which you want to get the
-     *              {@link org.fife.rtext.RTextEditorPane}.
+     * @param index The tab for which you want to get the {@link org.fife.rtext.RTextEditorPane}.
      * @return The corresponding {@link org.fife.rtext.RTextEditorPane}.
      */
     public RTextEditorPane getRTextEditorPaneAt(int index) {
@@ -1717,11 +1712,9 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns the <code>org.fife.rtext.RTextScrollPane</code> at the given
-     * index.
+     * Returns the <code>org.fife.rtext.RTextScrollPane</code> at the given index.
      *
-     * @param index The tab for which you want to get the
-     *              <code>org.fife.rtext.RTextScrollPane</code>.
+     * @param index The tab for which you want to get the <code>org.fife.rtext.RTextScrollPane</code>.
      * @return The scroll pane.
      */
     public abstract RTextScrollPane getRTextScrollPaneAt(int index);
@@ -1791,8 +1784,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns the color being used for selections in all text areas in this
-     * main view.
+     * Returns the color being used for selections in all text areas in this main view.
      *
      * @return The <code>Color</code> being used for all selections in all text
      * areas.
@@ -1838,9 +1830,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Returns the syntax filters being used to open documents (i.e., to decide
-     * what syntax highlighting color scheme, if any, to use when opening
-     * documents).
+     * Returns the syntax filters being used to open documents (i.e., to decide what syntax highlighting color scheme,
+     * if any, to use when opening documents).
      *
      * @return The filters being used.
      * @see #setSyntaxFilters(SyntaxFilters)
@@ -1866,7 +1857,7 @@ public abstract class AbstractMainView extends JPanel
                         return SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR;
                     }
                 }
-                return variants.get(0);
+                return variants.getFirst();
             }
         };
         return syntaxFilters.getSyntaxStyleForFile(fileName,getIgnoreBackupExtensions(), conflictResolver);
@@ -1985,7 +1976,6 @@ public abstract class AbstractMainView extends JPanel
      * @param pane The pane to examine.
      */
     private static void guessContentType(RTextEditorPane pane) {
-
         String style = SyntaxConstants.SYNTAX_STYLE_NONE;
 
         String firstLine;
@@ -2002,8 +1992,7 @@ public abstract class AbstractMainView extends JPanel
 
         if (firstLine.startsWith("#!")) {
 
-            // Determine the program name.  Take special care for
-            // the case of "#!/usr/bin/env progname".
+            // Determine the program name.  Take special care for  the case of "#!/usr/bin/env progname".
             int space = firstLine.indexOf(' ', 2);
             if (space > -1) {
                 if (firstLine.startsWith("#!/usr/bin/env")) {
@@ -2041,47 +2030,37 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Handles <code>IOException</code>s thrown when adding an old text file
-     * to RText.  This method displays a dialog showing the error message,
-     * prettied-up if possible.
+     * Handles <code>IOException</code>s thrown when adding an old text file to RText.
+     * This method displays a dialog showing the error message, prettied-up if possible.
      *
      * @param loc  The location of the file being opened or saved.
      * @param ioe  The exception thrown.
-     * @param load Whether this was a load operation.  If this value is
-     *             <code>false</code>, then this was a save operation.
+     * @param load Whether this was a load operation.  If this value is <code>false</code>, then this was a save operation.
      */
-    private void handleAddTextFileIOException(FileLocation loc,
-                                              IOException ioe, boolean load) {
-
+    private void handleAddTextFileIOException(FileLocation loc, IOException ioe, boolean load) {
         String desc;
         String title = owner.getString("ErrorDialogTitle");
 
         if ("sun.net.ftp.FtpLoginException".equals(ioe.getClass().getName())) {
             desc = owner.getString("ErrorCredentials");
-            JOptionPane.showMessageDialog(this, desc, title,
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, desc, title, JOptionPane.ERROR_MESSAGE);
         } else if (ioe instanceof java.net.ConnectException) {
             desc = owner.getString("ErrorConnectionRefused");
-            JOptionPane.showMessageDialog(this, desc, title,
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, desc, title, JOptionPane.ERROR_MESSAGE);
         } else if (ioe instanceof java.net.UnknownHostException) {
             String host = ioe.getMessage(); // Usually the hostname.
             if (host == null) {
                 host = "";
             }
             desc = owner.getString("ErrorUnknownHost", host);
-            JOptionPane.showMessageDialog(this, desc, title,
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, desc, title, JOptionPane.ERROR_MESSAGE);
         } else if (ioe instanceof java.io.FileNotFoundException) {
-            // For save operations, FileNotFoundException usually means
-            // "Access denied" or some other hard-to-decipher-from-a-stack-
-            // trace message, so for saves, just print the exception's
+            // For save operations, FileNotFoundException usually means "Access denied" or some other
+            // hard-to-decipher-from-a-stack-trace message, so for saves, just print the exception's
             // message instead of a pretty one.
             if (load) {
-                desc = owner.getString("ErrorFileNotFound",
-                        loc.getFileName());
-                JOptionPane.showMessageDialog(this, desc, title,
-                        JOptionPane.ERROR_MESSAGE);
+                desc = owner.getString("ErrorFileNotFound", loc.getFileName());
+                JOptionPane.showMessageDialog(this, desc, title, JOptionPane.ERROR_MESSAGE);
             } else { // Prevent "An unexpected error occurred"
                 desc = ioe.getMessage();
                 if (desc == null) {
@@ -2101,7 +2080,6 @@ public abstract class AbstractMainView extends JPanel
 
 
     private void handleFileModifiedEvent(String text) {
-
         StringTokenizer tokenizer = new StringTokenizer(
                 text.substring(text.indexOf(' ')));
 
@@ -2133,7 +2111,6 @@ public abstract class AbstractMainView extends JPanel
 
             // If they want to, reload the file.
             if (rc == JOptionPane.YES_OPTION) {
-
                 try {
                     File f = new File(currentTextArea.getFileFullPath());
                     if (f.isFile()) { // Should always be true.
@@ -2215,10 +2192,8 @@ public abstract class AbstractMainView extends JPanel
      *
      * @param owner       The <code>RText</code> that this tabbed pane sits in.
      * @param filesToOpen Array of strings representing files to open.  If
-     *                    this parameter is null, a single file with a default name is
-     *                    opened.
-     * @param prefs       A properties object used to initialize some fields on
-     *                    this main view.
+     *                    this parameter is null, a single file with a default name is opened.
+     * @param prefs       A properties object used to initialize some fields on this main view.
      */
     protected void initialize(RText owner, String[] filesToOpen, RTextPrefs prefs) {
         // Remember the owner of this tabbed pane.
@@ -2342,7 +2317,6 @@ public abstract class AbstractMainView extends JPanel
 
         // Update the title of the RText window.
         owner.setMessages(currentTextArea.getFileFullPath(), null);
-
     }
 
 
@@ -2617,13 +2591,10 @@ public abstract class AbstractMainView extends JPanel
                 case JOptionPane.CLOSED_OPTION:
                     // If they choose to Cancel (NOT "No" to saving), quit.
                     return JOptionPane.CANCEL_OPTION;
-
             }
-
         }
 
         return rc; // Either YES_OPTION or NO_OPTION
-
     }
 
 
@@ -2632,13 +2603,9 @@ public abstract class AbstractMainView extends JPanel
      */
     @Override
     public void propertyChange(PropertyChangeEvent e) {
+        switch (e.getPropertyName()) {
 
-        String propertyName = e.getPropertyName();
-
-        switch (propertyName) {
-
-            // If the file's path is changing (must be caused by the file being
-            // saved(?))...
+            // If the file's path is changing (must be caused by the file being saved(?))...
             case TextEditorPane.FULL_PATH_PROPERTY:
                 setDocumentDisplayNameAt(getSelectedIndex(), currentTextArea.getFileName());
                 fireCurrentTextAreaEvent(CurrentTextAreaEvent.FILE_NAME_CHANGED,
@@ -2677,9 +2644,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Refreshes the color used for the "active line range" of editors.  The
-     * user currently cannot set this, but we try to be smart and pick a good
-     * color based on the foreground/background colors.
+     * Refreshes the color used for the "active line range" of editors.  The user currently cannot set this,
+     * but we try to be smart and pick a good color based on the foreground/background colors.
      */
     private void refreshActiveLineRangeColors() {
         Color activeLineRangeColor = getAppropriateActiveLineRangeColor();
@@ -2697,52 +2663,50 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Updates the icons in file tabs/list view/etc.  This called in response to
-     * the user picking a new icon group.
+     * Updates the icons in file tabs/list view/etc.  This called in response to the user picking a new icon group.
      */
     public abstract void refreshTabIcons();
 
     /**
-     * Looks for duplicate open documents (documents opened more than once)
-     * and adds numbers to the display names for these documents to
-     * differentiate them.
+     * Looks for duplicate open documents (documents opened more than once) and adds numbers to the display names
+     * for these documents to differentiate them.
      */
     public void renumberDisplayNames() {
-
         // Go through and renumber any tab headings, if necessary.
         int numDocuments = getNumDocuments();
-        if (numDocuments > 0) {
+        if (numDocuments <= 0) {
+            return;
+        }
 
-            boolean[] doneYet = new boolean[numDocuments];
+        boolean[] doneYet = new boolean[numDocuments];
 
-            for (int i = 0; i < numDocuments; i++) {
-                if (doneYet[i])
-                    continue;
-                RTextEditorPane textArea = getRTextEditorPaneAt(i);
-                String fileFullPath = textArea.getFileFullPath();
-                int count = 1;
-                for (int j = i + 1; j < numDocuments; j++) {
-                    RTextEditorPane pane = getRTextEditorPaneAt(j);
-                    if (!doneYet[j] && pane.getFileFullPath().equals(fileFullPath)) {
-                        String title = pane.getFileName() + " (" + (++count) + ")";
-                        if (pane.isDirty())
-                            title = title + "*";
-                        setDocumentDisplayNameAt(j, title);
-                        doneYet[j] = true;
-                    }
+        for (int i = 0; i < numDocuments; i++) {
+            if (doneYet[i])
+                continue;
+            RTextEditorPane textArea = getRTextEditorPaneAt(i);
+            String fileFullPath = textArea.getFileFullPath();
+            int count = 1;
+            for (int j = i + 1; j < numDocuments; j++) {
+                RTextEditorPane pane = getRTextEditorPaneAt(j);
+                if (!doneYet[j] && pane.getFileFullPath().equals(fileFullPath)) {
+                    String title = pane.getFileName() + " (" + (++count) + ")";
+                    if (pane.isDirty())
+                        title = title + "*";
+                    setDocumentDisplayNameAt(j, title);
+                    doneYet[j] = true;
                 }
-                String title;
-                if (count > 1) {
-                    title = textArea.getFileName() + " (1)";
-                } else {
-                    title = textArea.getFileName();
-                }
-                if (textArea.isDirty())
-                    title = title + "*";
-                setDocumentDisplayNameAt(i, title);
-                doneYet[i] = true;
-            } // End of for (int i=0; i<numDocuments; i++).
-        } // End of if (numDocuments>0).
+            }
+            String title;
+            if (count > 1) {
+                title = textArea.getFileName() + " (1)";
+            } else {
+                title = textArea.getFileName();
+            }
+            if (textArea.isDirty())
+                title = title + "*";
+            setDocumentDisplayNameAt(i, title);
+            doneYet[i] = true;
+        } // End of for (int i=0; i<numDocuments; i++).
     }
 
 
@@ -2781,13 +2745,10 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Attempts to save all currently-opened files.  If any files have unsaved
-     * changes, the user is prompted whether to save them.
+     * Attempts to save all currently-opened files.  If any files have unsaved changes, the user is prompted whether to save them.
      *
-     * @return Whether all files were successfully saved.  This will be
-     * <code>false</code> if an IO error occurs, or if a file has
-     * unsaved changes and the user selects "Cancel" when prompted
-     * to save them.
+     * @return Whether all files were successfully saved.  This will be <code>false</code> if an IO error occurs,
+     * or if a file has unsaved changes and the user selects "Cancel" when prompted to save them.
      * @see #saveCurrentFile()
      * @see #saveCurrentFileAs()
      * @see #saveCurrentFileAs(FileLocation)
@@ -2803,7 +2764,7 @@ public abstract class AbstractMainView extends JPanel
             // Save this document, if it is not read-only
             if (!getRTextEditorPaneAt(i).isReadOnly()) {
                 setSelectedIndex(i);
-                allSaved |= saveCurrentFile();
+                allSaved &= saveCurrentFile();
             }
         }
 
@@ -2814,9 +2775,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Attempts to save the currently active file as it's current name.
-     * If the file is named "Untitled.txt", this action is essentially a
-     * "Save As" - the user is then prompted for a name to save with.<p>
+     * Attempts to save the currently active file as it's current name. If the file is named "Untitled.txt",
+     * this action is essentially a "Save As" - the user is then prompted for a name to save with.<p>
      * <p>
      * If an IO error occurs, the user is notified.
      *
@@ -2859,9 +2819,8 @@ public abstract class AbstractMainView extends JPanel
      * @see #saveAllFiles()
      */
     public synchronized boolean saveCurrentFileAs() {
-        // Ensures text area gets focus after save for saves that don't bring
-        // up an extra window (Save As, etc.).  Without this, the text area
-        // would lose focus.
+        // Ensures text area gets focus after save for saves that don't bring up an extra window (Save As, etc.).
+        // Without this, the text area would lose focus.
         currentTextArea.requestFocusInWindow();
 
         // Get the new filename they'd like to use.
@@ -2956,9 +2915,8 @@ public abstract class AbstractMainView extends JPanel
             return false;
         }
 
-        // Decide if we need to update the UI for syntax highlighting
-        // purposes (i.e., if the user saves a .txt file as a .java or a
-        // .c => .cpp, etc.).
+        // Decide if we need to update the UI for syntax highlighting purposes (i.e., if the user saves a .txt file as
+        // a .java or a .c => .cpp, etc.).
         String newStyle = getSyntaxStyleForFile(loc.getFileFullPath());
         setSyntaxStyle(currentTextArea, newStyle);
         setCodeFoldingEnabledForTextArea(currentTextArea, isCodeFoldingEnabledFor(newStyle));
@@ -3056,9 +3014,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Sets the alpha value used to make a background image translucent.  Note
-     * that if the background being used is simply a color and not a JPG or GIF
-     * image, this value does nothing.
+     * Sets the alpha value used to make a background image translucent.  Note that if the background being used is
+     * simply a color and not a JPG or GIF image, this value does nothing.
      *
      * @param alpha The new alpha value to use to make background images
      *              translucent. This value should be between 0.0f and 1.0f.
@@ -3101,7 +3058,6 @@ public abstract class AbstractMainView extends JPanel
      *                      <code>java.awt.Image</code> object.
      */
     public void setBackgroundObject(Object newBackground) {
-
         // If they passed in a valid type, remember the object.
         if (newBackground instanceof Color) {
             backgroundObject = newBackground;
@@ -3233,7 +3189,6 @@ public abstract class AbstractMainView extends JPanel
      * @see #isCodeFoldingEnabledFor(String)
      */
     public void setCodeFoldingEnabledFor(String language, boolean enabled) {
-
         boolean prev = isCodeFoldingEnabledFor(language);
 
         if (enabled != prev) {
@@ -3259,7 +3214,6 @@ public abstract class AbstractMainView extends JPanel
      *                 be ignored if the file is too large for code folding.
      */
     private void setCodeFoldingEnabledForTextArea(RTextEditorPane textArea, boolean enabled) {
-
         int charCountThreshold = getMaxFileSizeForCodeFolding() * 1024 * 1024;
 
         if (textArea.getDocument().getLength() <= charCountThreshold) {
@@ -3269,9 +3223,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Sets the color to use to highlight the current line.  Note that if
-     * highlighting the current line is turned off, you will not be able to see
-     * this highlight.
+     * Sets the color to use to highlight the current line.  Note that if highlighting the current line
+     * is turned off, you will not be able to see this highlight.
      *
      * @param color The color to use to highlight the current line.
      * @throws NullPointerException if <code>color</code> is <code>null</code>.
@@ -3308,9 +3261,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Sets the "currently active" text area.  This should only be called
-     * by subclasses.  After this is called, subclasses should call
-     * {@link #fireCurrentTextAreaEvent(int, Object, Object)} to notify any
+     * Sets the "currently active" text area.  This should only be called by subclasses.
+     * After this is called, subclasses should call {@link #fireCurrentTextAreaEvent(int, Object, Object)} to notify any
      * registered listeners of the change.
      *
      * @param textArea The new text area.
@@ -3373,8 +3325,7 @@ public abstract class AbstractMainView extends JPanel
 
     /**
      * Sets the default encoding of new text files to the specified value.
-     * This method fires a property change event of type
-     * {@link #DEFAULT_ENCODING_PROPERTY}.
+     * This method fires a property change event of type {@link #DEFAULT_ENCODING_PROPERTY}.
      *
      * @param encoding The new default encoding.  A value of <code>null</code>
      *                 means to use the system default encoding.
@@ -3391,9 +3342,8 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Sets the name being displayed for a given document.  For example, in a
-     * tabbed pane subclass implementation, this could be the name on the tab
-     * of the document.
+     * Sets the name being displayed for a given document.  For example, in a tabbed pane subclass implementation,
+     * this could be the name on the tabof the document.
      *
      * @param index       The index for the document for which to set the short name.
      *                    If <code>index</code> is invalid, this method does nothing.
@@ -3414,8 +3364,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Sets whether a file's size is checked before it is opened.  This
-     * method fires a property change event of type
+     * Sets whether a file's size is checked before it is opened.  This method fires a property change event of type
      * {@link #FILE_SIZE_CHECK_PROPERTY}.
      *
      * @param doCheck Whether to check a file's size.
@@ -3503,8 +3452,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Sets whether this panel will highlight modified documents' display
-     * names with a different color.
+     * Sets whether this panel will highlight modified documents' display names with a different color.
      *
      * @param highlight Whether to highlight modified documents' display names.
      * @see #highlightModifiedDocumentDisplayNames
@@ -3604,25 +3552,23 @@ public abstract class AbstractMainView extends JPanel
      * @see #getIgnoreBackupExtensions()
      */
     public void setIgnoreBackupExtensions(boolean ignore) {
-        if (ignore != ignoreBackupExtensions) {
+        if (ignore == ignoreBackupExtensions) {
+            return;
+        }
+        ignoreBackupExtensions = ignore;
 
-            ignoreBackupExtensions = ignore;
-
-            // Reset all open files' color schemes if necessary.
-            for (int i = 0; i < getNumDocuments(); i++) {
-                RTextEditorPane textArea = getRTextEditorPaneAt(i);
-                String oldStyle = textArea.getSyntaxEditingStyle();
-                String newStyle = getSyntaxStyleForFile(textArea.getFileName());
-                if (!oldStyle.equals(newStyle)) {
-                    setSyntaxStyle(textArea, newStyle);
-                    if (textArea == currentTextArea) {
-                        textArea.repaint();
-                    }
+        // Reset all open files' color schemes if necessary.
+        for (int i = 0; i < getNumDocuments(); i++) {
+            RTextEditorPane textArea = getRTextEditorPaneAt(i);
+            String oldStyle = textArea.getSyntaxEditingStyle();
+            String newStyle = getSyntaxStyleForFile(textArea.getFileName());
+            if (!oldStyle.equals(newStyle)) {
+                setSyntaxStyle(textArea, newStyle);
+                if (textArea == currentTextArea) {
+                    textArea.repaint();
                 }
             }
-
         }
-
     }
 
 
@@ -3684,8 +3630,7 @@ public abstract class AbstractMainView extends JPanel
      * @see #getLineTerminator()
      */
     public void setLineTerminator(String terminator) {
-        if (terminator != null &&
-                terminator.equals(System.getProperty("line.separator"))) {
+        if (terminator != null && terminator.equals(System.getProperty("line.separator"))) {
             terminator = null;
         }
         defaultLineTerminator = terminator;
@@ -3787,8 +3732,7 @@ public abstract class AbstractMainView extends JPanel
             for (int i = 0; i < count; i++) {
                 getRTextEditorPaneAt(i).setMarkOccurrences(markOccurrences);
             }
-            firePropertyChange(MARK_OCCURRENCES_PROPERTY,
-                    !markOccurrences, markOccurrences);
+            firePropertyChange(MARK_OCCURRENCES_PROPERTY, !markOccurrences, markOccurrences);
         }
     }
 
@@ -3817,8 +3761,7 @@ public abstract class AbstractMainView extends JPanel
     /**
      * Sets whether both brackets are highlighted when bracket matching.
      *
-     * @param matchBoth Whether to highlight both brackets (as opposed to just
-     *                  the opposite bracket).
+     * @param matchBoth Whether to highlight both brackets (as opposed to just the opposite bracket).
      * @see #getMatchBothBrackets()
      */
     public void setMatchBothBrackets(boolean matchBoth) {
@@ -3875,8 +3818,7 @@ public abstract class AbstractMainView extends JPanel
      * method fires a property change event of type
      * {@link #MAX_FILE_SIZE_PROPERTY}.
      *
-     * @param size The new maximum size for a file before the user is
-     *             prompted before opening it.
+     * @param size The new maximum size for a file before the user is prompted before opening it.
      * @see #getMaxFileSize()
      * @see #setDoFileSizeCheck(boolean)
      */
@@ -4343,8 +4285,7 @@ public abstract class AbstractMainView extends JPanel
 
     /**
      * Sets whether whitespace is visible in all open text areas.<p>
-     * This method will not change anything if the value of
-     * <code>visible</code> is already the whitespace-visibility state.
+     * This method will not change anything if the value of <code>visible</code> is already the whitespace-visibility state.
      *
      * @param visible Whether whitespace should be visible.
      */
@@ -4403,10 +4344,8 @@ public abstract class AbstractMainView extends JPanel
 
         refreshActiveLineRangeColors();
 
-        // Update all open files to ensure that they keep the "correct"
-        // background.  We need to do this because in RText's
-        // updateLookAndFeel(), each text area's updateUI() is called, which
-        // resets their background to white, evidently.
+        // Update all open files to ensure that they keep the "correct" background.  We need to do this because in RText's
+        // updateLookAndFeel(), each text area's updateUI() is called, which  resets their background to white, evidently.
         for (int i = 0; i < getNumDocuments(); i++)
             getRTextEditorPaneAt(i).setBackgroundObject(backgroundObject);
         if (currentTextArea != null)
@@ -4448,7 +4387,7 @@ public abstract class AbstractMainView extends JPanel
     }
 
     public void restoreOpenedFiles() {
-        openFileList.load(getOpenFilesListConfigPath());
+        openFileList.load(getOpenFilesListConfigPath(), true);
         filePositionHistory.load(getFilesPositionHistoryConfigPath());
         AtomicInteger selectedTabIndex = new AtomicInteger(-1);
         AtomicInteger counter = new AtomicInteger(0);
