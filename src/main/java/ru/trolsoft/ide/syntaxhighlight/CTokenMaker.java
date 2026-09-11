@@ -20,6 +20,11 @@ public class CTokenMaker extends org.fife.ui.rsyntaxtextarea.modes.CTokenMaker {
         if (deviceName == null || "<none>".equals(deviceName) || deviceName.equalsIgnoreCase(device)) {
             return;
         }
+        if (deviceName.isBlank()) {
+            device = deviceName;
+            replacer = null;
+            return;
+        }
         var device = AvrRatDevicesUtils.loadDevice(deviceName);
         if (device == null) {
             System.out.println("Device not found " + deviceName);
