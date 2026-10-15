@@ -6,7 +6,9 @@ import org.fife.rtext.RTextEditorPane;
 import org.fife.rtext.plugins.project.model.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 public class ProjectUtils {
@@ -72,4 +74,23 @@ public class ProjectUtils {
         }
         return Optional.empty();
     }
+
+    public static List<File> getActiveProjectFolders(RText rtext) {
+        var project = ProjectUtils.getProjectForCurrentFile(rtext);
+        var result = new ArrayList<File>();
+        if (project != null) {
+            var it = project.getEntryIterator();
+            while (it.hasNext()) {
+                var entry = it.next();
+                if (ProjectEntry.DIR_PROJECT_ENTRY.equals(entry.getType())) {
+                    //result.add(entry.getFile().getParentFile().getAbsolutePath() + File.separatorChar);
+                    result.add(entry.getFile());
+//                } else if (ProjectEntry.FILE_PROJECT_ENTRY.equals(entry.getType())) {
+//                    addFilesRecursive(entry.getFile());
+                }
+            }
+        }
+        return result;
+    }
+
 }

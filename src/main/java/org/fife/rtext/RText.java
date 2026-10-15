@@ -12,6 +12,7 @@ package org.fife.rtext;
 import org.fife.help.HelpDialog;
 import org.fife.rtext.actions.ActionFactory;
 import org.fife.rtext.plugins.buildoutput.BuildOutputWindow;
+import org.fife.rtext.plugins.findinfiles.FindResultsWindow;
 import org.fife.rtext.plugins.project.ProjectPlugin;
 import org.fife.rtext.plugins.project.model.Workspace;
 import org.fife.ui.CustomizableToolBar;
@@ -193,8 +194,14 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
     public RText(RTextAppContext context, String[] filesToOpen, RTextPrefs preferences) {
         super(context, "rtext", preferences);
         init(filesToOpen);
+        instance = this;
     }
 
+    private static RText instance;
+
+    public static RText getInstance() {
+        return instance;
+    }
 
     // What to do when user does something.
     @Override
@@ -1656,8 +1663,22 @@ public class RText extends AbstractPluggableGUIApplication<RTextPrefs>
         return null;
     }
 
+    public org.fife.rtext.plugins.findinfiles.Plugin getFindInFilesPlugin() {
+        for (Plugin<?> p : getPlugins()) {
+            if (p instanceof org.fife.rtext.plugins.findinfiles.Plugin pp) {
+                return pp;
+            }
+        }
+        return null;
+    }
+
     public BuildOutputWindow getBuildOutputWindow() {
         var plugin = getBuildOutputPlugin();
+        return plugin == null ? null : plugin.getDockableWindow();
+    }
+
+    public FindResultsWindow getFindResultsWindow() {
+        var plugin = getFindInFilesPlugin();
         return plugin == null ? null : plugin.getDockableWindow();
     }
 

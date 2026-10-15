@@ -3423,7 +3423,7 @@ private boolean fractionalFontMetricsEnabled;
 						linkGeneratorResult = null;
 					}
 				}
-				if (getCursor()!=c2) {
+				if (getCursor() != c2) {
 
 					setCursor(c2);
 					// TODO: Repaint just the affected line(s).

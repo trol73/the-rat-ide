@@ -100,7 +100,6 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 	 */
 	@Override
 	public void addMatchData(MatchData matchData, String dirName) {
-
 		// Make the displayed filename be in a path relative to the
 		// directory typed into the Find in Files dialog.
 		int pos = 0;
@@ -290,7 +289,6 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 
 	@Override
 	public File getSelectedFile() {
-
 		int selectedRow = getSelectedRow();
 		if (selectedRow == -1) {
 			UIManager.getLookAndFeel().provideErrorFeedback(this);
@@ -437,7 +435,6 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 	 */
 	@Override
 	public void updateUI() {
-
 		/*
 		 * NOTE: This is silly, but it's what it took to get a LaF change to
 		 * occur without throwing an NPE because of the JRE bug.  No doubt there
@@ -457,7 +454,7 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 
 		// Temporarily set the table header's renderer to the default.
 		Container parent = getParent();
-		if (parent!=null) { // First time through, it'll be null
+		if (parent != null) { // First time through, it'll be null
 			TableCellRenderer r = getTableHeader().getDefaultRenderer();
 			if (r instanceof SortableHeaderRenderer) { // Always true
 				SortableHeaderRenderer shr = (SortableHeaderRenderer)r;
@@ -468,7 +465,7 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 		super.updateUI();
 
 		// Now set the renderer back to our custom one.
-		if (parent!=null) {
+		if (parent != null) {
 			JScrollPane sp = (JScrollPane)parent.getParent();
 			sp.setColumnHeaderView(getTableHeader());
 			sp.revalidate();
@@ -476,13 +473,12 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 		}
 
 		// Update our custom renderers too.
-		if (defaultRenderer!=null) { // First time through, it's null
+		if (defaultRenderer != null) { // First time through, it's null
 			defaultRenderer.updateUI();
 		}
-		if (verboseRenderer!=null) {
+		if (verboseRenderer != null) {
 			verboseRenderer.updateUI();
 		}
-
 	}
 
 
@@ -498,19 +494,15 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 
 			// If it's HTML and selected, don't colorize the HTML, let the
 			// text all be the table's "selected text" color.
-			if (selected && value instanceof String) {
-				String str = (String)value;
-				if (str.startsWith("<html>")) {
+			if (selected && value instanceof String str) {
+                if (str.startsWith("<html>")) {
 					value = str.replaceAll("color=\"[^\"]+\"", "");
 				}
 			}
 
-			super.getTableCellRendererComponent(table, value, selected,
-												focused, row, column);
+			super.getTableCellRendererComponent(table, value, selected, focused, row, column);
 			return this;
-
 		}
-
 	}
 
 
@@ -526,11 +518,7 @@ public class FindInFilesTable extends JTable implements ResultsComponent, FileSe
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (!isSelected) {
 				MatchData data = getMatchDataForRow(row);
-				if (data.isVerboseSearchInfo()) {
-					setForeground(Color.GRAY);
-				} else if (data.isError()) {
-					setForeground(Color.RED);
-				}
+				setForeground(data.isVerboseSearchInfo() ? Color.GRAY : Color.RED);
 			}
 			return this;
 		}

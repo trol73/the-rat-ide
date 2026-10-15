@@ -59,6 +59,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	private final StatusBar statusBar;
 
 	private final ResultsComponent resultsComponent;
+	private final ResultsComponent dockableResultsComponent;
 
 	// This helps us work around the "bug" where JComboBox eats the first Enter press.
 	private String lastSearchString;
@@ -155,7 +156,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		leftPanel.add(bottomLeftPanel);
 
 		// Make a panel containing the buttons.
-		JPanel rightPanel2 = new JPanel(new GridLayout(3,1, 5,5));
+		JPanel rightPanel2 = new JPanel(new GridLayout(4,1, 5,5));
 		btnFind = UIUtil.newButton(getBundle(), "Find");
 		btnFind.setActionCommand("FindInFiles");
 		btnFind.addActionListener(this);
@@ -165,9 +166,13 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		btnCancel = UIUtil.newButton(MSG, "Close");
 		btnCancel.setActionCommand("Close");
 		btnCancel.addActionListener(this);
+		JButton btnShow = UIUtil.newButton(MSG, "Show");
+		btnShow.setActionCommand("Show");
+		btnShow.addActionListener(this);
 		rightPanel2.add(btnFind);
 		rightPanel2.add(btnBrowse);
 		rightPanel2.add(btnCancel);
+		rightPanel2.add(btnShow);
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		if (orientation.isLeftToRight()) {
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(0,5,0,0));
@@ -198,6 +203,9 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 		resultsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		resultsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		resultsPanel.add(resultsScrollPane);
+
+		var dockableWindow = ((RText)getParent()).getFindResultsWindow();
+		dockableResultsComponent = dockableWindow != null ? dockableWindow.getSearchResults() : null;
 
 		// Make the "status bar."
 		statusBar = new org.fife.ui.StatusBar();
@@ -286,6 +294,20 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 			}
 		}
 
+		else if ("Show".equals(command)) {
+			RText rtext = (RText)getParent();
+			var window = rtext.getFindResultsWindow();
+			var src = (FindInFilesTable)resultsComponent;
+System.err.println("CNT = " + src.getRowCount());
+			for (int i = 0; i < src.getRowCount(); i++) {
+				var data = src.getMatchDataForRow(i);
+//				data.get
+System.err.println(data);
+				window.getSearchResults().addMatchData(data, "111");
+			}
+			window.focusInDockableWindowGroup(true);
+//			fireFindInFilesEvent(new FindInFilesEvent(this, null, -1));
+		}
 		else if ("Subfolders".equals(command)) {
 			boolean search = sbSubfolders.isSelected();
 			((FindInFilesSearchContext)context).setSearchSubfolders(search);
@@ -329,7 +351,12 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 */
 	void addMatchData(final MatchData matchData) {
 		final String dirName = inFolderTextField.getText();
-		SwingUtilities.invokeLater(() -> getResultsComponent().addMatchData(matchData, dirName));
+		SwingUtilities.invokeLater(() -> {
+			getResultsComponent().addMatchData(matchData, dirName);
+			if (dockableResultsComponent != null) {
+				dockableResultsComponent.addMatchData(matchData, dirName);
+			}
+		});
 	}
 
 
@@ -561,13 +588,11 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 
 
 	/**
-	 * Notifies all find-in-files listeners of a find-in-files event in this
-	 * dialog.
+	 * Notifies all find-in-files listeners of a find-in-files event in this dialog.
 	 *
 	 * @param e The event to notify all listeners about.
 	 */
 	protected void fireFindInFilesEvent(FindInFilesEvent e) {
-
 		// Guaranteed to return a non-null array
 		Object[] listeners = eventListenerList.getListenerList();
 
@@ -677,7 +702,7 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	/**
 	 * Returns whether matches should be whole word.
 	 *
-	 * @return Whether or not matches should be whole word.
+	 * @return Whether matches should be whole word.
 	 * @see #getCheckSubfolders
 	 * @see #getMatchCase
 	 * @see #getUseRegEx
@@ -983,7 +1008,6 @@ public class FindInFilesDialog extends AbstractSearchDialog {
 	 * lost on the JTextField portion of our combo box.
 	*/
 	public void updateUI() {
-
 		// Create listeners for the combo boxes.
 		FindInFilesFocusAdapter focusAdapter = new FindInFilesFocusAdapter();
 

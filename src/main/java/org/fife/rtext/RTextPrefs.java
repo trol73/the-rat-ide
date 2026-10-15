@@ -266,7 +266,7 @@ public class RTextPrefs extends AppPrefs implements RTextActionInfo {
         secondaryLanguageColors[2] = theme.secondaryLanguages[2];
         hyperlinksEnabled = true;
         hyperlinkColor = theme.hyperlinkFG;
-        hyperlinkModifierKey = InputEvent.CTRL_DOWN_MASK;
+        hyperlinkModifierKey = OS.get() == OS.MAC_OS_X ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
         visibleWhitespace = false;
         showEOLMarkers = false;
         showTabLines = false;

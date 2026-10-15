@@ -180,16 +180,12 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 				dialog.setStatusText(searchingFile + i + "/" + numFiles + ": " + fileFullPath);
 
 				try {
-					// Use a UnicodeReader to auto-detect whether this
-					// is a Unicode file.
-					// FIXME:  Allow the user to specify the default
-					// encoding, instead of assuming system default,
-					// somehow.
+					// Use a UnicodeReader to auto-detect whether this is a Unicode file.
+					// FIXME:  Allow the user to specify the default encoding, instead of assuming system default, somehow.
 					Reader r = new BufferedReader(new UnicodeReader(temp));
 					String style = view.getSyntaxStyleForFile(temp.getPath());
 					textArea.read(r, null);	// Clears all old text.
-					// Important!  Clear undo history, or RSTA's undo manager
-					// will keep all old text (i.e. copies of ALL previous
+					// Important!  Clear undo history, or RSTA's undo manager will keep all old text (i.e. copies of ALL previous
 					// files searched)!
 					textArea.discardAllEdits();
 					if (!style.equals(textArea.getSyntaxEditingStyle())) {
@@ -214,14 +210,10 @@ class FindInFilesThread extends GUIWorkerThread<Object> {
 				if (buffer != null) {
 					try {
 						if (useRegex) {
-							doSearchRegex(buffer, searchString, textArea,
-								matchCase, wholeWord, matchingLines,
-								fileFullPath, seg);
+							doSearchRegex(buffer, searchString, textArea, matchCase, wholeWord, matchingLines, fileFullPath, seg);
 						}
 						else {
-							doSearchNoRegex(buffer, searchString, textArea,
-								matchCase, wholeWord, matchingLines,
-								fileFullPath, seg);
+							doSearchNoRegex(buffer, searchString, textArea, matchCase, wholeWord, matchingLines, fileFullPath, seg);
 						}
 					} catch (Exception e) {
 						// Shouldn't happen...

@@ -292,6 +292,7 @@ class PluginLoader {
 		app.addPlugin(new org.fife.rtext.plugins.tasks.TasksPlugin(rtext));
 		app.addPlugin(new org.fife.rtext.plugins.tidy.Plugin(rtext));
 		app.addPlugin(new org.fife.rtext.plugins.tools.ToolPlugin(rtext));
+		app.addPlugin(new org.fife.rtext.plugins.findinfiles.Plugin(rtext));
 
 		app.addPlugin(new CodeListingPlugin(rtext));
 	}

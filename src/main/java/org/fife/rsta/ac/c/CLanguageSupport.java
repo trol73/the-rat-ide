@@ -13,6 +13,7 @@ package org.fife.rsta.ac.c;
 import javax.swing.ListCellRenderer;
 
 import org.fife.rsta.ac.AbstractLanguageSupport;
+import org.fife.rtext.RText;
 import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -67,6 +68,7 @@ public class CLanguageSupport extends AbstractLanguageSupport {
         installImpl(textArea, ac);
 
         textArea.setToolTipSupplier(provider);
+        textArea.setLinkGenerator(new CLinkGenerator(RText.getInstance()));
     }
 
 

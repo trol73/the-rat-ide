@@ -1237,7 +1237,7 @@ public abstract class AbstractMainView extends JPanel
                 findInFilesDialog.setLocationRelativeTo(owner);
             }
         }
-        var dirs = getActiveProjectFolders();
+        var dirs = ProjectUtils.getActiveProjectFolders(owner);
         if (!dirs.isEmpty()) {
             findInFilesDialog.setSearchIn(dirs.getFirst());
             findInFilesDialog.addPaths(dirs);
@@ -1258,24 +1258,6 @@ public abstract class AbstractMainView extends JPanel
         }
 
         return findInFilesDialog;
-    }
-
-    private List<File> getActiveProjectFolders() {
-        var project = ProjectUtils.getProjectForCurrentFile(owner);
-        var result = new ArrayList<File>();
-        if (project != null) {
-            var it = project.getEntryIterator();
-            while (it.hasNext()) {
-                var entry = it.next();
-                if (ProjectEntry.DIR_PROJECT_ENTRY.equals(entry.getType())) {
-                    //result.add(entry.getFile().getParentFile().getAbsolutePath() + File.separatorChar);
-                    result.add(entry.getFile());
-//                } else if (ProjectEntry.FILE_PROJECT_ENTRY.equals(entry.getType())) {
-//                    addFilesRecursive(entry.getFile());
-                }
-            }
-        }
-        return result;
     }
 
 
@@ -3500,8 +3482,7 @@ public abstract class AbstractMainView extends JPanel
 
 
     /**
-     * Sets the modifier key used to start hyperlink scanning in text
-     * editors.
+     * Sets the modifier key used to start hyperlink scanning in text editors.
      *
      * @param key The modifier key(s).  If an invalid value is passed in,
      *            {@link java.awt.event.InputEvent#CTRL_DOWN_MASK} is used.

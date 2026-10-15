@@ -229,8 +229,7 @@ public class Plugin extends GUIPlugin<RText> {
 
 
     /**
-     * Loads saved preferences.  If this is the first time through, default
-     * values will be returned.
+     * Loads saved preferences.  If this is the first time through, default values will be returned.
      *
      * @return The preferences.
      */
