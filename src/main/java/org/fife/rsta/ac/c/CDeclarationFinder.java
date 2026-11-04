@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 public class CDeclarationFinder {
     private final RText rtext;
     private final ParallelSearch searcher = new ParallelSearch();
-    private static final List<String> FILE_MASKS = List.of("*.c", "*.h", "*.art");
+    private static final List<String> FILE_MASKS = List.of("*.c", "*.h", "*.art", "*.arth");
 
     OccurrenceFilter filter = (file, ext, line) -> {
         if ("c".equalsIgnoreCase(ext)) {
@@ -26,7 +26,7 @@ public class CDeclarationFinder {
     }
 
     public Declaration find(String identifier) {
-        var project = ProjectUtils.getProjectForCurrentFile(rtext);
+//        var project = ProjectUtils.getProjectForCurrentFile(rtext);
 //        project.getWorkspace().
 //        var thread = new FindIdentifierThread()
         var folders = ProjectUtils.getActiveProjectFolders(rtext);
@@ -49,7 +49,7 @@ public class CDeclarationFinder {
                 for (var r : results) {
                     var s = r.getText();
                     if (
-                            s.endsWith(" " + identifier + "() {") ||
+                            (!s.startsWith("if ") && !s.startsWith("while ") && s.endsWith(" " + identifier + "() {")) ||
                             s.startsWith("} "+ identifier + ";") ||
                             s.startsWith("#define "+ identifier)
                     ) {
@@ -61,7 +61,7 @@ public class CDeclarationFinder {
                 for (var r : results) {
                     var s = r.getText();
                     if (
-                            s.endsWith(") {") && s.contains(" " + identifier + "(")
+                            (!s.startsWith("if ") && !s.startsWith("while ") && s.endsWith(") {") && s.contains(" " + identifier + "("))
                     ) {
 //        System.err.println(s);
                         return new Declaration(r.getFile(), r.getLine(), r.getColumn());

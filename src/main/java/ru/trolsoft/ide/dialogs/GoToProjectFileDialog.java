@@ -125,6 +125,9 @@ public class GoToProjectFileDialog extends EscapableDialog implements ActionList
 
     private void addFileHint(File file) {
         var name = file.getName();
+        if (name.endsWith(".o")) {
+            return;
+        }
         if (fileHints.contains(name)) {
             var oldFile = projectFiles.get(name);
             fileHints.remove(name);
