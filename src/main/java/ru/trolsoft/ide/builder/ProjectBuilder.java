@@ -9,10 +9,12 @@ import org.fife.rtext.plugins.project.model.Project;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.jetbrains.annotations.NotNull;
 import ru.trolsoft.compiler.generator.ListingRec;
+import ru.trolsoft.compiler.utils.ConsoleReporter;
 import ru.trolsoft.ide.plugins.codelisting.CodeListingWindow;
 import ru.trolsoft.ide.therat.AvrRatDevicesUtils;
 import ru.trolsoft.ide.utils.StringUtils;
 import ru.trolsoft.therat.RatKt;
+import ru.trolsoft.compiler.utils.Printer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,8 +89,19 @@ public class ProjectBuilder {
                 if (listingVisible) {
                     listingWindow.setSyntax(detectListingSyntax(path));
                 }
+
+                var includePath = new ArrayList<String>();
+                var console = new ConsoleReporter(out::println, err::println, false );
                 try {
-                    RatKt.compileProject(null, path, devPath, encodingsPath, defines, out, err, listingVisible ? listingHandler(listingWindow) : null);
+                    RatKt.compileProject(
+                        null,
+                        path,
+                        devPath,
+                        encodingsPath,
+                        defines,
+                        includePath,
+                        console,
+                        listingVisible ? listingHandler(listingWindow) : null);
                 } catch (kotlin.NotImplementedError e) {
                     throw new RuntimeException("Wrong operation", e);
                 } catch (Exception e) {
@@ -138,8 +151,10 @@ public class ProjectBuilder {
                 if (codeListWindow != null) {
                     codeListWindow.clear();
                 }
+                var includePath = new ArrayList<String>();
+                var console = new ConsoleReporter(out::println, err::println, false );
                 try {
-                    RatKt.compileProject(null, path, devPath, encodingsPath, defines, out, err, listingVisible ? listingHandler(listingWindow) : null);
+                    RatKt.compileProject(null, path, devPath, encodingsPath, defines, includePath, console, listingVisible ? listingHandler(listingWindow) : null);
                 } catch (kotlin.NotImplementedError e) {
                     throw new RuntimeException("Wrong operation", e);
                 }

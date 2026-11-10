@@ -1,6 +1,5 @@
 package ru.trolsoft.ide.therat;
 
-import ru.trolsoft.therat.RatKt;
 import ru.trolsoft.therat.arch.avr.AvrDevParserKt;
 import ru.trolsoft.therat.arch.avr.AvrDevice;
 
@@ -11,16 +10,18 @@ import java.util.List;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
+import static ru.trolsoft.compiler.utils.FileUtils_jvmKt.getRootPath;
+
 public class AvrRatDevicesUtils {
 
     private static final WeakHashMap<String, AvrDevice> devicesCache = new WeakHashMap<>();
 
     public static File getDevFolder() {
-        return new File(RatKt.getRootPath() + "../devices/avr");
+        return new File(getRootPath() + "../devices/avr");
     }
 
     public static File getEncodingsFolder() {
-        return new File(RatKt.getRootPath() + "../encodings");
+        return new File(getRootPath() + "../encodings");
     }
 
     public static List<String> getAllDevices() {
