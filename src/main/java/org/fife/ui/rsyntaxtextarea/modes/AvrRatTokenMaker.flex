@@ -252,8 +252,8 @@ Register                = X|Y|Z|r0|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|r13|r1
 
 	/* Keywords */
 	"as"|"bitmask"|"break"|"continue"|"do"|"else"|"extern"|"goto"|"if"|
-    "inline"|"loop"|"mem"|"pin"|"prg"|"proc"|"return"|"saveregs"|"use"|
-    "var"|"vectors"|"while"|"struct"|"typedef"|"$org"|"$encoding"|"$output"|"$cleanup" 		{ addToken(Token.RESERVED_WORD); }
+    "inline"|"loop"|"mem"|"pin"|"prg"|"proc"|"return"|"saveregs"|"use"|"reuse"|"const"|"template"|
+    "var"|"vectors"|"while"|"struct"|"typedef"|"$org"|"$encoding"|"$output"|"$cleanup"|"$pad_to" 		{ addToken(Token.RESERVED_WORD); }
 
       /* Keywords 2 (just an optional set of keywords colored differently) */
       "high"|"low"|"sizeof"|"signed" { addToken(Token.RESERVED_WORD_2); }

@@ -252,8 +252,8 @@ Register                = A|B|C|D|E|H|L|M|BC|DE|HL|SP|PSW
 
 	/* Keywords */
 	"as"|"bitmask"|"break"|"continue"|"do"|"else"|"extern"|"goto"|"if"|
-    "inline"|"loop"|"mem"|"port"|"proc"|"return"|"saveregs"|"use"|
-    "var"|"while"|"struct"|"typedef"|"absolute"|"$org"|"$encoding"|"$output"|"$cleanup" 		{ addToken(Token.RESERVED_WORD); }
+    "inline"|"loop"|"mem"|"port"|"proc"|"return"|"saveregs"|"use"|"reuse"|"const"|"template"|
+    "var"|"while"|"struct"|"typedef"|"absolute"|"$org"|"$encoding"|"$output"|"$cleanup"|"$pad_to" 		{ addToken(Token.RESERVED_WORD); }
 
       /* Keywords 2 (just an optional set of keywords colored differently) */
       "high"|"low"|"sizeof"|"signed" { addToken(Token.RESERVED_WORD_2); }
