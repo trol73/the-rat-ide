@@ -51,6 +51,7 @@ public class ProjectBuilder {
             case I8085_RAT -> build8085RatProject();
             case BUILDER -> buildMakeBuilderProject();
             case MAKEFILE -> buildMakeFileProject();
+            case VIPER_RAT -> buildViperRatProject();
             default -> window.prompt("Unsupported project type " + project.getType());
         }
 //        window.execute("cat " + activeFilePath);
@@ -125,12 +126,52 @@ public class ProjectBuilder {
     private static String detectListingSyntax(String path) {
         if (path.endsWith(".8080") || path.endsWith(".8085")) {
             return SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_8085;
+        } else if (path.endsWith(".viper")) {
+            return SyntaxConstants.SYNTAX_STYLE_VIPER_RAT;
         } else {
             return SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_AVR;
         }
     }
 
     private void build8085RatProject() {
+        boolean listingVisible = rtext.getCodeListingPlugin().isCodeListingWindowVisible();
+        var listingWindow = rtext.getCodeListingWindow();
+        if (listingVisible) {
+            listingWindow.clear();
+        }
+        window.execute(new BuildTask() {
+            @Override
+            public void run() {
+                String path = project.getMainFile();
+                window.prompt("Compile " + path + "\n");
+                String devPath = AvrRatDevicesUtils.getDevFolder().getAbsolutePath();
+                String encodingsPath = AvrRatDevicesUtils.getEncodingsFolder().getAbsolutePath();
+                List<String> defines = new ArrayList<>();
+                PrintStream out = getOutStream();
+                PrintStream err = getErrStream();
+
+                var codeListWindow = rtext.getCodeListingWindow();
+                if (codeListWindow != null) {
+                    codeListWindow.clear();
+                }
+                var includePath = new ArrayList<String>();
+                var console = new ConsoleReporter(out::println, err::println, false );
+                try {
+                    RatKt.compileProject(null, path, devPath, encodingsPath, defines, includePath, console, listingVisible ? listingHandler(listingWindow) : null);
+                } catch (kotlin.NotImplementedError e) {
+                    throw new RuntimeException("Wrong operation", e);
+                }
+                if (listingVisible) {
+                    String syntax = detectListingSyntax(path);
+                    listingWindow.initText(syntax);
+                }
+                //window.prompt("Done.\n");
+                restoreFocus();
+            }
+        });
+    }
+
+    private void buildViperRatProject() {
         boolean listingVisible = rtext.getCodeListingPlugin().isCodeListingWindowVisible();
         var listingWindow = rtext.getCodeListingWindow();
         if (listingVisible) {

@@ -3,6 +3,7 @@ package org.fife.rtext.plugins.project.model;
 public enum ProjectType {
     RAT,
     I8085_RAT,
+    VIPER_RAT,
     BUILDER,
     MAKEFILE,
     CUSTOM;

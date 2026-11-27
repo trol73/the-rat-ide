@@ -141,15 +141,99 @@ public class NewProjectDialog extends AbstractEnterFileNameDialog implements Doc
                         .withType(ProjectType.I8085_RAT)
                         .withFolders("src")
                         .withFile("src/" + mainFile + ".8080",
+                                """                               
+                                        proc main() {
+                                            SP = 0x75FF
+                                            nop
+                                        }
+                                        """);
+            }
+        },
+        RAT_VIPER("Rat Viper") {
+            @Override
+            public BuildTemplate build(String name, File root, String device, String mainFile) {
+                return new BuildTemplate(root)
+                        .withType(ProjectType.VIPER_RAT)
+                        .withFolders("src")
+                        .withFile("src/" + mainFile + ".viper",
                                 """
+                                        #include "syscalls.viperh"
+                                        
+                                        proc main() {
+                                            HALT
+                                        }
+                                        """)
+                        .withFile("src/syscalls.viperh" ,
+                        """
+                                const KEY_UP    = 0x01
+                                const KEY_DOWN  = 0x02
+                                const KEY_LEFT  = 0x04
+                                const KEY_RIGHT = 0x08
+                                const KEY_ENTER = 0x10
+                                
+                                inline proc uartRead() -> (b: r0) {
+                                    syscall 0x00
+                                }
+                                
+                                inline proc uartTryRead() -> (b: r0) {
+                                    syscall 0x01
+                                }
+                                
+                                inline proc uartWrite(b: r0) {
+                                    syscall 0x02
+                                }
+                                
+                                inline proc setColor(color: RX) {
+                                    syscall 0x03
+                                }
+                                
+                                inline proc setBackground(color: RX) {
+                                    syscall 0x04
+                                }
+                                
+                                inline proc drawRect(x: r0, y: r1, width: r2, height: r3) {
+                                    syscall 0x05
+                                }
+                                
+                                inline proc fillRect(x: r0, y: r1, width: r2, height: r3) {
+                                    syscall 0x06
+                                }
+                                
+                                inline proc drawCircle(x: r0, y: r1, r: r2) {
+                                    syscall 0x07
+                                }
+                                
+                                inline proc fillCircle(x: r0, y: r1, r: r2) {
+                                    syscall 0x08
+                                }
+                                
+                                inline proc drawChar(x: r0, y: r1, ch: r2) {
+                                    syscall 0x09
+                                }
+                                
+                                inline proc fillChar(x: r0, y: r1, ch: r2) {
+                                    syscall 0x0A
+                                }
+                                
+                                inline proc drawString(x: r0, y: r1, s: RX) {
+                                    syscall 0x0B
+                                }
+                                
+                                inline proc fillString(x: r0, y: r1, s: RX) {
+                                    syscall 0x0C
+                                }
+                                
+                                inline proc keyRead() -> (key: r0) {
+                                    syscall 0x0D
+                                }
 
-                                proc main() {
-                                    SP = 0x75FF
-                                    nop
+                                inline proc keyWait() -> (key: r0) {
+                                    syscall 0x0E
                                 }
                                 """);
             }
         };
+
 //        CPP_APPLICATION("C++ Application") {
 //            @Override
 //            public BuildTemplate build(String name, File root, String device, String mainFile) {

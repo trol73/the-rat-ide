@@ -356,4 +356,6 @@ public interface SyntaxConstants {
 
 	String SYNTAX_STYLE_I8085_RAT = "text/i8085rat";
 
+	String SYNTAX_STYLE_VIPER_RAT = "text/viperrat";
+
 }
