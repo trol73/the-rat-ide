@@ -11,8 +11,6 @@ import org.fife.ui.app.prefs.AppPrefs;
 import org.fife.ui.app.themes.NativeTheme;
 import org.fife.util.DarculaUtil;
 import org.fife.util.SubstanceUtil;
-import ru.trolsoft.ide.therat.AvrRatDevicesUtils;
-import ru.trolsoft.therat.RatKt;
 
 import javax.swing.*;
 import java.io.File;
