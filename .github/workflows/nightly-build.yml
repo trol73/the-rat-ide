@@ -30,12 +30,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew jar --no-daemon
 
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: the-rat-nightly-${{ github.run_number }}
-          path: build/libs/the-rat.jar
-          retention-days: 90
+      - name: Create GitHub Release with JAR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "nightly-${{ github.run_number }}" \
+            --title "Nightly Build #${{ github.run_number }}" \
+            build/libs/the-rat.jar
 
       - name: Delete old nightly releases
         shell: bash
