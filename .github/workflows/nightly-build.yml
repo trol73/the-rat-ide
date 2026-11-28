@@ -49,7 +49,9 @@ jobs:
             --limit 100 \
             --order desc \
             --json tagName \
-            --jq '[.[] | select(startswith("nightly-"))][3:][]' \
+            --jq 'map(select(.tagName | startswith("nightly-")))
+                  | .[3:]
+                  | .[].tagName' \
           | while IFS= read -r tag; do
               [ -z "$tag" ] && continue
               echo "Deleting old nightly release: $tag"
